@@ -1,0 +1,26 @@
+export default {
+    PROJECT:{
+        component:"nk-page-doc-detail",
+        snapshotUrl:'/apps/projects/snapshot/',
+        diffUrl:'/apps/projects/diff/',
+        detailUrl:'/apps/projects/detail/'
+    },
+    TRANSACTION:{
+        component:"nk-page-doc-detail",
+        snapshotUrl:'/apps/docs/snapshot/',
+        diffUrl:'/apps/docs/diff/',
+        detailUrl:'/apps/docs/detail/'
+    },
+    PARTNER:{
+        component:"nk-page-partner-detail",
+        snapshotUrl:'/apps/partners/snapshot/',
+        diffUrl:'/apps/partners/diff/',
+        detailUrl:'/apps/partners/detail/'
+    },
+    PARTNER_T:{
+        component:"nk-page-partner-detail",
+        snapshotUrl:'/apps/partners/snapshot/',
+        diffUrl:'/apps/partners/diff/',
+        detailUrl:'/apps/partners/detail/'
+    }
+}

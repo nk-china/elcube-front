@@ -1,0 +1,150 @@
+<template>
+    <a-card :class="{'nk-page-layout-card':true,'no-expand':!expand}"
+            size="default"
+            :extra="extra"
+            :loading="loading"
+            :hoverable="true"
+            :headStyle="headStyle"
+            :bodyStyle="bodyStyle"
+            :bordered="true"
+            :activeTabKey="activeTabKey"
+            :defaultActiveTabKey="defaultActiveTabKey"
+            :tabList="tabList"
+            @tabChange="tabChange"
+    >
+
+        <div  v-if=" nkOptions.componentName || title" slot="title" @dblclick="editMode !==undefined && switchExpand()" style="user-select: none">{{nkOptions.componentName||title}}</div>
+        <slot v-else slot="title" name="title"></slot>
+        <slot slot="actions" name="actions"></slot>
+        <slot slot="cover" name="cover"></slot>
+
+        <div slot="tabBarExtraContent">
+            <a-icon v-if="editMode !==undefined && tabList" v-show="!expand" class="expand" type="caret-up"    @click="switchExpand"></a-icon>
+            <a-icon v-if="editMode !==undefined && tabList" v-show=" expand" class="expand" type="caret-down"  @click="switchExpand"></a-icon>
+            <slot name="tabBarExtraContent"></slot>
+        </div>
+        <div slot="extra">
+            <slot name="extra" v-if="expand"></slot>
+            <nk-help-link v-if="nkOptions.markdownFlag" slot="extra" :nk-options="nkOptions" />
+            <a-icon v-if="editMode !==undefined && !tabList" v-show="!expand" class="expand" type="caret-up"    @click="switchExpand"></a-icon>
+            <a-icon v-if="editMode !==undefined && !tabList" v-show=" expand" class="expand" type="caret-down"  @click="switchExpand"></a-icon>
+        </div>
+        <div v-show="expand">
+            <slot v-if="expand||editMode"></slot>
+        </div>
+    </a-card>
+</template>
+
+<script>
+  let parse = ()=>{
+    try{
+      return (JSON.parse(localStorage.getItem("$NkCard"))||[]);
+    }catch (e) {
+      return [];
+    }
+  };
+  let getKey = (component)=>{
+    let parent = component;
+    do{
+      parent = parent.$parent;
+    }while(parent && !parent.doc);
+
+    let keyPre = '';
+    if(parent){
+      keyPre = `${parent.doc.docType}:`;
+    }
+    return `${keyPre}${component.cardKey || component.$parent.$vnode.key}`;
+  };
+  let getExpand = (component)=>{
+    const key = getKey(component);
+    return key ? parse().indexOf(key)===-1 : true;
+  };
+  let setExpand = (component,expand)=>{
+    const key = getKey(component);
+    if(key){
+      const arr = parse();
+      let index = arr.indexOf(key);
+      if(expand && index>-1){
+        arr.splice(index,1);
+      }else if(!expand && index===-1){
+        arr.push(key);
+      }
+      if(arr.length){
+        localStorage.setItem("$NkCard",JSON.stringify(arr));
+      }else{
+        localStorage.removeItem("$NkCard");
+      }
+    }
+  };
+  export default {
+    props:{
+      title:String,
+      loading:{
+        type:Boolean,
+        default:false
+      },
+      extra:String,
+      headStyle:Object,
+      bodyStyle:Object,
+      activeTabKey:String,
+      defaultActiveTabKey:String,
+      tabList:Array,
+      cardKey:String,
+      nkOptions:{
+          type:Object,
+          default(){
+              return {}
+          }
+      },
+        editMode:{
+            default(){
+                return undefined
+            }
+        }
+    },
+    data(){
+      return {
+        expand: getExpand(this)
+      }
+    },
+    created(){
+        this.$emit("expand",this.expand);
+    },
+    methods:{
+      tabChange(e){
+        this.$emit("tabChange",e);
+      },
+      switchExpand(){
+        this.expand = !this.expand;
+        setExpand(this,this.expand);
+        this.$emit("expand",this.expand);
+      }
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+    ::v-deep.nk-page-layout-card.no-expand{
+        .ant-card-body{
+            padding: 2px;
+        }
+    }
+    ::v-deep.ant-tabs .ant-tabs-large-bar {
+        .ant-tabs-extra-content{
+            line-height: 40px;
+        }
+        .ant-tabs-nav .ant-tabs-tab{
+            padding: 12px 16px;
+            font-size: 14px;
+        }
+    }
+    ::v-deep .ant-card-extra{
+        padding: 0;
+    }
+    ::v-deep .ant-card-body{
+        cursor: default;
+    }
+    .expand{
+        margin-left: 10px;
+    }
+</style>
