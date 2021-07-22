@@ -46,6 +46,9 @@ export default ()=>{
                 this.nk$Sortable = [];
                 this.nk$SortableVxeTable.forEach(sortable=>sortable.destroy());
                 this.nk$SortableVxeTable = [];
+            },
+            $nkSortableRemove(arr,i){
+                arr.splice(i-1,1);
             }
         },
         destroyed() {

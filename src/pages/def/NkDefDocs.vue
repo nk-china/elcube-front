@@ -7,23 +7,19 @@
         :selectable="false"
         @change="search"
     >
-
         <a-button-group slot="action">
             <a-button type="primary" @click="toCreate">新建</a-button>
         </a-button-group>
-
-
     </nk-query-layout>
 </template>
 
 <script>
 import qs from 'qs';
+const classifies = [
+    {label: "伙伴",value:"PARTNER"},
+    {label: "交易",value:"TRANSACTION"},
+];
 export default {
-    data(){
-        return {
-            classify:[]
-        }
-    },
     computed:{
         searchItemsDefault(){
             return [
@@ -32,7 +28,7 @@ export default {
                     field:'docClassify',
                     component:'nk-search-options-single',
                     option:{
-                        buckets:this.options
+                        buckets:classifies
                     }
                 },
                 {
@@ -55,7 +51,7 @@ export default {
               { field: 'docClassify',   title: '单据分类', width: '14%',editRender: { name: 'input' },sortable:true, params:{ orderField: 'DOC_CLASSIFY' },
                   formatter: [
                       'nkFromList',
-                      this.classify
+                      classifies
                   ]
               },
               { field: 'docType',       title: '单据类型', width: '9%',editRender: { name: 'input' },sortable:true, params:{ orderField: 'DOC_TYPE' } },
@@ -74,30 +70,17 @@ export default {
               },
               {                         title: 'ACTION',  width: '10%',
                   slots: { default: ({row},h) => {
-                          return [h(
-                              'router-link',
-                              {
-                                  props:{to: '/apps/def/doc/detail/'+row.docType}
-                              },
-                              "详情"
-                          )]
-                      }}
+                      return [h(
+                          'router-link',
+                          {
+                              props:{to: '/apps/def/doc/detail/'+row.docType}
+                          },
+                          "详情"
+                      )]
+                  }}
               },
           ];
-        },
-        options(){
-            const options = [];
-            this.classify.forEach((item)=>{
-                options.push({name:item.label,key:item.value});
-            })
-            return options;
         }
-    },
-    created() {
-        this.$http.get("/api/def/doc/type/classify")
-            .then(res=>{
-                this.classify = res.data;
-            });
     },
     methods:{
         search(params){

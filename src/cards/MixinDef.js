@@ -1,18 +1,17 @@
 export default (defaultValue)=>{
   return {
     props: {
-      component:Object,
       editMode:Boolean,
       docDef:Object,
-      componentsDef:Object
+      card:Object,
     },
     computed:{
       def:{
         get(){
-          return this.componentsDef[this.component.component];
+          return this.card.config;
         },
         set(value){
-          this.componentsDef[this.component.component] = value;
+          this.card.config = value;
         }
       }
     },
@@ -26,7 +25,7 @@ export default (defaultValue)=>{
         }else{
           dv = JSON.parse(JSON.stringify(defaultValue));
         }
-        this.$set(this.componentsDef,this.component.component,dv)
+        this.$set(this.card,"config",dv)
       }
     }
   };

@@ -2,7 +2,7 @@
     <div class="nk-form-item" :style="style">
         <div class="term" :class="termClass">
             <nk-required-mark v-if="editMode && required" />
-            {{term}}
+            {{term || title}}
             <slot name="term"></slot>
         </div>
         <div class="content" :class="termClass+(errorMsg?' has-error':'')">
@@ -18,6 +18,10 @@ export default {
     name: "NkFormItem",
     props: {
         term: {
+            type: String,
+            required: false
+        },
+        title: {
             type: String,
             required: false
         },

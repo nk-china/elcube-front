@@ -32,6 +32,8 @@ import NkUtil from "../utils/NkUtil";
 import Mixin from "../cards/Mixin";
 import MixinDef from "../cards/MixinDef";
 
+import axios from 'axios';
+
 function install(Vue){
 
   Vue.config.productionTip = false;
@@ -50,6 +52,7 @@ function install(Vue){
   Vue.use(NkDocuments);
   Vue.use(NkPages);
 
+
   Vue.component('nk-component-lost',NkCardLost);
 
   Vue.filter("nkNumber",NkFormat.nkNumber);
@@ -58,6 +61,23 @@ function install(Vue){
   Vue.filter("nkCurrency",NkFormat.nkCurrency);
   Vue.filter("nkPercent", NkFormat.nkPercent);
   Vue.filter("nkFromList",NkFormat.nkFromList);
+
+  axios.get("/api/public/def/card/vueTemplates")
+      .then(res=>{
+
+        let modules = {
+          Mixin,
+          MixinDef,
+          NkFormat,
+          NkUtil
+        }
+
+        for(let componentName in res.data){
+          if(res.data.hasOwnProperty(componentName)){
+            NkUtil.componentLoader(componentName, res.data[componentName], modules)
+          }
+        }
+      });
 }
 
 function NkVuexStore(moduleStores){

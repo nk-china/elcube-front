@@ -11,8 +11,8 @@
                 全部
             </a-select-option>
             <template v-if="option">
-                <a-select-option v-for="(item) in option.buckets" :key="item.key">
-                    {{format(item.name||item.key)}}
+                <a-select-option v-for="(item) in option.buckets" :key="item.key||item.value">
+                    {{format(item.name||item.label||item.key||item.value)}}
                     <template v-if="typeof item.docCount!=='undefined'">({{item.docCount}})</template>
                 </a-select-option>
             </template>

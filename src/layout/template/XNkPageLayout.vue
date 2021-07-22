@@ -6,32 +6,30 @@
 <template>
     <a-spin class="nk-page-layout" :spinning="spinning">
         <div class="nk-page-layout-header">
-            <a-skeleton :loading="loading">
-                <slot name="top"></slot>
-                <slot name="custom"></slot>
-                <a-page-header
-                    v-if="!$slots.custom"
-                    :title="title"
-                    :sub-title="subTitle"
-                    :class="{'show-right':headerIndent && rightBar}"
-                >
-                    <slot name="title"      slot="title"></slot>
-                    <slot name="tags"       slot="tags"></slot>
+            <slot name="top"></slot>
+            <slot name="custom"></slot>
+            <a-page-header
+                v-if="!$slots.custom"
+                :title="title"
+                :sub-title="subTitle"
+                :class="{'show-right':headerIndent && rightBar}"
+            >
+                <slot name="title"      slot="title"></slot>
+                <slot name="tags"       slot="tags"></slot>
 
-                    <slot name="footer"     slot="footer"></slot>
-                    <slot name="avatar"     slot="avatar"></slot>
-                    <slot name="backIcon"   slot="backIcon"></slot>
-                    <slot name="action"     slot="extra"></slot>
-                    <a-row>
-                        <a-col :span="18">
-                            <slot name="content"></slot>
-                        </a-col>
-                        <a-col :span="6">
-                            <slot name="extra"></slot>
-                        </a-col>
-                    </a-row>
-                </a-page-header>
-            </a-skeleton>
+                <slot name="footer"     slot="footer"></slot>
+                <slot name="avatar"     slot="avatar"></slot>
+                <slot name="backIcon"   slot="backIcon"></slot>
+                <slot name="action"     slot="extra"></slot>
+                <a-row>
+                    <a-col :span="18">
+                        <slot name="content"></slot>
+                    </a-col>
+                    <a-col :span="6">
+                        <slot name="extra"></slot>
+                    </a-col>
+                </a-row>
+            </a-page-header>
         </div>
         <a-spin :spinning="loading">
             <div class="nk-page-layout-content">

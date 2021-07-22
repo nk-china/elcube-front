@@ -33,13 +33,13 @@ import NkDefPartners from "./NkDefPartners";
 import NkDefPartnerType from "./NkDefPartnerType";
 import NkDefProjects from "./NkDefProjects";
 import NkDefProjectType from "./NkDefProjectType";
-import NkDefDocs from "./NkDefDocs";
-import NkDefDocType from "./NkDefDocType";
+import NkDefDocs from "./def/NkDefDocs";
+import NkDefDocType from "./def/NkDefDocType";
 // 脚本
 import NkDefScriptsTreeVersion from "./NkDefScriptsTreeVersion";
 import NkDefScripts from "./NkDefScripts";
 import NkDefScriptEditor from "./NkDefScriptEditor";
-import NkScriptLabel from "./NkScriptLabel";
+import NkScriptLabel from "./components/NkScriptLabel";
 // 常量
 import NkDefConstant from "./NkDefConstant";
 // 自定义搜索

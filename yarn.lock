@@ -9907,6 +9907,11 @@ vue-router@^3.1.5:
   resolved "http://ns.nkpro.cn/repository/npm-public/vue-router/-/vue-router-3.5.1.tgz#edf3cf4907952d1e0583e079237220c5ff6eb6c9"
   integrity sha1-7fPPSQeVLR4Fg+B5I3Igxf9utsk=
 
+vue-sfc-loader@^0.1.0:
+  version "0.1.0"
+  resolved "http://ns.nkpro.cn/repository/npm-public/vue-sfc-loader/-/vue-sfc-loader-0.1.0.tgz#630b8a47ec79e3a80bd9ba781967f6ad23bb149d"
+  integrity sha1-YwuKR+x546gL2bp4GWf2rSO7FJ0=
+
 vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
   version "4.1.2"
   resolved "http://ns.nkpro.cn/repository/npm-public/vue-style-loader/-/vue-style-loader-4.1.2.tgz#dedf349806f25ceb4e64f3ad7c0a44fba735fcf8"
@@ -9927,6 +9932,11 @@ vue-template-es2015-compiler@^1.9.0:
   version "1.9.1"
   resolved "http://ns.nkpro.cn/repository/npm-public/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha1-HuO8mhbsv1EYvjNLsV+cRvgvWCU=
+
+vue3-sfc-loader@^0.8.4:
+  version "0.8.4"
+  resolved "http://ns.nkpro.cn/repository/npm-public/vue3-sfc-loader/-/vue3-sfc-loader-0.8.4.tgz#b13309c2a466a4a9139ece4a42047e157ad8e21b"
+  integrity sha1-sTMJwqRmpKkTns5KQgR+FXrY4hs=
 
 vue@^2.6.10:
   version "2.6.12"
