@@ -1,0 +1,193 @@
+
+<!-- 基本布局 -->
+
+
+
+<template>
+    <a-spin class="nk-page-layout" :spinning="spinning">
+        <div class="nk-page-layout-header">
+            <a-skeleton :loading="loading">
+                <slot name="top"></slot>
+                <slot name="custom"></slot>
+                <a-page-header
+                    v-if="!$slots.custom"
+                    :title="title"
+                    :sub-title="subTitle"
+                    :class="{'show-right':headerIndent && rightBar}"
+                >
+                    <slot name="title"      slot="title"></slot>
+                    <slot name="tags"       slot="tags"></slot>
+
+                    <slot name="footer"     slot="footer"></slot>
+                    <slot name="avatar"     slot="avatar"></slot>
+                    <slot name="backIcon"   slot="backIcon"></slot>
+                    <slot name="action"     slot="extra"></slot>
+                    <a-row>
+                        <a-col :span="18">
+                            <slot name="content"></slot>
+                        </a-col>
+                        <a-col :span="6">
+                            <slot name="extra"></slot>
+                        </a-col>
+                    </a-row>
+                </a-page-header>
+            </a-skeleton>
+        </div>
+        <a-spin :spinning="loading">
+            <div class="nk-page-layout-content">
+                <div :class="{'content':true}">
+                    <slot></slot>
+                </div>
+                <div v-if="rightBar" class="right">
+                    <slot name="nav" />
+                </div>
+            </div>
+        </a-spin>
+    </a-spin>
+</template>
+
+<script>
+
+export default {
+    name: "NkPageLayout",
+    props: {
+        title:        String,
+        subTitle:     String,
+        spinning:     Boolean,
+        loading:      Boolean,
+        // 显示右边栏
+        rightBar:     {
+            type:Boolean,
+            default:false
+        },
+        // 保持标题栏缩进
+        headerIndent:  {
+            type:Boolean,
+            default:true
+        }
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+
+.nk-page-layout{
+
+    font-size: 12px;
+
+    // 头部
+    ::v-deep .nk-page-layout-header{
+        background-color: #ffffff;
+        border-bottom: 1px solid #e8e8e8;
+
+        .ant-breadcrumb{
+            margin: 4px 0;
+        }
+        .ant-page-header-heading{
+            margin: 8px 0 0;
+        }
+
+        .ant-page-header{
+            padding: 16px 32px;
+
+            &.show-right{
+                padding-right: 332px;
+            }
+        }
+    }
+
+    .nk-page-layout-content{
+
+        display: flex;
+
+        // 内容
+        .content{
+            padding: 24px;
+            width: 100%;
+        }
+
+        // 右边栏
+        .right{
+            top: 30px;
+            right: 0;
+            width: 300px;
+            flex-shrink: 0;
+
+            &.show{
+                display: none;
+            }
+        }
+    }
+
+    // 卡片样式
+    ::v-deep.ant-card{
+        .ant-card-head{
+            min-height: 24px;
+            .ant-card-head-title{
+                font-size: 14px;
+                padding: 12px 0;
+            }
+        }
+        .ant-card-body{
+            padding: 16px;
+        }
+    }
+
+
+    // 表单样式
+    ::v-deep.ant-form-item{
+        margin-bottom: 12px;
+        label{
+            font-size: 12px;
+        }
+        .ant-form-item-label{
+            line-height: 29.9999px;
+        }
+        .ant-form-item-control{
+            line-height: 30px;
+        }
+    }
+
+    // 表格样式
+    ::v-deep.vxe-toolbar{
+        height: 36px;
+        padding-bottom: 8px;
+    }
+
+    ::v-deep.vxe-table--header{
+        background: #fafafa ;
+    }
+    ::v-deep.vxe-row-has-error{
+        color: crimson;
+    }
+
+    // 状态样式
+    ::v-deep.ant-statistic{
+        .ant-statistic-title{
+            font-size: 13px;
+        }
+        .ant-statistic-content{
+            height: 32px;
+            .ant-statistic-content-value{
+                font-size: 18px;
+            }
+        }
+    }
+}
+
+
+@media screen and ( max-width: 1400px ){
+
+    ::v-deep.nk-page-layout-header .ant-page-header{
+        padding-right: 32px !important;
+    }
+    .nk-page-layout-stick{
+        padding-right: 32px !important;
+    }
+    .nk-page-layout-content {
+        .right {
+            display: none;
+        }
+    }
+}
+</style>

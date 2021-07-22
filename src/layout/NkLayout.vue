@@ -65,13 +65,6 @@
                                class="nk-layout-content-component">
                     </component>
                 </a-layout-content>
-                <a-layout-footer class="copyright">
-                    Copyright <a-icon type="copyright" ></a-icon> 2020 TS5
-<!--                   ｜ <router-link to="/apps/apidoc">WsDoc </router-link>-->
-<!--                    <a @click="reindex()">ReIndex </a>-->
-<!--                    <a @click="clearbuf()">ClearBuf </a>-->
-<!--                    <a @click="caleBreach()">Breach </a>-->
-                </a-layout-footer>
             </a-layout>
             <a-layout-sider v-if="layoutConfig.helperVisible" width="25%">
                 <nk-helper />
@@ -465,9 +458,9 @@ export default {
     }
     /*内容页*/
     .nk-layout-content{
-        min-height: calc(100vh - 133px);
+        min-height: calc(100vh - 64px);
 
-        .nk-page-layout-card + .nk-page-layout-card{
+        ::v-deep.nk-page-layout-card + .nk-page-layout-card{
             margin-top: 24px;
         }
     }

@@ -15,7 +15,6 @@
             <a-page-header
                 v-if="!$slots.custom"
                 :title="title"
-                :breadcrumb="breadcrumbsData"
                 :sub-title="subTitle"
                 class="nk-page-layout-limit"
             >
@@ -26,7 +25,7 @@
                 <slot v-if="!loading" name="avatar" slot="avatar"></slot>
                 <slot v-if="!loading" name="backIcon" slot="backIcon"></slot>
                 <slot v-if="!loading" name="action" slot="extra"></slot>
-                <a-row v-if="!loading">
+                <a-row v-if="!loading && ($slots.content||$slots.extra)">
                     <a-col :span="18">
                         <slot name="content"></slot>
                     </a-col>
@@ -54,11 +53,18 @@
                 <slot name="nav" />
             </div>
         </div>
+<!--                        <a-layout-footer class="copyright">-->
+<!--                            Copyright <a-icon type="copyright" ></a-icon> 2020 TS5-->
+        <!--                   ｜ <router-link to="/apps/apidoc">WsDoc </router-link>-->
+        <!--                    <a @click="reindex()">ReIndex </a>-->
+        <!--                    <a @click="clearbuf()">ClearBuf </a>-->
+        <!--                    <a @click="caleBreach()">Breach </a>-->
+<!--                        </a-layout-footer>-->
     </a-spin>
 </template>
 
 <script>
-import NkSticky from "../components/NkSticky";
+import NkSticky from "../../components/NkSticky";
 import {mapGetters} from "vuex";
 
 export default {
@@ -84,9 +90,6 @@ export default {
     created(){
     },
     computed:{
-        ...mapGetters('User',[
-            'user'
-        ]),
         ...mapGetters('NkDoc',[
             'layoutConfig'
         ]),

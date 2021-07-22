@@ -1,7 +1,7 @@
 <template>
     <nk-query-layout
         ref="layout"
-        title="单据类型列表"
+        title="单据类型"
         :search-items-default="searchItemsDefault"
         :dataTableColumns="columns"
         :selectable="false"

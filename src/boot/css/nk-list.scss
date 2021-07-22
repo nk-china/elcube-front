@@ -1,0 +1,27 @@
+.nk-list{
+  background: initial;
+  .ant-list{
+
+    background: white;
+
+    border: 1px solid #e8e8e8;
+
+    .ant-list-header{
+      padding: 0;
+
+      .ant-input{
+        height: 40px;
+        border: none;
+      }
+    }
+
+    .ant-list-item{
+      padding: 10px 10px;
+
+      &.selected{
+        background: #1890ff;
+        color: white;
+      }
+    }
+  }
+}

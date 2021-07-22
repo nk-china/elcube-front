@@ -5055,7 +5055,7 @@ glob-to-regexp@^0.3.0:
   resolved "http://ns.nkpro.cn/repository/npm-public/glob-to-regexp/-/glob-to-regexp-0.3.0.tgz#8c5a1494d2066c570cc3bfe4496175acc4d502ab"
   integrity sha1-jFoUlNIGbFcMw7/kSWF1rMTVAqs=
 
-glob@^7.0.0, glob@^7.0.3, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4:
+glob@^7.0.3, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4:
   version "7.1.6"
   resolved "http://ns.nkpro.cn/repository/npm-public/glob/-/glob-7.1.6.tgz#141f33b81a7c2492e125594307480c46679278a6"
   integrity sha1-FB8zuBp8JJLhJVlDB0gMRmeSeKY=
@@ -5657,11 +5657,6 @@ internal-ip@^4.3.0:
   dependencies:
     default-gateway "^4.2.0"
     ipaddr.js "^1.9.0"
-
-interpret@^1.0.0:
-  version "1.4.0"
-  resolved "http://ns.nkpro.cn/repository/npm-public/interpret/-/interpret-1.4.0.tgz#665ab8bc4da27a774a40584e812e3e0fa45b1a1e"
-  integrity sha1-Zlq4vE2iendKQFhOgS4+D6RbGh4=
 
 intersperse@^1.0.0:
   version "1.0.0"
@@ -7058,14 +7053,6 @@ nth-check@^1.0.2, nth-check@~1.0.1:
   dependencies:
     boolbase "~1.0.0"
 
-null-loader@^3.0.0:
-  version "3.0.0"
-  resolved "http://ns.nkpro.cn/repository/npm-public/null-loader/-/null-loader-3.0.0.tgz#3e2b6c663c5bda8c73a54357d8fa0708dc61b245"
-  integrity sha1-PitsZjxb2oxzpUNX2PoHCNxhskU=
-  dependencies:
-    loader-utils "^1.2.3"
-    schema-utils "^1.0.0"
-
 num2fraction@^1.2.2:
   version "1.2.2"
   resolved "http://ns.nkpro.cn/repository/npm-public/num2fraction/-/num2fraction-1.2.2.tgz#6f682b6a027a4e9ddfa4564cd2589d1d4e669ede"
@@ -8251,13 +8238,6 @@ readdirp@~3.5.0:
   dependencies:
     picomatch "^2.2.1"
 
-rechoir@^0.6.2:
-  version "0.6.2"
-  resolved "http://ns.nkpro.cn/repository/npm-public/rechoir/-/rechoir-0.6.2.tgz#85204b54dba82d5742e28c96756ef43af50e3384"
-  integrity sha1-hSBLVNuoLVdC4oyWdW70OvUOM4Q=
-  dependencies:
-    resolve "^1.1.6"
-
 regenerate-unicode-properties@^8.2.0:
   version "8.2.0"
   resolved "http://ns.nkpro.cn/repository/npm-public/regenerate-unicode-properties/-/regenerate-unicode-properties-8.2.0.tgz#e5de7111d655e7ba60c057dbe9ff37c87e65cdec"
@@ -8450,7 +8430,7 @@ resolve-url@^0.2.1:
   resolved "http://ns.nkpro.cn/repository/npm-public/resolve-url/-/resolve-url-0.2.1.tgz#2c637fe77c893afd2a663fe21aa9080068e2052a"
   integrity sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
 
-resolve@^1.1.6, resolve@^1.10.0, resolve@^1.12.0, resolve@^1.14.2:
+resolve@^1.10.0, resolve@^1.12.0, resolve@^1.14.2:
   version "1.20.0"
   resolved "http://ns.nkpro.cn/repository/npm-public/resolve/-/resolve-1.20.0.tgz#629a013fb3f70755d6f0b7935cc1c2c5378b1975"
   integrity sha1-YpoBP7P3B1XW8LeTXMHCxTeLGXU=
@@ -8677,13 +8657,6 @@ semver@^6.0.0, semver@^6.1.0, semver@^6.1.1, semver@^6.1.2, semver@^6.3.0:
   resolved "http://ns.nkpro.cn/repository/npm-public/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
   integrity sha1-7gpkyK9ejO6mdoexM3YeG+y9HT0=
 
-semver@^7.1.2:
-  version "7.3.4"
-  resolved "http://ns.nkpro.cn/repository/npm-public/semver/-/semver-7.3.4.tgz#27aaa7d2e4ca76452f98d3add093a72c943edc97"
-  integrity sha1-J6qn0uTKdkUvmNOt0JOnLJQ+3Jc=
-  dependencies:
-    lru-cache "^6.0.0"
-
 send@0.17.1:
   version "0.17.1"
   resolved "http://ns.nkpro.cn/repository/npm-public/send/-/send-0.17.1.tgz#c1d8b059f7900f7466dd4938bdc44e11ddb376c8"
@@ -8823,15 +8796,6 @@ shell-quote@^1.6.1:
   version "1.7.2"
   resolved "http://ns.nkpro.cn/repository/npm-public/shell-quote/-/shell-quote-1.7.2.tgz#67a7d02c76c9da24f99d20808fcaded0e0e04be2"
   integrity sha1-Z6fQLHbJ2iT5nSCAj8re0ODgS+I=
-
-shelljs@^0.8.3:
-  version "0.8.4"
-  resolved "http://ns.nkpro.cn/repository/npm-public/shelljs/-/shelljs-0.8.4.tgz#de7684feeb767f8716b326078a8a00875890e3c2"
-  integrity sha1-3naE/ut2f4cWsyYHiooAh1iQ48I=
-  dependencies:
-    glob "^7.0.0"
-    interpret "^1.0.0"
-    rechoir "^0.6.2"
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.3"
@@ -9852,15 +9816,6 @@ vm-browserify@^1.0.1:
   version "1.1.2"
   resolved "http://ns.nkpro.cn/repository/npm-public/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha1-eGQcSIuObKkadfUR56OzKobl3aA=
-
-vue-cli-plugin-vuetify@^2.0.3:
-  version "2.1.0"
-  resolved "http://ns.nkpro.cn/repository/npm-public/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.1.0.tgz#1261d5866bca8f5c256f1b13abad2568fbcd6bb2"
-  integrity sha1-EmHVhmvKj1wlbxsTq60laPvNa7I=
-  dependencies:
-    null-loader "^3.0.0"
-    semver "^7.1.2"
-    shelljs "^0.8.3"
 
 vue-codemirror@^4.0.6:
   version "4.0.6"

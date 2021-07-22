@@ -28,6 +28,7 @@ import NkSettingsAuthGroup from "./NkSettingsAuthGroup";
 /**
  * 配置页面
  */
+import NkDefCardType from "./NkDefCardType";
 import NkDefPartners from "./NkDefPartners";
 import NkDefPartnerType from "./NkDefPartnerType";
 import NkDefProjects from "./NkDefProjects";
@@ -205,6 +206,21 @@ module.routes = [
     name: "系统配置",
     path: "def",
     children: [
+      {
+        name: "卡片",
+        path: "card",
+        component: NkDefCardType,
+        children: [
+          {
+            name: "卡片配置",
+            path: ':mode',
+            component: NkDefCardType,
+            meta:{
+              title: "卡片配置",
+            }
+          },
+        ]
+      },
       {
         name: "交易伙伴角色",
         path: 'partner',

@@ -156,7 +156,6 @@ export default {
             }
         }
     },
-    watch:{},
     mounted(){
         if(!this.lazy) {
             this.init()
