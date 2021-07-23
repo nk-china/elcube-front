@@ -1,28 +1,46 @@
 <template>
-    <x-nk-page-layout :title="def.docType||'未命名'" :sub-title="def.docName" :loading="loading">
+    <x-nk-page-layout :title="def.docType" :sub-title="def.docName" :spinning="loading">
         <div slot="action">
             <a-button-group>
-                <a-button type="primary" @click="doRun"       :disabled="def.state==='Active'" >
-                    <!--运行--><a-icon type="play-circle" />
-                </a-button>
-                <a-button                @click="doStop"      :disabled="!debugId"        >
-                    <!--停止--><a-icon type="stop" :style="{color: debugId?'#aa2222':''}" />
-                </a-button>
-                <a-button type="danger"  @click="doActive"    :disabled="isCreate || def.state==='Active'" >
-                    <!--激活--><a-icon type="exclamation-circle" />
-                </a-button>
-                <a-button                @click="doBreach"    :disabled="isCreate"             >
-                    <!--分支--><a-icon type="branches" />
-                </a-button>
-                <a-button                @click="doEdit"      :disabled="editMode"             >
-                    <!--编辑--><a-icon type="edit" />
-                </a-button>
-                <a-button                @click="doUpdate"    :disabled="!editMode"            >
-                    <!--保存--><a-icon type="save" />
-                </a-button>
-                <a-button                @click="showHistory" :disabled="isCreate"             >
-                    <!--历史--><a-icon type="clock-circle" />
-                </a-button>
+                <a-tooltip title="调试">
+                    <a-button type="primary" @click="doRun"       :disabled="def.state==='Active'" >
+                        <a-icon type="play-circle" />
+                    </a-button>
+                </a-tooltip>
+                <a-tooltip title="停止调试">
+                    <a-button                @click="doStop"      :disabled="!debugId"        >
+                        <a-icon type="stop" :style="{color: debugId?'#aa2222':''}" />
+                    </a-button>
+                </a-tooltip>
+                <a-tooltip title="激活">
+                    <a-button type="danger"  @click="doActive"    :disabled="isCreate || def.state==='Active'" >
+                        <a-icon type="exclamation-circle" />
+                    </a-button>
+                </a-tooltip>
+                <a-tooltip title="编辑">
+                    <a-button                @click="doEdit"      :disabled="editMode"             >
+                        <a-icon type="edit" />
+                    </a-button>
+                </a-tooltip>
+                <a-tooltip title="保存">
+                    <a-button                @click="doUpdate"    :disabled="!editMode"            >
+                        <a-icon type="save" />
+                    </a-button>
+                </a-tooltip>
+                <a-dropdown>
+                    <a-menu slot="overlay" @click="handleMenuClick">
+                        <a-menu-item key="doBreach" :disabled="isCreate">
+                            <a-icon type="branches" /> 创建分支
+                        </a-menu-item>
+                        <a-menu-item key="showHistory" :disabled="isCreate">
+                            <a-icon type="clock-circle" /> 历史版本
+                        </a-menu-item>
+                        <a-menu-item key="doDelete" :disabled="isCreate || def.state==='Active'">
+                            <a-icon type="delete" /> 删除
+                        </a-menu-item>
+                    </a-menu>
+                    <a-button><a-icon type="ellipsis" /></a-button>
+                </a-dropdown>
             </a-button-group>
         </div>
         <a-layout>
@@ -151,11 +169,22 @@ export default {
             markdownOption,
             def:{
                 refObjectType:'',
-                status:[],
+                status:[{
+                    docState:'S001',
+                    docStateDesc:'新创建',
+                    editPerm:1,
+                    preDocState:'@',
+                    refObjectType:''
+                }],
+                flows:[{
+                    preDocType:'@',
+                    preDocStatus:'@',
+                    refObjectType:''
+                }],
                 cards:[],
                 cardsDef:{},
                 updatedTime: undefined,
-                version: 0,
+                version: '',
                 bpm:{},
                 validFrom:'',
                 validTo:'',
@@ -202,36 +231,34 @@ export default {
     created() {
         this.routeParams = Object.assign({},this.$route.params);
         this.selected = this.defaultCards[0]||{};
-        this.init();
     },
     mounted() {
-        if(this.isCreate){
-            this.$emit('setTab',`新建单据类型`);
-            this.editMode = true;
-        }else{
-            this.loading = true;
-            this.$http.get(`/api/def/doc/type/detail/${this.routeParams.type}/${this.routeParams.version}`)
-                .then(response=>{
-                    this.def = response.data;
-                    this.loading = false;
-                    this.$emit('setTab',`单据类型:${this.def.docType}`);
-                })
+
+        this.loading = true;
+        let promises = [];
+        promises.push(this.$http.get(`/api/def/doc/type/options?classify=${this.def.docClassify||''}`));
+        if(!this.isCreate){
+            promises.push(this.$http.get(`/api/def/doc/type/detail/${this.routeParams.type}/${this.routeParams.version}`));
         }
+
+        Promise.all(promises)
+            .then((res)=>{
+                this.options = res[0].data;
+                if(this.isCreate){
+                    this.$emit('setTab',`新建单据类型`);
+                    this.editMode = true;
+                }else{
+                    this.def = res[1].data;
+                    this.$emit('setTab',`单据类型:${this.def.docType}`);
+                }
+                this.loading = false;
+            })
     },
     methods:{
         ...mapMutations('Debug',[
             'startDebug','stopDebug'
         ]),
         init(){
-            this.loading = true;
-            this.$http.get(`/api/def/doc/type/options?classify=${this.def.docClassify||''}`)
-                .then(response=>{
-                    this.options = response.data;
-                })
-                .catch(()=>{})
-                .finally(()=>{
-                    this.loading=false;
-                })
         },
         menuClick(menu){
             this.selected = menu;
@@ -243,11 +270,28 @@ export default {
         doStop(){
             this.stopDebug();
         },
-        doActive(){
-
+        doDelete(){
+            this.loading = true;
+            this.$http.postJSON(`/api/def/doc/type/delete`,this.def)
+                .then(()=>{
+                    this.$emit("close");
+                })
+                .finally(()=>{
+                    this.loading = false;
+                })
         },
-        doEdit(){
-            this.editMode = true;
+        doActive(){
+            this.valid().then(()=>{
+                this.loading = true;
+                this.$http.postJSON(`/api/def/doc/type/active`,this.def)
+                    .then((res)=>{
+                        this.editMode = false;
+                        this.def = res.data;
+                    })
+                    .finally(()=>{
+                        this.loading = false;
+                    })
+            });
         },
         doBreach(){
             this.valid().then(()=>{
@@ -256,23 +300,43 @@ export default {
                     .then((res)=>{
                         this.$emit("replace",`/apps/def/doc/detail/${res.data.docType}/${res.data.version}`)
                     })
-                    .finally(()=>{
+                    .catch(()=>{
+                        this.loading = false;
                     })
             });
+        },
+        doEdit(){
+            //this.valid().then(()=>{
+                this.loading = true;
+                this.$http.postJSON(`/api/def/doc/type/edit`,this.def)
+                    .then((res)=>{
+                        if(this.def.version!==res.data.version){
+                            this.$emit("replace",`/apps/def/doc/detail/${this.def.docType}/${res.data.version}`)
+                        }else{
+                            this.editMode = true;
+                            this.def = res.data;
+                            this.loading = false;
+                        }
+                    })
+                    .catch(()=>{
+                        this.loading = false;
+                    })
+            //});
         },
         doUpdate(){
             this.valid().then(()=>{
                 this.loading = true;
-                this.$http.postJSON(`/api/def/doc/type/update?create=${this.isCreate}`,this.def)
+                this.$http.postJSON(`/api/def/doc/type/update`,this.def)
                     .then((res)=>{
-                        if(this.isCreate){
-                            this.$router.push(`/apps/def/doc/detail/${this.def.docType}/${this.def.version}`)
+                        if(!this.def.version){
+                            this.$emit("replace",`/apps/def/doc/detail/${this.def.docType}/${this.def.version}`)
                         }else{
                             this.editMode = false;
                             this.def = res.data;
+                            this.loading = false;
                         }
                     })
-                    .finally(()=>{
+                    .catch(()=>{
                         this.loading = false;
                     })
             });
@@ -285,9 +349,9 @@ export default {
                 if(!this.def.docName){
                     this.$message.error("单据描述不能为空"); return;
                 }
-                if(!this.def.validFrom || !this.def.validTo){
-                    this.$message.error("单据有效期限不能为空"); return;
-                }
+                // if(!this.def.validFrom || !this.def.validTo){
+                //     this.$message.error("单据有效期限不能为空"); return;
+                // }
                 if(!this.def.refObjectType){
                     this.$message.error("单据处理程序不能为空"); return;
                 }
@@ -306,8 +370,12 @@ export default {
                 resolve();
             })
         },
-        showHistory(){
-
+        handleMenuClick({key}){
+            switch (key){
+                case "doDelete":this.doDelete();break;
+                case "doBreach":this.doBreach();break;
+                case "showHistory":break;
+            }
         }
     },
 }

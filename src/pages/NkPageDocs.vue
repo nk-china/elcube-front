@@ -133,7 +133,7 @@ export default {
     },
     created() {
 
-        this.$http.get("/api/doc/types/TRANSACTION")
+        this.$http.get("/api/doc/entrance?classify=TRANSACTION")
             .then(res=>{
                 this.creatableDocTypes = res.data;
             });

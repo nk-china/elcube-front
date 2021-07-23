@@ -5,6 +5,7 @@
         :search-items-default="searchItemsDefault"
         :dataTableColumns="columns"
         :selectable="false"
+        :init-rows="50"
         @change="search"
     >
         <a-button-group slot="action">
@@ -20,7 +21,20 @@ const classifies = [
     {label: "交易",value:"TRANSACTION"},
 ];
 export default {
+    data(){
+        return {
+            docTypes:[]
+        }
+    },
     computed:{
+        docTypeOptions(){
+            return this.docTypes.map(docType=>{
+                return {
+                    value:docType.docType,
+                    label:docType.docType,
+                };
+            });
+        },
         searchItemsDefault(){
             return [
                 {
@@ -34,8 +48,21 @@ export default {
                 {
                     name:'单据类型',
                     field:'docType',
-                    component:'nk-search-options-text',
-                    placeholder:'请输入单据类型'
+                    component:'nk-search-options-single',
+                    option:{
+                        buckets: this.docTypeOptions
+                    }
+                },
+                {
+                    name:'状态',
+                    field:'state',
+                    component:'nk-search-options-single',
+                    option:{
+                        buckets: [
+                            {label: "Active",value:"Active"},
+                            {label: "InActive",value:"InActive"},
+                        ]
+                    }
                 },
                 {
                     name:'关键字',
@@ -48,7 +75,7 @@ export default {
         columns(){
           return [
               { type: 'seq',            title: '#',       width: '4%', editRender: { name: 'input' } },
-              { field: 'docClassify',   title: '单据分类', width: '14%',editRender: { name: 'input' },sortable:true, params:{ orderField: 'DOC_CLASSIFY' },
+              { field: 'docClassify',   title: '单据分类', width: '8%',editRender: { name: 'input' },sortable:true, params:{ orderField: 'DOC_CLASSIFY' },
                   formatter: [
                       'nkFromList',
                       classifies
@@ -56,8 +83,9 @@ export default {
               },
               { field: 'docType',       title: '单据类型', width: '9%',editRender: { name: 'input' },sortable:true, params:{ orderField: 'DOC_TYPE' } },
               { field: 'docName',       title: '类型描述', width: '20%',editRender: { name: 'input' } },
-              { field: 'version',       title: '版本',    width: '10%',editRender: { name: 'input' },sortable:true, params:{ orderField: 'VERSION' } },
-              { field: 'updatedTime',   title: '更新时间',  width: '15%',editRender: { name: 'input' },sortable:true, params:{ orderField: 'UPDATED_TIME' }, formatter: 'nkDatetimeFriendly' },
+              { field: 'version',       title: '版本',    width: '8%',editRender: { name: 'input' },sortable:true, params:{ orderField: 'VERSION' } },
+              { field: 'validFrom',     title: '有效期起', width: '10%'},
+              { field: 'validTo',       title: '有效期至', width: '10%'},
               { field: 'state',         title: '状态',     width: '10%', editRender: { name: 'input' },sortable:true, params:{ orderField: 'STATE' },
                   formatter: [
                       'nkFromList',
@@ -68,7 +96,8 @@ export default {
                       ]
                   ]
               },
-              {                         title: 'ACTION',  width: '10%',
+              { field: 'updatedTime',   title: '更新时间',  width: '10%',editRender: { name: 'input' },sortable:true, params:{ orderField: 'UPDATED_TIME' }, formatter: 'nkDatetimeFriendly' },
+              {                         title: 'ACTION',
                   slots: { default: ({row},h) => {
                       return [h(
                           'router-link',
@@ -81,6 +110,12 @@ export default {
               },
           ];
         }
+    },
+    created(){
+        this.$http.get("/api/def/doc/type/types")
+            .then(res=>{
+                this.docTypes = res.data;
+            })
     },
     methods:{
         search(params){

@@ -133,6 +133,10 @@ export default {
         selectable:{
             type: Boolean,
             default: true
+        },
+        initRows:{
+            type: Number,
+            default: 10,
         }
     },
     data(){
@@ -145,7 +149,7 @@ export default {
 
             params : {
                 from : 0,
-                rows : 10
+                rows : this.initRows
             },
 
             saveAs: {

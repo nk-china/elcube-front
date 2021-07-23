@@ -39,7 +39,7 @@
             <nk-form-item term="开发">Bean</nk-form-item>
             <nk-form-item term="修订">Bean</nk-form-item>
             <nk-form-item term="更新时间">{{docDef.updatedTime | nkDatetimeFriendly}}</nk-form-item>
-            <nk-form-item term="版本">{{docDef.version}}.{{docDef.updatedTime || 0}}</nk-form-item>
+            <nk-form-item term="版本">{{docDef.version}}</nk-form-item>
             <nk-form-item term="状态">{{docDef.state}}</nk-form-item>
         </nk-form>
     </a-card>
@@ -76,12 +76,12 @@ export default {
             return current.isBefore('2000-01-01') && current.isAfter('2099-12-31');
         },
         validDateChange(e){
-            this.docDef.validFrom = (e[0]&&e[0].format("YYYYMMDD"));
-            this.docDef.validTo   = (e[1]&&e[1].format("YYYYMMDD"));
+            this.$set(this.docDef,"validFrom",  e[0]&&e[0].format("YYYYMMDD"));
+            this.$set(this.docDef,"validTo",    e[1]&&e[1].format("YYYYMMDD"));
         },
         validDateLongTerm(){
-            this.docDef.validFrom = '20000101';
-            this.docDef.validTo   = '20991231'
+            this.$set(this.docDef,"validFrom",  "20000101");
+            this.$set(this.docDef,"validTo",    "20991231");
         },
         refObjectTypeChange(){
             //const process = this.options.docProcessors.find(item=>item.key===e);

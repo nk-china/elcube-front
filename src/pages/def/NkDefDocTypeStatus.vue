@@ -27,7 +27,7 @@
             <vxe-table-column   title="前序状态"   field="preDocState"      width="10%" :edit-render="{
                     name:'$select',
                     options: availableStatus,
-                    optionProps: {value: 'docState', label: 'docState'},
+                    optionProps: {value: 'docState', label: 'docState'}
                 }" >
             </vxe-table-column>
             <vxe-table-column   title="编辑控制"   field="editPerm"      width="12%" :edit-render="{
@@ -40,7 +40,7 @@
                         label:'仅状态',value:3
                     },{
                         label:'流程中编辑',value:2
-                    },],
+                    }]
                 }" >
             </vxe-table-column>
             <vxe-table-column         field="sysState"      width="13%" :edit-render="{name: 'input', attrs: {type: 'text'}}">
