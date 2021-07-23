@@ -31,8 +31,6 @@ import NkSettingsAuthGroup from "./NkSettingsAuthGroup";
 import NkDefCardType from "./NkDefCardType";
 import NkDefPartners from "./NkDefPartners";
 import NkDefPartnerType from "./NkDefPartnerType";
-import NkDefProjects from "./NkDefProjects";
-import NkDefProjectType from "./NkDefProjectType";
 import NkDefDocs from "./def/NkDefDocs";
 import NkDefDocType from "./def/NkDefDocType";
 // 脚本
@@ -245,29 +243,6 @@ module.routes = [
         ]
       },
       {
-        name: "业务类型",
-        path: 'project',
-        component: NkDefProjects,
-        children: [
-          {
-            name: "业务类型配置详情",
-            path: ':mode',
-            component: NkDefProjectType,
-            meta:{
-              title: "配置详情",
-            }
-          },
-          {
-            name: "业务类型配置编辑",
-            path: ':mode/:type/:version',
-            component: NkDefProjectType,
-            meta:{
-              title: "配置详情",
-            }
-          }
-        ]
-      },
-      {
         name: "单据类型",
         path: 'doc',
         component: NkDefDocs,
@@ -282,7 +257,7 @@ module.routes = [
           },
           {
             name: "单据类型配置编辑",
-            path: ':mode/:type',
+            path: ':mode/:type/:version',
             component: NkDefDocType,
             meta:{
               title: "配置详情",

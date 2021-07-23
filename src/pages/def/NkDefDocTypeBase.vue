@@ -36,7 +36,11 @@
                     <a-select-option v-for="item in docOptions.docProcessors" :key="item.key">{{item.name}}</a-select-option>
                 </a-select>
             </nk-form-item>
+            <nk-form-item term="开发">Bean</nk-form-item>
+            <nk-form-item term="修订">Bean</nk-form-item>
             <nk-form-item term="更新时间">{{docDef.updatedTime | nkDatetimeFriendly}}</nk-form-item>
+            <nk-form-item term="版本">{{docDef.version}}.{{docDef.updatedTime || 0}}</nk-form-item>
+            <nk-form-item term="状态">{{docDef.state}}</nk-form-item>
         </nk-form>
     </a-card>
 </template>
@@ -65,7 +69,6 @@ export default {
         }
     },
     created() {
-        console.log(this.card)
         this.routeParams = Object.assign({},this.$route.params);
     },
     methods:{

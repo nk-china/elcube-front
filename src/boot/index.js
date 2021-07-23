@@ -75,6 +75,7 @@ function install(Vue){
         for(let componentName in res.data){
           if(res.data.hasOwnProperty(componentName)){
             NkUtil.componentLoader(componentName, res.data[componentName], modules)
+            NkUtil.componentLoader(componentName, res.data[componentName], modules)
           }
         }
       });

@@ -2,12 +2,27 @@
     <x-nk-page-layout :title="def.docType||'未命名'" :sub-title="def.docName" :loading="loading">
         <div slot="action">
             <a-button-group>
-                <a-button type="primary" @click="doRun"                         ><a-icon type="play-circle" /></a-button>
-                <a-button                @click="doStop" disabled="disabled"    ><a-icon type="stop" /></a-button>
-                <a-button type="danger"  @click="doActive"                      ><a-icon type="exclamation-circle" /></a-button>
-                <a-button                @click="doEdit"   :disabled="editMode" ><a-icon type="edit" /></a-button>
-                <a-button                @click="doUpdate" :disabled="!editMode"><a-icon type="save" /></a-button>
-                <a-button                @click="showHistory"                   ><a-icon type="clock-circle" /></a-button>
+                <a-button type="primary" @click="doRun"       :disabled="def.state==='Active'" >
+                    <!--运行--><a-icon type="play-circle" />
+                </a-button>
+                <a-button                @click="doStop"      :disabled="!debugId"        >
+                    <!--停止--><a-icon type="stop" :style="{color: debugId?'#aa2222':''}" />
+                </a-button>
+                <a-button type="danger"  @click="doActive"    :disabled="isCreate || def.state==='Active'" >
+                    <!--激活--><a-icon type="exclamation-circle" />
+                </a-button>
+                <a-button                @click="doBreach"    :disabled="isCreate"             >
+                    <!--分支--><a-icon type="branches" />
+                </a-button>
+                <a-button                @click="doEdit"      :disabled="editMode"             >
+                    <!--编辑--><a-icon type="edit" />
+                </a-button>
+                <a-button                @click="doUpdate"    :disabled="!editMode"            >
+                    <!--保存--><a-icon type="save" />
+                </a-button>
+                <a-button                @click="showHistory" :disabled="isCreate"             >
+                    <!--历史--><a-icon type="clock-circle" />
+                </a-button>
             </a-button-group>
         </div>
         <a-layout>
@@ -82,6 +97,7 @@ import NkDefDocTypeBizFlow from "./NkDefDocTypeBizFlow";
 import NkDefDocTypeCycle from "./NkDefDocTypeCycle";
 import NkDefDocTypeCards from "./NkDefDocTypeCards";
 import NkUtil from "../../utils/NkUtil";
+import {mapMutations, mapState} from "vuex";
 
 const defaultCards = [
     {key:"doc",     name:"基本信息",    defComponentNames: [NkDefDocTypeBase,NkDefDocTypeStatus,NkDefDocTypeBizFlow]},
@@ -139,10 +155,11 @@ export default {
                 cards:[],
                 cardsDef:{},
                 updatedTime: undefined,
-                version: 1,
+                version: 0,
                 bpm:{},
                 validFrom:'',
-                validTo:''
+                validTo:'',
+                state:'InActive'
             },
 
             loading:true,
@@ -174,25 +191,37 @@ export default {
             }]
         }
     },
+    computed:{
+        ...mapState('Debug',[
+            'debugId'
+        ]),
+        isCreate(){
+            return this.routeParams.mode==='create';
+        }
+    },
     created() {
         this.routeParams = Object.assign({},this.$route.params);
         this.selected = this.defaultCards[0]||{};
         this.init();
     },
     mounted() {
-        if(this.routeParams.mode==='detail'){
+        if(this.isCreate){
+            this.$emit('setTab',`新建单据类型`);
+            this.editMode = true;
+        }else{
             this.loading = true;
-            this.$http.get("/api/def/doc/type/detail?docType="+this.routeParams.type)
+            this.$http.get(`/api/def/doc/type/detail/${this.routeParams.type}/${this.routeParams.version}`)
                 .then(response=>{
                     this.def = response.data;
                     this.loading = false;
                     this.$emit('setTab',`单据类型:${this.def.docType}`);
                 })
-        }else{
-            this.$emit('setTab',`新建单据类型`);
         }
     },
     methods:{
+        ...mapMutations('Debug',[
+            'startDebug','stopDebug'
+        ]),
         init(){
             this.loading = true;
             this.$http.get(`/api/def/doc/type/options?classify=${this.def.docClassify||''}`)
@@ -208,10 +237,11 @@ export default {
             this.selected = menu;
         },
         doRun(){
-            console.log(this.def)
+            this.startDebug();
+            this.doUpdate();
         },
         doStop(){
-
+            this.stopDebug();
         },
         doActive(){
 
@@ -219,14 +249,28 @@ export default {
         doEdit(){
             this.editMode = true;
         },
+        doBreach(){
+            this.valid().then(()=>{
+                this.loading = true;
+                this.$http.postJSON(`/api/def/doc/type/breach`,this.def)
+                    .then((res)=>{
+                        this.$emit("replace",`/apps/def/doc/detail/${res.data.docType}/${res.data.version}`)
+                    })
+                    .finally(()=>{
+                    })
+            });
+        },
         doUpdate(){
             this.valid().then(()=>{
-                const create = this.routeParams.mode==='create';
                 this.loading = true;
-                this.$http.postJSON(`/api/def/doc/type/update?create=${create}`,this.def)
-                    .then(()=>{
-                        if(create)  this.$router.push(`/apps/def/doc/detail/${this.def.docType}`)
-                        else        this.editMode = false;
+                this.$http.postJSON(`/api/def/doc/type/update?create=${this.isCreate}`,this.def)
+                    .then((res)=>{
+                        if(this.isCreate){
+                            this.$router.push(`/apps/def/doc/detail/${this.def.docType}/${this.def.version}`)
+                        }else{
+                            this.editMode = false;
+                            this.def = res.data;
+                        }
                     })
                     .finally(()=>{
                         this.loading = false;

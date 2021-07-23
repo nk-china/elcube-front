@@ -4,6 +4,7 @@ import crypto from 'crypto'
 import AuthUtils from "./AuthUtils";
 import User from "../store/StateUser";
 import UI from "../store/StateUI";
+import StateDebug from "../store/StateDebug";
 import TextUtils from "../utils/TextUtils";
 
 function sha1(password){
@@ -21,6 +22,9 @@ export default (Vue) => {
     let token = AuthUtils.getToken();
     if(token){
       config.headers.common['NK-Token'] = token;
+    }
+    if(StateDebug.state.debugId){
+      config.headers.common['NK-Debug'] = StateDebug.state.debugId;
     }
     return Promise.resolve(config)
   };
