@@ -36,66 +36,66 @@
 </template>
 
 <script>
-  let parse = ()=>{
+let parse = ()=>{
     try{
-      return (JSON.parse(localStorage.getItem("$NkCard"))||[]);
+        return (JSON.parse(localStorage.getItem("$NkCard"))||[]);
     }catch (e) {
-      return [];
+        return [];
     }
-  };
-  let getKey = (component)=>{
+};
+let getKey = (component)=>{
     let parent = component;
     do{
-      parent = parent.$parent;
+        parent = parent.$parent;
     }while(parent && !parent.doc);
 
     let keyPre = '';
     if(parent){
-      keyPre = `${parent.doc.docType}:`;
+        keyPre = `${parent.doc.docType}:`;
     }
     return `${keyPre}${component.cardKey || component.$parent.$vnode.key}`;
-  };
-  let getExpand = (component)=>{
+};
+let getExpand = (component)=>{
     const key = getKey(component);
     return key ? parse().indexOf(key)===-1 : true;
-  };
-  let setExpand = (component,expand)=>{
+};
+let setExpand = (component,expand)=>{
     const key = getKey(component);
     if(key){
-      const arr = parse();
-      let index = arr.indexOf(key);
-      if(expand && index>-1){
-        arr.splice(index,1);
-      }else if(!expand && index===-1){
-        arr.push(key);
-      }
-      if(arr.length){
-        localStorage.setItem("$NkCard",JSON.stringify(arr));
-      }else{
-        localStorage.removeItem("$NkCard");
-      }
+        const arr = parse();
+        let index = arr.indexOf(key);
+        if(expand && index>-1){
+            arr.splice(index,1);
+        }else if(!expand && index===-1){
+            arr.push(key);
+        }
+        if(arr.length){
+            localStorage.setItem("$NkCard",JSON.stringify(arr));
+        }else{
+            localStorage.removeItem("$NkCard");
+        }
     }
-  };
-  export default {
+};
+export default {
     props:{
-      title:String,
-      loading:{
-        type:Boolean,
-        default:false
-      },
-      extra:String,
-      headStyle:Object,
-      bodyStyle:Object,
-      activeTabKey:String,
-      defaultActiveTabKey:String,
-      tabList:Array,
-      cardKey:String,
-      nkOptions:{
-          type:Object,
-          default(){
-              return {}
-          }
-      },
+        title:String,
+        loading:{
+            type:Boolean,
+            default:false
+        },
+        extra:String,
+        headStyle:Object,
+        bodyStyle:Object,
+        activeTabKey:String,
+        defaultActiveTabKey:String,
+        tabList:Array,
+        cardKey:String,
+        nkOptions:{
+            type:Object,
+            default(){
+                return {}
+            }
+        },
         editMode:{
             default(){
                 return undefined
@@ -103,48 +103,48 @@
         }
     },
     data(){
-      return {
-        expand: getExpand(this)
-      }
+        return {
+            expand: getExpand(this)
+        }
     },
     created(){
         this.$emit("expand",this.expand);
     },
     methods:{
-      tabChange(e){
-        this.$emit("tabChange",e);
-      },
-      switchExpand(){
-        this.expand = !this.expand;
-        setExpand(this,this.expand);
-        this.$emit("expand",this.expand);
-      }
+        tabChange(e){
+            this.$emit("tabChange",e);
+        },
+        switchExpand(){
+            this.expand = !this.expand;
+            setExpand(this,this.expand);
+            this.$emit("expand",this.expand);
+        }
     }
-  }
+}
 </script>
 
 <style scoped lang="scss">
-    ::v-deep.nk-page-layout-card.no-expand{
-        .ant-card-body{
-            padding: 2px;
-        }
+::v-deep.nk-page-layout-card.no-expand{
+    .ant-card-body{
+        padding: 2px;
     }
-    ::v-deep.ant-tabs .ant-tabs-large-bar {
-        .ant-tabs-extra-content{
-            line-height: 40px;
-        }
-        .ant-tabs-nav .ant-tabs-tab{
-            padding: 12px 16px;
-            font-size: 14px;
-        }
+}
+::v-deep.ant-tabs .ant-tabs-large-bar {
+    .ant-tabs-extra-content{
+        line-height: 40px;
     }
-    ::v-deep .ant-card-extra{
-        padding: 0;
+    .ant-tabs-nav .ant-tabs-tab{
+        padding: 12px 16px;
+        font-size: 14px;
     }
-    ::v-deep .ant-card-body{
-        cursor: default;
-    }
-    .expand{
-        margin-left: 10px;
-    }
+}
+::v-deep .ant-card-extra{
+    padding: 0;
+}
+::v-deep .ant-card-body{
+    cursor: default;
+}
+.expand{
+    margin-left: 10px;
+}
 </style>

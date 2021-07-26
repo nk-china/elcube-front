@@ -1,12 +1,12 @@
 <template>
-    <a-card :title="`${card.cardName}卡片`">
+    <nk-card :title="`${card.cardName}卡片`" :edit-mode="editMode">
         <nk-form :col="1" :edit="editMode">
             <nk-form-item title="字段">
                 {{data.field}}
                 <a-input v-model="data.field" slot="edit" @change="$nkCalc('123');" />
             </nk-form-item>
         </nk-form>
-    </a-card>
+    </nk-card>
 </template>
 
 <script>
