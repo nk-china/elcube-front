@@ -1,26 +1,13 @@
 import {mapGetters} from "vuex";
 
-export default (defaultValue)=>{
-
-  function getData(){
-    let data = this.doc.componentsData[this.componentOptions.componentMapping];
-    if(!data){
-      data = undefined;
-      if(defaultValue && typeof defaultValue==='function'){
-        data = defaultValue();
-      }else if(defaultValue){
-        data = JSON.parse(JSON.stringify(defaultValue));
-      }
-    }
-    return data;
-  }
+export default ()=>{
 
   return {
     props: {
       editMode:Boolean,
       createMode:Boolean,
       doc:Object,
-      componentOptions:Object
+      card:Object
     },
     data(){
       return {
@@ -31,23 +18,21 @@ export default (defaultValue)=>{
       }
     },
     created() {
-      if(!this.doc.componentsData[this.componentOptions.componentMapping]){
-        this.$set(this.doc.componentsData,this.componentOptions.componentMapping,getData.call(this));
-      }
+      console.log(this.data)
     },
     computed:{
       ...mapGetters('User',[
         'user'
       ]),
       def(){
-        return this.doc.definedDoc.customComponentsDef[this.componentOptions.component];
+        return this.card.config;
       },
       data:{
         get(){
-          return getData.call(this);
+          return this.doc.data[this.card.cardKey];
         },
         set(value){
-          this.doc.componentsData[this.componentOptions.componentMapping] = value;
+          this.doc.data[this.card.cardKey] = value;
         }
       },
       pagedData(){
@@ -71,8 +56,8 @@ export default (defaultValue)=>{
               })
         })
       },
-      $nkCalc(event,selfOnly){
-        this.$emit("nk-calc",[selfOnly?this.componentOptions.component:'',event]);
+      $nkCalc(options){
+        this.$emit("nk-calc",options);
       }
     }
   };

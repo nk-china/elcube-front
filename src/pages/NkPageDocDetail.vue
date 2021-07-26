@@ -1,13 +1,14 @@
 <template>
-    <nk-page-layout class="mini"
-                    title="详情"
-                    ref="nav"
-                    :sub-title="doc.docName"
-                    :loading="loading"
-                    :spinning="spinning"
-                    :breadcrumbs="preview?[]:breadcrumbs"
-                    :showPageNav="!preview"
-                    :showPageBar="!preview"
+    <x-nk-page-layout class="mini"
+                      :title="doc.docName||'单据详情'"
+                      ref="nav"
+                      sub-title="单据详情"
+                      :loading="loading"
+                      :spinning="spinning"
+                      :showPageNav="!preview"
+                      :showPageBar="!preview"
+                      :right-bar="true"
+                      :header-indent="false"
     >
         <div v-if="history" slot="top" style="padding: 20px 20px 0 20px;">
             <div class="ant-alert ant-alert-warning ant-alert-closable">
@@ -23,80 +24,166 @@
             </div>
         </div>
 
-        <component :is="headerComponent"
-                   ref="header"
-                   slot="custom"
+        <a-row slot="content">
+            <a-col :span="18">
+                <nk-form ref="form" :col="2" :edit="editMode" v-if="!loading">
+                    <nk-form-item term="交易类型">
+                        {{doc.def && doc.def.docType}} | {{doc.def && doc.def.docName}}
+                    </nk-form-item>
+                    <nk-form-item term="交易伙伴">
+                        <router-link v-if="doc.partnerId" :to="`/apps/partners/detail/${doc.partnerId}`">{{doc.partnerName}}</router-link>
+                        <span v-else style="color: rgba(0, 0, 0, 0.45);">&lt;未选择&gt;</span>
+                        <span v-if="diffTarget && diffTarget.partnerId!==doc.partnerId" class="state-original">
+                            <router-link v-if="diffTarget.partnerId" :to="`/apps/partners/detail/${diffTarget.partnerId}`">{{diffTarget.partnerName}}</router-link>
+                        </span>
+                    </nk-form-item>
+                    <nk-form-item term="交易编号">
+                        <span v-if="doc.docNumber">{{doc.docNumber}}</span>
+                        <span v-else style="color: rgba(0, 0, 0, 0.45);">&lt;未编号&gt;</span>
+                    </nk-form-item>
+                    <nk-form-item term="交易描述"
+                                  :validateFor="doc.docName"
+                                  :message="`请输入交易描述`"
+                                  required
+                                  len
+                                  :max="20"
+                                  :lenMessage="`交易描述1-20个字`">
+                        {{doc.docName}}
+                        <span v-if="diffTarget && diffTarget.docName!==doc.docName" class="state-original">
+                            {{diffTarget.docName}}
+                        </span>
+                        <a-input v-model="doc.docName" slot="edit" allowClear ></a-input>
+                    </nk-form-item>
+                    <nk-form-item term="创建时间">{{doc.createdTime | nkDatetimeFriendly}}</nk-form-item>
+                    <nk-form-item term="更新时间">{{doc.updatedTime | nkDatetimeFriendly}}</nk-form-item>
+                    <nk-form-item term="备注" :col="2">
+                        {{doc.docDesc||'暂无内容'}}
+                        <a-textarea v-model="doc.docDesc" slot="edit" :auto-size="{ minRows: 3, maxRows: 10 }"></a-textarea>
+                        <span v-if="diffTarget && diffTarget.docDesc!==doc.docDesc" class="state-original">
+                            {{diffTarget.docDesc||'暂无内容'}}
+                        </span>
+                    </nk-form-item>
+                </nk-form>
+            </a-col>
+            <a-col :span="6">
+                <a-statistic title="状态" :value="doc.docState | nkFromList(doc.def&&doc.def.status,'docStateDesc','docState')"/>
+                <span v-if="diffTarget && diffTarget.docState!==doc.docState" class="state-original">
+                    {{diffTarget.docState | nkFromList(diffTarget.definedDoc&&diffTarget.definedDoc.status,'docStateDesc','docState')}}
+                </span>
+            </a-col>
+        </a-row>
 
-                   :loading="loading"
+        <a-button-group v-if="!history && !loading && !diffTarget" slot="extra">
+            <slot       v-if="!editMode" name="buttons"></slot>
 
-                   :user="user"
-                   :doc="doc"
-                   :preview="preview"
+            <a-button   v-if="!editMode" :type="preview?'default':'primary'" :disabled="!docEditable" @click="nkEditModeChanged(true)">
+                <a-icon type="edit" />
+            </a-button>
+            <a-dropdown-button v-if=" editMode" :type="'primary'" @click="doSave()" :trigger="['click']">
+                <a-icon type="save" />
+                <a-menu slot="overlay">
+                    <a-menu-item key="" disabled style="font-size: 8px;padding: 1px 30px 1px 8px;cursor: default;">保存为：</a-menu-item>
+                    <a-menu-divider />
+                    <a-menu-item v-for="item in availableStatus"
+                                 :key="item.docState"
+                                 @click="doSave(item.docState)"
+                    >
+                        {{item.docStateDesc}}
+                    </a-menu-item>
+                </a-menu>
+            </a-dropdown-button>
+            <a-button   v-if=" editMode" type="default" @click="cancel()">
+                <a-icon type="rollback" />
+            </a-button>
 
-                   :breadcrumbs="breadcrumbsData"
+            <a-dropdown v-if="!bpmTask && !preview && !editMode && docTypes.length" :trigger="['click']">
+                <a-button type="primary">创建<a-icon type="down" /> </a-button>
+                <a-menu slot="overlay">
+                    <a-menu-item v-for="item in docTypes" :key="item.docType" @click="$emit('nk-create',item)" :disabled="item.disabled">
+                        {{item.docType}} | {{item.docName}}
+                    </a-menu-item>
+                </a-menu>
+            </a-dropdown>
 
-                   :history="history"
-                   :histories="histories"
+            <a-button v-if="!editMode" :type="histories?'primary':'default'"
+                      @click="$emit('nk-show-history')">
+                <a-icon type="clock-circle" />
+            </a-button>
 
-                   :doc-state="docState"
-                   :available-status="availableStatus"
+            <a-button v-if="doc.def&&doc.def.markdownFlag"
+                      :type="'default'"
+                      @click="doSetDocumentPage('nkdn://user/'+doc.definedDoc.docType+'/'+doc.definedDoc.version)">
+                <a-icon type="question-circle" />
+            </a-button>
 
-                   :edit-mode="editMode"
-                   :doc-editable="docEditable"
-                   :status-editable="statusEditable"
+            <!-- 配置按钮 -->
+            <a-button v-if="!preview && user&&user.authorities&&user.authorities.find(a=>{return a.authority==='*:*'||a.authority==='DEF:*'})"
+                      @click="$router.push('/apps/def/doc/detail/'+doc.docType)">
+                <a-icon type="deployment-unit" />
+            </a-button>
 
-                   :bpm-task="bpmTask"
-                   :doc-types="docTypes"
+        </a-button-group>
 
-                   @nk-save="doSave"
-                   @nk-edit="nkEditModeChanged"
-                   @nk-create="toCreateDoc"
-                   @nk-cancel="cancel"
-                   @nk-show-history="showHistory"
-                   @replace="$emit('replace',event)"
-        >
-            <slot name="buttons" slot="buttons"></slot>
-        </component>
+<!--        <component :is="headerComponent"-->
+<!--                   ref="header"-->
+<!--                   slot="custom"-->
 
+<!--                   :loading="loading"-->
+
+<!--                   :user="user"-->
+<!--                   :doc="doc"-->
+<!--                   :preview="preview"-->
+
+<!--                   :history="history"-->
+<!--                   :histories="histories"-->
+
+<!--                   :doc-state="docState"-->
+<!--                   :available-status="availableStatus"-->
+
+<!--                   :edit-mode="editMode"-->
+<!--                   :doc-editable="docEditable"-->
+<!--                   :status-editable="statusEditable"-->
+
+<!--                   :bpm-task="bpmTask"-->
+<!--                   :doc-types="docTypes"-->
+
+<!--                   @nk-save="doSave"-->
+<!--                   @nk-edit="nkEditModeChanged"-->
+<!--                   @nk-create="toCreateDoc"-->
+<!--                   @nk-cancel="cancel"-->
+<!--                   @nk-show-history="showHistory"-->
+<!--                   @replace="$emit('replace',event)"-->
+<!--        >-->
+<!--            <slot name="buttons" slot="buttons"></slot>-->
+<!--        </component>-->
+
+        <!--异常信息-->
         <nk-doc-exception v-if="doc.exception" :exception="doc.exception" />
 
+        <!--todo 历史记录 需迁移到右边栏-->
         <nk-card-historys v-if="histories" class="nk-page-layout-card" :doc="doc" />
-        <slot name="component"></slot>
 
-        <template v-for="(c) in availableComponents">
+        <!--卡片列表-->
+        <slot name="component"></slot>
+        <template v-for="(c) in availableCards">
             <component ref="components"
-                       v-if="c.dataComponent"
-                       :id="buildAnchorLink(c.component)"
-                       :class="`nk-page-layout-card ${historyClass(c.component)}`"
-                       :is="c.dataComponent"
-                       :key="c.component"
-                       :componentOptions="c"
+                       v-if="c.dataComponentName"
+                       :class="`nk-page-layout-card ${historyClass(c.cardKey)}`"
+                       :is="c.dataComponentName"
+                       :id="buildAnchorLink(c.cardKey)"
+                       :key="c.cardKey"
+                       :card="c"
                        :doc="doc"
                        :editMode="editMode && c.writeable"
                        :createMode="createMode"
                        @nk-reload="reload"
                        @nk-save="doSave"
-                       @nk-calc="nkCalc($event,c)"
+                       @nk-calc="nkCalc(c,$event)"
                        @nk-changed="nkChanged($event,c)"
             />
-            <template v-if="c.dataComponent">
-                <component
-                    v-for="(ext) in c.dataComponentExtNames||[]"
-                    ref="components"
-                    :class="`nk-page-layout-card ${historyClass(c.component)}`"
-                    :is="ext"
-                    :key="ext"
-                    :componentOptions="c"
-                    :doc="doc"
-                    :editMode="editMode && c.writeable"
-                    :createMode="createMode"
-                    @nk-reload="reload"
-                    @nk-save="doSave"
-                    @nk-calc="nkCalc($event,c)"
-                    @nk-changed="nkChanged($event,c)" />
-            </template>
         </template>
 
+        <!-- 右边栏： 导航 -->
         <div slot="nav" class="nav">
             <a-anchor :offsetTop="80"
                       wrapperClass="anchor"
@@ -104,7 +191,7 @@
                       :showInkInFixed="true"
                       @click="(e)=>{e.preventDefault()}">
                 <a-anchor-link title="详情" :href="'#tfms'"></a-anchor-link>
-                <a-anchor-link v-for="(c) in availableComponents"
+                <a-anchor-link v-for="(c) in availableCards"
                                :key="c.component"
                                :class="`${historyClass(c.component)}`"
                                :title="c.componentName"
@@ -114,7 +201,7 @@
             </a-anchor>
         </div>
 
-    </nk-page-layout>
+    </x-nk-page-layout>
 </template>
 
 <script>
@@ -122,11 +209,13 @@ import qs from 'qs'
 import ClassifyMapping from "./ClassifyMapping";
 import DocDetailMixin from "./NkPageDocDetailMixin";
 import NkPageDocHeaderLoading from "./NkPageDocHeaderLoading";
+import XNkPageLayout from "../layout/template/XNkPageLayout";
 import { mapActions} from 'vuex';
 
 export default {
     mixins:[DocDetailMixin],
     components:{
+        XNkPageLayout,
         NkPageDocHeaderLoading
     },
     props:{
@@ -143,6 +232,8 @@ export default {
 
             history :undefined,
             histories : undefined,
+
+            diffTarget:undefined
         }
     },
 
@@ -156,72 +247,15 @@ export default {
         docTypes(){
             return this.doc.refObject && this.doc.refObject.defined && this.doc.refObject.defined.docs || [];
         },
-        breadcrumbs(){
-            if(this.preview){
-                return [];
-            }
-            const routes = [
-                {
-                    breadcrumbName:'首页',
-                    path:'/apps'
-                },
-            ];
-            if(this.doc && this.doc.refObject){
-                routes.push({
-                    breadcrumbName:'业务',
-                    path:'/projects'
-                });
-                routes.push({
-                    breadcrumbName: this.doc.refObject.projectName||'业务详情',
-                    path:'/detail/'+this.doc.refObject.projectId
-                });
-            }else{
-                routes.push({
-                    breadcrumbName:'交易',
-                    path:'/docs'
-                });
-            }
-            routes.push({
-                breadcrumbName: '交易详情'
-            });
-            return routes;
-        },
-        breadcrumbsData(){
-            let routes = [];
-            if(this.breadcrumbs){
-                routes = this.breadcrumbs;
-            }else{
-                this.$route.matched.forEach(r=>{
-                    let path = (r.components.default && (r.parent?r.path.substr(r.parent.path.length):r.path))||'';
-                    routes.push({
-                        path:path,
-                        breadcrumbName:(r.meta && r.meta.title) || r.name
-                    })
-                });
-            }
-            return {
-                props: {
-                    routes
-                }
-            }
-        },
-        availableComponents(){
-            if(this.doc.definedDoc && this.doc.definedDoc.customComponents){
-                return this.doc.definedDoc.customComponents
-                    .filter(item=>item.dataComponent)
+        // 对卡片进行预处理，判断卡片是否缺失
+        availableCards(){
+            if(this.doc.def && this.doc.def.cards){
+                return this.doc.def.cards
+                    .filter(item=>item.dataComponentName)
                     .map(item=>{
-                        if(!this.$options.components[item.dataComponent]){
-                            item.componentLost = item.dataComponent;
-                            item.dataComponent = 'nk-component-lost';
-                        }
-                        if(item.componentExtNames){
-                            item.componentExtNames.forEach(ext=>{
-                                if(!this.$options.components[ext]){
-                                    item.componentLost = ext;
-                                    item.dataComponent = 'nk-component-lost';
-                                    item.componentExtNames = null;
-                                }
-                            })
+                        if(!this.$options.components[item.dataComponentName]){
+                            item.componentLost = item.dataComponentName;
+                            item.dataComponentName = 'nk-component-lost';
                         }
                         return item;
                     });
@@ -237,8 +271,8 @@ export default {
             }
         },
         editPerm(){
-            if(this.doc && this.doc.definedDoc){
-                let defState = this.doc.definedDoc.status.find(state=>state.docState===this.doc.docState);
+            if(this.doc && this.doc.def){
+                let defState = this.doc.def.status.find(state=>state.docState===this.doc.docState);
                 if(defState && this.doc.writeable){
                     if(defState.editPerm===1)
                         return 1;
@@ -260,13 +294,9 @@ export default {
             return this.editPerm===1||this.editPerm===2;
         },
         availableStatus(){
-            const status = [];
-            this.doc.definedDoc && this.doc.definedDoc.status.forEach(state=>{
-                if(state.preDocState === this.doc.docState || state.docState === this.doc.docState){
-                    status.push(state);
-                }
-            });
-            return status;
+            return this.doc.def && this.doc.def.status.filter(
+                state => state.preDocState === this.doc.docState || state.docState === this.doc.docState
+            );
         },
         contextParams(){
             const params = this.params || this.$route.params;
@@ -296,6 +326,7 @@ export default {
                         this.loading = false;
                         this.nkEditModeChanged(true);
                         this.$emit("setTab",{confirm:"单据尚未保存，确认关闭吗？"});
+                        this.editMode = true;
                     }).catch(res=>{
                         if(res.response.status===403){
                             this.$emit("close")
@@ -325,7 +356,7 @@ export default {
             }
         },
         async doSave(state) {
-            let error = this.$refs.header.hasError&&this.$refs.header.hasError();
+            let error = this.$refs.header && this.$refs.header.hasError&&this.$refs.header.hasError();
             if (error) {
                 this.$message.error(error);
                 return;
@@ -355,7 +386,7 @@ export default {
             const originalState = this.doc.docState
             this.spinning = true;
             this.doc.docState = this.docState = state||this.docState;
-            this.$http.postJSON(`/api/doc/update/${this.doc.docType}`, this.doc)
+            this.$http.postJSON(`/api/doc/update`, this.doc)
                 .then((response) => {
                     if (this.$route.params.mode === 'create') {
                         setTimeout(() => {
@@ -373,6 +404,22 @@ export default {
                     this.spinning = false;
                     this.doc.docState = this.docState = originalState;
                 });
+        },
+        nkCalc(card,options){
+
+            this.spinning=true;
+            this.$http.postJSON(`/api/doc/calculate`,{doc:this.doc,cardKey:card.cardKey,options})
+                .then(response=>{
+                    this.doc = response.data;
+                    this.$nextTick(()=>{
+                        this.nkChanged({
+                            event:'nk-calc'
+                        },card);
+                    })
+                })
+                .finally(()=>{
+                    this.spinning=false;
+                })
         },
         cancel(){
             if(this.contextParams.mode==='create') {
