@@ -30,7 +30,7 @@
 <script>
 import NkFormat from "../utils/NkFormat";
 import NkPagePreview from "./NkPagePreview";
-import qs from 'qs';
+import NkUtil from "../utils/NkUtil";
 
 export default {
     components: {NkPagePreview},
@@ -110,18 +110,23 @@ export default {
                 }
             ],
             previewParams: {},
-            preViewVisable: false
+            preViewVisable: false,
+            preCondition:{
+                term:{
+                    classify:"PARTNER"
+                }
+            }
         }
     },
     mounted(){
-        this.$http.get("/api/partner/all/roles")
-            .then(response=>{
-                this.allRoles = response.data;
-            })
+        this.$http.get("/api/doc/entrance?classify=PARTNER")
+            .then(res=>{
+                this.allRoles = res.data;
+            });
     },
     methods:{
         search(params){
-            this.$http.post("/api/partner/list",qs.stringify(params, { arrayFormat: 'brackets' }))
+            this.$http.postJSON("/api/doc/list",NkUtil.toEsParams(params,this.preCondition))
                 .then((res)=>{
                     this.$emit("setTab","交易伙伴");
                     if(this.$refs.layout)

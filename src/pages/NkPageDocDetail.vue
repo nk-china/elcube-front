@@ -97,10 +97,10 @@
             </a-button>
 
             <a-dropdown v-if="!bpmTask && !preview && !editMode && docTypes.length" :trigger="['click']">
-                <a-button type="primary">创建<a-icon type="down" /> </a-button>
+                <a-button type="primary"><a-icon type="file-add" /> </a-button>
                 <a-menu slot="overlay">
-                    <a-menu-item v-for="item in docTypes" :key="item.docType" @click="$emit('nk-create',item)" :disabled="item.disabled">
-                        {{item.docType}} | {{item.docName}}
+                    <a-menu-item v-for="item in docTypes" :key="item.docType" @click="toCreateDoc(item)" :disabled="item.disabled">
+                        {{item.docType}} | {{item.docName || item.docType}}
                     </a-menu-item>
                 </a-menu>
             </a-dropdown>
@@ -118,7 +118,7 @@
 
             <!-- 配置按钮 -->
             <a-button v-if="!preview && user&&user.authorities&&user.authorities.find(a=>{return a.authority==='*:*'||a.authority==='DEF:*'})"
-                      @click="$router.push('/apps/def/doc/detail/'+doc.docType)">
+                      @click="$router.push(`/apps/def/doc/detail/${doc.docType}/${doc.def.version}`)">
                 <a-icon type="deployment-unit" />
             </a-button>
 
@@ -192,10 +192,10 @@
                       @click="(e)=>{e.preventDefault()}">
                 <a-anchor-link title="详情" :href="'#tfms'"></a-anchor-link>
                 <a-anchor-link v-for="(c) in availableCards"
-                               :key="c.component"
+                               :key="c.dataComponentName"
                                :class="`${historyClass(c.component)}`"
-                               :title="c.componentName"
-                               :href="'#'+buildAnchorLink(c.component)"
+                               :title="c.cardName"
+                               :href="'#'+buildAnchorLink(c.cardKey)"
                 >
                 </a-anchor-link>
             </a-anchor>
@@ -245,7 +245,7 @@ export default {
             return (this.doc.definedDoc && this.doc.definedDoc.docHeaderComponent) || 'nk-page-doc-header-loading';
         },
         docTypes(){
-            return this.doc.refObject && this.doc.refObject.defined && this.doc.refObject.defined.docs || [];
+            return this.doc.def && this.doc.def.flows && this.doc.def.flows;
         },
         // 对卡片进行预处理，判断卡片是否缺失
         availableCards(){
@@ -273,7 +273,8 @@ export default {
         editPerm(){
             if(this.doc && this.doc.def){
                 let defState = this.doc.def.status.find(state=>state.docState===this.doc.docState);
-                if(defState && this.doc.writeable){
+
+                if(this.doc.writeable && defState){
                     if(defState.editPerm===1)
                         return 1;
                     if(defState.editPerm===3)
@@ -435,7 +436,6 @@ export default {
             this.$router.push({
                 path:`/apps/docs/create/${defDoc.docType}`,
                 query:{
-                    ref:this.doc.refObjectId,
                     pre:this.doc.docId
                 }
             });

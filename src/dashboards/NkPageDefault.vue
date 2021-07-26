@@ -124,7 +124,9 @@ export default {
         }
     },
     created(){
-        this.load('');
+        //this.load('');
+        this.loading = false;
+
         const titles = document.getElementsByTagName("title");
         this.title = (titles && titles[0] && titles[0].getAttribute("title"))||'交易金融管理系统';
     },

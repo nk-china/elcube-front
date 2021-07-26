@@ -283,7 +283,7 @@ export default {
         submit(){
             this.$refs.xTable.validate(true).then(()=>{
                 this.spinning = true;
-                this.$http.postJSON('/api/sys/menu/save',this.menus)
+                this.$http.postJSON('/api/settings/menu/save',this.menus)
                     .then(()=>{
                         this.spinning = false;
                         this.$confirm({
@@ -297,7 +297,7 @@ export default {
         },
         reset(){
             this.spinning = true;
-            this.$http.get('/api/sys/menu/menus').then(res=>{
+            this.$http.get('/api/settings/menu/menus').then(res=>{
                 this.menus = res.data;
                 this.spinning = false;
             });

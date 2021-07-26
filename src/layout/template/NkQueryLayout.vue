@@ -26,6 +26,16 @@
                                :option="item.option || aggs[item.field]"
                                @change="formItemChanged"
                     ></component>
+                    <component v-for="(item) in searchItemsMoreSelected"
+                               ref="searchMoreItems"
+                               :key="item.field"
+                               :is="item.component"
+                               :config="item"
+                               :option="aggs[item.field]"
+                               :closeable="true"
+                               @change="formItemChanged"
+                               @close="searchMoreItemClosed"
+                    ></component>
                     <div v-if="availableSearchItemsMoreDef && availableSearchItemsMoreDef.length">
                         <a-select
                             ref="select"
@@ -55,20 +65,6 @@
                             另存为...
                         </a-button>
                     </nk-search-item>
-                    <a-divider v-if="searchItemsMoreSelected.length"
-                               orientation="left"
-                               class="nk-search-divider">更多条件</a-divider>
-                    <component v-for="(item) in searchItemsMoreSelected"
-                               ref="searchMoreItems"
-                               :key="item.field"
-                               :is="item.component"
-                               :config="item"
-                               :option="aggs[item.field]"
-                               slot="more"
-                               :closeable="true"
-                               @change="formItemChanged"
-                               @close="searchMoreItemClosed"
-                    ></component>
                 </nk-search-box>
             </a-form>
 
@@ -393,6 +389,30 @@ export default {
     }
 }
 
+.nk-search-divider{
+    font-size: 10px;
+    font-weight: 400;
+    color: #ccc;
+    margin: 4px 0 10px;
+}
+
+::v-deep.nk-search-box-more{
+    width:120px;
+    .ant-select-selection--multiple,
+    .ant-select-selection--multiple:focus,
+    .ant-select-selection--multiple:active{
+        cursor: pointer !important;
+        border: none !important;
+    }
+    .ant-select-selection__placeholder{
+        display: block !important;
+        color: rgba(0, 0, 0, 0.65);
+    }
+    .ant-select-selection__placeholder+ul{
+        height: 0;
+        overflow: hidden;
+    }
+}
 .nk-button+.nk-button{
     margin-left: 10px;
 }
