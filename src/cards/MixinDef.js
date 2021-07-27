@@ -1,4 +1,11 @@
 export default (defaultValue)=>{
+
+  if(typeof defaultValue==='function'){
+    defaultValue = defaultValue();
+  }else if(defaultValue){
+    defaultValue = JSON.parse(JSON.stringify(defaultValue));
+  }
+
   return {
     props: {
       editMode:Boolean,
@@ -11,25 +18,16 @@ export default (defaultValue)=>{
       },
       def:{
         get(){
-          return this.card.config;
+          return this.card.config || defaultValue;
         },
         set(value){
-          console.log(value)
           this.docDef.cards.find(card=>card.cardKey===this.cardKey).config = value;
         }
       }
     },
-    beforeCreate() {
-    },
     created(){
       if(!this.def){
-        let dv = undefined;
-        if(typeof defaultValue==='function'){
-          dv = defaultValue();
-        }else{
-          dv = JSON.parse(JSON.stringify(defaultValue));
-        }
-        this.def = dv;
+        this.def = defaultValue;
       }
     }
   };

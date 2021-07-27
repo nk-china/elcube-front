@@ -254,7 +254,6 @@ export default {
         },
         menuClick(menu){
             this.selected = menu;
-            console.log(this.selected)
         },
         doRun(){
             this.startDebug();

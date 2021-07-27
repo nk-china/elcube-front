@@ -1,9 +1,11 @@
 import Vue from 'vue';
 
-import {NkModule,NkRouter,NkVuexStore,App} from './boot';
+import {NkModule,NkRouter,NkVuexStore,App,NkVueLoader} from './boot';
 import NkPageDefault from "./dashboards/NkPageDefault";
 
 Vue.use(NkModule);
+
+NkVueLoader();
 
 new Vue({
   router  : NkRouter([],undefined,NkPageDefault),

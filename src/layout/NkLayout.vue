@@ -111,6 +111,7 @@
 
 <script>
 
+import {NkVueLoader} from "../boot";
 import {mapActions, mapGetters, mapMutations, mapState} from 'vuex';
 import NkTabs from "./NkLayoutTabs";
 import NkNav from "./NkNav";
@@ -348,11 +349,23 @@ export default {
             this.pages = items;
         },
         tabItemRefresh(item){
-            let c = item.component;
-            item.component = undefined;
-            this.$nextTick(()=>{
-                item.component=c
-            });
+
+            if(this.debugId){
+                NkVueLoader().then(()=>{
+                    let c = item.component;
+                    item.component = undefined;
+                    this.$nextTick(()=>{
+                        item.component=c
+                    });
+                });
+            }else{
+                let c = item.component;
+                item.component = undefined;
+                this.$nextTick(()=>{
+                    item.component=c
+                });
+            }
+
         },
         dragstart(e){
             console.log(e)

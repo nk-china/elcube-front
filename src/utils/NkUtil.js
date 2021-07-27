@@ -1,29 +1,5 @@
 
-import Vue from 'vue';
-import {loadModule} from 'vue3-sfc-loader/dist/vue2-sfc-loader';
-
-function componentLoader(componentName, template, modules) {
-    return Vue.component( componentName,() => loadModule(
-        componentName+".vue",
-        {
-            moduleCache: {
-                vue: Vue,
-                ...modules
-            },
-            getFile() {
-                return template;
-            },
-            addStyle(textContent) {
-                const style = Object.assign(document.createElement('style'), { textContent });
-                const ref = document.head.getElementsByTagName('style')[0] || null;
-                document.head.insertBefore(style, ref);
-            },
-        }
-    ));
-}
-
 export default {
-    componentLoader,
     isRepeat(arr,keys){
         const hash = {};
         for(let i in arr){
@@ -56,8 +32,8 @@ export default {
     toEsParams(params,preCondition,$debug){
 
         let must = [],
-          condition = {"bool": {must}},
-          np = {};
+            condition = {"bool": {must}},
+            np = {};
         let value;
         for(let field in params){
             switch (field) {

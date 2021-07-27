@@ -12,9 +12,10 @@ import mavonEditor from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css'
 
 // 服务
-import Http from "./Http";
 import Router from './Router';
 import Stores from '../store';
+import Http from "./Http";
+import NkVueLoader from "./VueLoader";
 
 // UI组件
 import NkComponent from "../components";
@@ -27,12 +28,10 @@ import './nk.scss'
 
 // 导出引用
 import App from "../layout/NkApp";
-import NkFormat from "../utils/NkFormat";
-import NkUtil from "../utils/NkUtil";
 import Mixin from "../cards/Mixin";
 import MixinDef from "../cards/MixinDef";
-
-import axios from 'axios';
+import NkFormat from "../utils/NkFormat";
+import NkUtil from "../utils/NkUtil";
 
 function install(Vue){
 
@@ -62,23 +61,6 @@ function install(Vue){
   Vue.filter("nkPercent", NkFormat.nkPercent);
   Vue.filter("nkFromList",NkFormat.nkFromList);
 
-  axios.get("/api/public/def/card/vueTemplates")
-      .then(res=>{
-
-        let modules = {
-          Mixin,
-          MixinDef,
-          NkFormat,
-          NkUtil
-        }
-
-        for(let componentName in res.data){
-          if(res.data.hasOwnProperty(componentName)){
-            NkUtil.componentLoader(componentName, res.data[componentName], modules)
-            NkUtil.componentLoader(componentName, res.data[componentName], modules)
-          }
-        }
-      });
 }
 
 function NkVuexStore(moduleStores){
@@ -110,5 +92,7 @@ export {
   Mixin,
   MixinDef,
   NkFormat,
-  NkUtil
+  NkUtil,
+
+  NkVueLoader
 }
