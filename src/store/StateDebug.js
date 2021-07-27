@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import moment from "moment";
 
 const debugId = localStorage.getItem("$NK-DebugId");
-const expire  = localStorage.getItem("$NK-DebugExpire");
+const expire  = parseInt(localStorage.getItem("$NK-DebugExpire"));
 
 function stopDebug(state){
     if(state.timer){
@@ -32,7 +32,7 @@ const state = {
             state.timeout = moment.duration(state.expire,'seconds').humanize(true);
             state.timer   = setInterval(()=>{
 
-                state.expire--;
+                state.expire -= 10;
                 state.timeout = moment.duration(state.expire,'seconds').humanize(true);
                 localStorage.setItem("$NK-DebugExpire",state.expire);
 
