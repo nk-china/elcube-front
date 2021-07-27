@@ -18,8 +18,15 @@
                         ></a-icon>
                         <span v-if="env" class="trigger" style="padding-left: 0;color: #ff7e79;user-select: none;cursor: default;">{{env}}</span>
                     </div>
+                    <div>
+                    </div>
                     <div class="nk-user">
-
+                        <div style="margin-right: 20px;" v-if="debugId">
+                            <a-button type="default" @click="stopDebug">
+                                <a-icon type="border" :style="{color: '#aa2222','background-color':'#aa2222',height:'14px'}" />
+                                正在调试
+                            </a-button>
+                        </div>
                         <a-dropdown :trigger="['click']">
                             <div class="ant-dropdown-link" @click="e => e.preventDefault()" >
                                 <a-avatar class="a-avatar">
@@ -104,7 +111,7 @@
 
 <script>
 
-import {mapActions, mapGetters, mapMutations} from 'vuex';
+import {mapActions, mapGetters, mapMutations, mapState} from 'vuex';
 import NkTabs from "./NkLayoutTabs";
 import NkNav from "./NkNav";
 import NkHelper from "../pages/NkHelper";
@@ -150,6 +157,9 @@ export default {
         }
     },
     computed:{
+        ...mapState('Debug',[
+            'debugId'
+        ]),
         ...mapGetters('NkDoc',[
             'layoutConfig'
         ]),
@@ -177,6 +187,9 @@ export default {
         this.addPage(this.$route);
     },
     methods:{
+        ...mapMutations('Debug',[
+            'stopDebug'
+        ]),
         ...mapMutations('User',[
             'setUser','clearReLogin'
         ]),
@@ -446,6 +459,7 @@ export default {
         justify-content: space-between;
 
         .nk-user{
+            display: flex;
             margin-right: 40px;
 
             ::v-deep.ant-dropdown-link{

@@ -7,11 +7,6 @@
                         <a-icon type="play-circle" />
                     </a-button>
                 </a-tooltip>
-                <a-tooltip title="停止调试">
-                    <a-button                @click="doStop"      :disabled="!debugId"        >
-                        <a-icon type="stop" :style="{color: debugId?'#aa2222':''}" />
-                    </a-button>
-                </a-tooltip>
                 <a-tooltip title="激活">
                     <a-button type="danger"  @click="doActive"    :disabled="isCreate || def.state==='Active'" >
                         <a-icon type="exclamation-circle" />
@@ -115,7 +110,7 @@ import NkDefDocTypeBizFlow from "./NkDefDocTypeBizFlow";
 import NkDefDocTypeCycle from "./NkDefDocTypeCycle";
 import NkDefDocTypeCards from "./NkDefDocTypeCards";
 import NkUtil from "../../utils/NkUtil";
-import {mapMutations, mapState} from "vuex";
+import {mapMutations} from "vuex";
 
 const defaultCards = [
     {key:"doc",     name:"基本信息",    defComponentNames: [NkDefDocTypeBase,NkDefDocTypeStatus,NkDefDocTypeBizFlow]},
@@ -221,9 +216,6 @@ export default {
         }
     },
     computed:{
-        ...mapState('Debug',[
-            'debugId'
-        ]),
         isCreate(){
             return this.routeParams.mode==='create';
         }
@@ -266,10 +258,14 @@ export default {
         },
         doRun(){
             this.startDebug();
-            this.doUpdate();
-        },
-        doStop(){
-            this.stopDebug();
+            this.loading = true;
+            this.$http.postJSON(`/api/def/doc/type/debug`,this.def)
+                .then(()=>{
+                    this.$message.info("配置已运行")
+                })
+                .finally(()=>{
+                    this.loading = false;
+                })
         },
         doDelete(){
             this.loading = true;

@@ -6,6 +6,11 @@ export default {
     state: {
         debugId:undefined
     },
+    getters:{
+        getDebug(state){
+            return state.debugId;
+        },
+    },
     mutations: {
         startDebug(state){
             state.debugId = state.debugId||uuidv4();
