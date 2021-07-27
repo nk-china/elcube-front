@@ -27,17 +27,11 @@ export default {
     computed:{
         component(){
             switch (this.params.classify){
-                case "TRANSACTION":
-                    return "nk-page-doc-detail";
-                case "PROJECT":
-                    return "nk-page-doc-detail";
-                case "PARTNER":
-                case "PARTNER_T":
-                    return "nk-page-partner-detail";
                 case "bpmTask":
                     return "nk-page-task-detail";
+                default:
+                    return "nk-page-doc-detail";
             }
-            return null;
         }
     },
     methods:{

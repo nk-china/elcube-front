@@ -26,50 +26,26 @@
 
         <a-row slot="content">
             <a-col :span="18">
-                <nk-form ref="form" :col="2" :edit="editMode" v-if="!loading">
-                    <nk-form-item term="交易类型">
-                        {{doc.def && doc.def.docType}} | {{doc.def && doc.def.docName}}
-                    </nk-form-item>
-                    <nk-form-item term="交易伙伴">
-                        <router-link v-if="doc.partnerId" :to="`/apps/partners/detail/${doc.partnerId}`">{{doc.partnerName}}</router-link>
-                        <span v-else style="color: rgba(0, 0, 0, 0.45);">&lt;未选择&gt;</span>
-                        <span v-if="diffTarget && diffTarget.partnerId!==doc.partnerId" class="state-original">
-                            <router-link v-if="diffTarget.partnerId" :to="`/apps/partners/detail/${diffTarget.partnerId}`">{{diffTarget.partnerName}}</router-link>
-                        </span>
-                    </nk-form-item>
-                    <nk-form-item term="交易编号">
-                        <span v-if="doc.docNumber">{{doc.docNumber}}</span>
-                        <span v-else style="color: rgba(0, 0, 0, 0.45);">&lt;未编号&gt;</span>
-                    </nk-form-item>
-                    <nk-form-item term="交易描述"
-                                  :validateFor="doc.docName"
-                                  :message="`请输入交易描述`"
-                                  required
-                                  len
-                                  :max="20"
-                                  :lenMessage="`交易描述1-20个字`">
-                        {{doc.docName}}
-                        <span v-if="diffTarget && diffTarget.docName!==doc.docName" class="state-original">
-                            {{diffTarget.docName}}
-                        </span>
-                        <a-input v-model="doc.docName" slot="edit" allowClear ></a-input>
-                    </nk-form-item>
-                    <nk-form-item term="创建时间">{{doc.createdTime | nkDatetimeFriendly}}</nk-form-item>
-                    <nk-form-item term="更新时间">{{doc.updatedTime | nkDatetimeFriendly}}</nk-form-item>
-                    <nk-form-item term="备注" :col="2">
-                        {{doc.docDesc||'暂无内容'}}
-                        <a-textarea v-model="doc.docDesc" slot="edit" :auto-size="{ minRows: 3, maxRows: 10 }"></a-textarea>
-                        <span v-if="diffTarget && diffTarget.docDesc!==doc.docDesc" class="state-original">
-                            {{diffTarget.docDesc||'暂无内容'}}
-                        </span>
-                    </nk-form-item>
-                </nk-form>
+                <template v-for="(c) in availableCards">
+                    <component ref="components"
+                               v-if="c.position==='header' && c.dataComponentName"
+                               :class="`nk-page-layout-card ${historyClass(c.cardKey)}`"
+                               :is="c.dataComponentName"
+                               :id="buildAnchorLink(c.cardKey)"
+                               :key="c.cardKey"
+                               :card="c"
+                               :doc="doc"
+                               :editMode="editMode && c.writeable"
+                               :createMode="createMode"
+                               @nk-reload="reload"
+                               @nk-save="doSave"
+                               @nk-calc="nkCalc(c,$event)"
+                               @nk-changed="nkChanged($event,c)"
+                    />
+                </template>
             </a-col>
             <a-col :span="6">
                 <a-statistic title="状态" :value="doc.docState | nkFromList(doc.def&&doc.def.status,'docStateDesc','docState')"/>
-                <span v-if="diffTarget && diffTarget.docState!==doc.docState" class="state-original">
-                    {{diffTarget.docState | nkFromList(diffTarget.definedDoc&&diffTarget.definedDoc.status,'docStateDesc','docState')}}
-                </span>
             </a-col>
         </a-row>
 
@@ -124,39 +100,6 @@
 
         </a-button-group>
 
-<!--        <component :is="headerComponent"-->
-<!--                   ref="header"-->
-<!--                   slot="custom"-->
-
-<!--                   :loading="loading"-->
-
-<!--                   :user="user"-->
-<!--                   :doc="doc"-->
-<!--                   :preview="preview"-->
-
-<!--                   :history="history"-->
-<!--                   :histories="histories"-->
-
-<!--                   :doc-state="docState"-->
-<!--                   :available-status="availableStatus"-->
-
-<!--                   :edit-mode="editMode"-->
-<!--                   :doc-editable="docEditable"-->
-<!--                   :status-editable="statusEditable"-->
-
-<!--                   :bpm-task="bpmTask"-->
-<!--                   :doc-types="docTypes"-->
-
-<!--                   @nk-save="doSave"-->
-<!--                   @nk-edit="nkEditModeChanged"-->
-<!--                   @nk-create="toCreateDoc"-->
-<!--                   @nk-cancel="cancel"-->
-<!--                   @nk-show-history="showHistory"-->
-<!--                   @replace="$emit('replace',event)"-->
-<!--        >-->
-<!--            <slot name="buttons" slot="buttons"></slot>-->
-<!--        </component>-->
-
         <!--异常信息-->
         <nk-doc-exception v-if="doc.exception" :exception="doc.exception" />
 
@@ -167,7 +110,7 @@
         <slot name="component"></slot>
         <template v-for="(c) in availableCards">
             <component ref="components"
-                       v-if="c.dataComponentName"
+                       v-if="c.position==='default' && c.dataComponentName"
                        :class="`nk-page-layout-card ${historyClass(c.cardKey)}`"
                        :is="c.dataComponentName"
                        :id="buildAnchorLink(c.cardKey)"
@@ -190,7 +133,6 @@
                       :target-offset="70"
                       :showInkInFixed="true"
                       @click="(e)=>{e.preventDefault()}">
-                <a-anchor-link title="详情" :href="'#tfms'"></a-anchor-link>
                 <a-anchor-link v-for="(c) in availableCards"
                                :key="c.dataComponentName"
                                :class="`${historyClass(c.component)}`"
@@ -206,10 +148,9 @@
 
 <script>
 import qs from 'qs'
-import ClassifyMapping from "./ClassifyMapping";
-import DocDetailMixin from "./NkPageDocDetailMixin";
-import NkPageDocHeaderLoading from "./NkPageDocHeaderLoading";
-import XNkPageLayout from "../layout/template/XNkPageLayout";
+import DocDetailMixin from "../NkPageDocDetailMixin";
+import NkPageDocHeaderLoading from "../NkPageDocHeaderLoading";
+import XNkPageLayout from "../../layout/template/XNkPageLayout";
 import { mapActions} from 'vuex';
 
 export default {
@@ -391,7 +332,7 @@ export default {
                 .then((response) => {
                     if (this.$route.params.mode === 'create') {
                         setTimeout(() => {
-                            this.$emit('replace', ClassifyMapping[this.doc.classify].detailUrl + this.doc.docId);
+                            this.$emit('replace', `/apps/docs/detail/${this.doc.docId}`);
                         }, 200)
                     } else {
                         this.doc = response.data;

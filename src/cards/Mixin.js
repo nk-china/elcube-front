@@ -18,7 +18,6 @@ export default ()=>{
       }
     },
     created() {
-      console.log(this.data)
     },
     computed:{
       ...mapGetters('User',[

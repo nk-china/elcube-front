@@ -4,16 +4,13 @@
  */
 import NkPageTasks from "./NkPageTasks";
 import NkPageTaskDetail from "./NkPageTaskDetail";
-import NkPageProjects from "./NkPageProjects";
-import NkPageDocs from "./NkPageDocs";
+import NkPageDocs from "./doc/NkPageDocs";
 import NkPageDocHeaderDefault from "./NkPageDocHeaderDefault";
 import NkPageDocHeaderProject from "./NkPageDocHeaderProject";
-import NkPageDocDetail from "./NkPageDocDetail";
+import NkPageDocDetail from "./doc/NkPageDocDetail";
 import NkPageDocDetailDiff from "./NkPageDocDetailDiff";
-import NkPagePartners from "./NkPagePartners";
 import NkPagePartnerDetail from "./NkPagePartnerDetail";
 import NkPagePartnerHeaderDefault from "./NkPagePartnerHeaderDefault";
-import NkPagePartnerDetailDiff from "./NkPagePartnerDetailDiff";
 import NkPageCustomQuery from "./NkPageCustomQuery";
 import NkCard from "./NkCard";
 
@@ -91,58 +88,21 @@ module.routes = [
     ]
   },
   {
-    name: "交易",
+    name: "单据",
     path: 'docs',
     component: NkPageDocs,
     children: [
       {
-        name: "交易详情",
+        name: "单据详情",
         path: ':mode/:docId',
         component: NkPageDocDetail,
         props:true,
       },
       {
-        name: "交易对比",
+        name: "单据对比",
         path: 'diff/:sourceDocId/:targetDocId',
         component: NkPageDocDetailDiff
       }
-    ]
-  },
-  {
-    name: "业务",
-    path: 'projects',
-    component: NkPageProjects,
-    children: [
-      {
-        name: "业务详情",
-        path: ':mode/:docId',
-        component: NkPageDocDetail,
-        props:true,
-      },
-      {
-        name: "业务对比",
-        path: 'diff/:sourceDocId/:targetDocId',
-        component: NkPageDocDetailDiff
-      }
-    ]
-  },
-  {
-    name: "交易伙伴",
-    path: 'partners',
-    component: NkPagePartners,
-    children: [
-      {
-        name: "详情",
-        // mode : detail | new-partner | new-role | doc | next | snapshot
-        // docId: docId | docType
-        path: ':mode/:docId',
-        component: NkPagePartnerDetail
-      },
-      {
-        name: "交易伙伴对比",
-        path: 'diff/:sourceDocId/:targetDocId',
-        component: NkPagePartnerDetailDiff
-      },
     ]
   },
   {

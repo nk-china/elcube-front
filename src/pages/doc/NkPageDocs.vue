@@ -1,8 +1,8 @@
 <template>
     <nk-query-layout
         ref="layout"
-        title="交易"
-        sub-title="这里是交易管理，在这里您可以检索你的业务交易单据"
+        title="单据"
+        sub-title="单据管理"
         :search-items-default="searchItemsDefault"
         :search-items-more-def="searchItemsMoreDef"
         :dataTableColumns="columns"
@@ -33,14 +33,12 @@
 </template>
 
 <script>
-import NkUtil from "../utils/NkUtil";
-import NkPagePreview from "./NkPagePreview";
+import NkUtil from "../../utils/NkUtil";
+import NkPagePreview from "../NkPagePreview";
 
-const classifys = [
+const classifies = [
     {value:'TRANSACTION',label:'交易'},
-    {value:'PARTNER',label:'交易伙伴'},
-    {value:'PARTNER_T',label:'伙伴交易'},
-    {value:'PROJECT',label:'业务'},
+    {value:'PARTNER',label:'交易伙伴'}
 ];
 
 export default {
@@ -50,7 +48,7 @@ export default {
             creatableDocTypes:[],
             columns:[
                 { type: 'seq',            title: '#',         width: '36'},
-                { field: 'classify',      title: '分类',       width: '8%',  sortable:true,formatter:['nkFromList',classifys] },
+                { field: 'classify',      title: '分类',       width: '8%',  sortable:true,formatter:['nkFromList',classifies] },
                 { field: 'docTypeDesc',   title: '单据类型',    width: '15%', sortable:true },
                 { field: 'docName',       title: '名称',       width: '20%', sortable:true,
                     params:{ orderField: 'docName.original' }},
@@ -74,10 +72,10 @@ export default {
                     field:'classify',
                     component:'nk-search-options-single',
                     agg:true,
-                    formatter: ['nkFromList',classifys]
+                    formatter: ['nkFromList',classifies]
                 },
                 {
-                    name:'交易类型',
+                    name:'单据类型',
                     field:'docTypeDesc',
                     component:'nk-search-options-multiple',
                     min:300,
@@ -133,7 +131,7 @@ export default {
     },
     created() {
 
-        this.$http.get("/api/doc/entrance?classify=TRANSACTION")
+        this.$http.get("/api/doc/entrance?classify=")
             .then(res=>{
                 this.creatableDocTypes = res.data;
             });
@@ -142,7 +140,7 @@ export default {
         search(params){
             this.$http.postJSON("/api/doc/list",NkUtil.toEsParams(params,this.preCondition))
                 .then((res)=>{
-                    this.$emit("setTab","交易");
+                    this.$emit("setTab","单据");
                     if(this.$refs.layout)
                         this.$refs.layout.setData(res.data)
                 });

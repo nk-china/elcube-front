@@ -86,11 +86,11 @@
                     </nk-form>
                 </a-card>
                 <component
-                           v-for="item in selected.defComponentNames"
-                           :key="item.cardKey"
+                           v-for="(item,index) in selected.defComponentNames"
+                           :key="index"
                            :is="item"
                            :doc-def="def"
-                           :card="selected"
+                           :card-key="selected.cardKey"
                            :doc-options="options"
                            :edit-mode="editMode" />
                 <a-card v-if="selected.cardHandler" title="文档" :key="'document-'+selected.cardKey">
@@ -262,6 +262,7 @@ export default {
         },
         menuClick(menu){
             this.selected = menu;
+            console.log(this.selected)
         },
         doRun(){
             this.startDebug();
@@ -329,7 +330,7 @@ export default {
                 this.$http.postJSON(`/api/def/doc/type/update`,this.def)
                     .then((res)=>{
                         if(!this.def.version){
-                            this.$emit("replace",`/apps/def/doc/detail/${this.def.docType}/${this.def.version}`)
+                            this.$emit("replace",`/apps/def/doc/detail/${this.def.docType}/${res.data.version}`)
                         }else{
                             this.editMode = false;
                             this.def = res.data;

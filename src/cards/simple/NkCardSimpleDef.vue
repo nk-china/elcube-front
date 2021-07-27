@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import MixinDef from "./MixinDef";
+import MixinDef from "./../MixinDef";
 export default {
     mixins:[new MixinDef({field:"test"})],
     created() {

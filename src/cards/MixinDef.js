@@ -3,15 +3,19 @@ export default (defaultValue)=>{
     props: {
       editMode:Boolean,
       docDef:Object,
-      card:Object,
+      cardKey:String,
     },
     computed:{
+      card(){
+        return this.docDef.cards.find(card=>card.cardKey===this.cardKey);
+      },
       def:{
         get(){
           return this.card.config;
         },
         set(value){
-          this.card.config = value;
+          console.log(value)
+          this.docDef.cards.find(card=>card.cardKey===this.cardKey).config = value;
         }
       }
     },
@@ -25,7 +29,7 @@ export default (defaultValue)=>{
         }else{
           dv = JSON.parse(JSON.stringify(defaultValue));
         }
-        this.$set(this.card,"config",dv)
+        this.def = dv;
       }
     }
   };

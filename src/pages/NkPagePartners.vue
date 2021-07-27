@@ -12,10 +12,10 @@
     >
 
         <a-button-group slot="action">
-            <a-dropdown :trigger="['click']" v-if="allRoles.length">
+            <a-dropdown :trigger="['click']" v-if="creatableDocTypes.length">
                 <a-menu slot="overlay" >
-                    <a-menu-item v-for="role in allRoles" :key="role.partnerRole" @click="toNewRole(role)">
-                        <a-icon type="user" />{{role.partnerRoleDesc}}
+                    <a-menu-item v-for="docDef in creatableDocTypes" :key="docDef.docType" @click="toNewRole(docDef)">
+                        <a-icon type="user" />{{docDef.docName}}
                     </a-menu-item>
                 </a-menu>
                 <a-button type="primary"> 新建 <a-icon type="down" /> </a-button>
@@ -36,7 +36,7 @@ export default {
     components: {NkPagePreview},
     data(){
         return {
-            allRoles:[],
+            creatableDocTypes:[],
             columns:[
                 { type: 'seq',            title: '#',         width: '36'},
                 { field: 'partnerType',   title: '类型', width: '10%',editRender: { name: 'input' },sortable:true,
@@ -121,7 +121,7 @@ export default {
     mounted(){
         this.$http.get("/api/doc/entrance?classify=PARTNER")
             .then(res=>{
-                this.allRoles = res.data;
+                this.creatableDocTypes = res.data;
             });
     },
     methods:{
@@ -136,8 +136,8 @@ export default {
         tagClick(e){
             this.$router.push('/apps/partners/detail?id='+e.partnerId+'&role='+e.role)
         },
-        toNewRole(role){
-            this.$router.push('/apps/partners/new-partner/'+role.partnerRole);
+        toNewRole(docDef){
+            this.$router.push('/apps/docs/create/'+docDef.docType);
         },
         selected({row}){
             this.preViewVisable = true;
