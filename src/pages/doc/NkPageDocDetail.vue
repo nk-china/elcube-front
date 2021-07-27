@@ -128,19 +128,39 @@
 
         <!-- 右边栏： 导航 -->
         <div slot="nav" class="nav">
-            <a-anchor :offsetTop="80"
+            <a-anchor v-if="!sidebarCards.length"
+                      :offsetTop="80"
                       wrapperClass="anchor"
                       :target-offset="70"
                       :showInkInFixed="true"
                       @click="(e)=>{e.preventDefault()}">
-                <a-anchor-link v-for="(c) in availableCards"
-                               :key="c.dataComponentName"
-                               :class="`${historyClass(c.component)}`"
-                               :title="c.cardName"
-                               :href="'#'+buildAnchorLink(c.cardKey)"
-                >
+                <a-anchor-link title="详情" :href="'#tfms'"></a-anchor-link>
+                <template v-for="(c) in availableCards">
+                    <a-anchor-link v-if="c.position==='default'"
+                                   :key="c.dataComponentName"
+                                   :class="`${historyClass(c.component)}`"
+                                   :title="c.cardName"
+                                   :href="'#'+buildAnchorLink(c.cardKey)"
+                    >
                 </a-anchor-link>
+                </template>
             </a-anchor>
+
+            <component  v-for="(c) in sidebarCards"
+                        ref="components"
+                        :class="`nk-page-layout-card ${historyClass(c.cardKey)}`"
+                        :is="c.dataComponentName"
+                        :id="buildAnchorLink(c.cardKey)"
+                        :key="c.cardKey"
+                        :card="c"
+                        :doc="doc"
+                        :editMode="editMode && c.writeable"
+                        :createMode="createMode"
+                        @nk-reload="reload"
+                        @nk-save="doSave"
+                        @nk-calc="nkCalc(c,$event)"
+                        @nk-changed="nkChanged($event,c)"
+            />
         </div>
 
     </x-nk-page-layout>
@@ -202,6 +222,9 @@ export default {
                     });
             }
             return [];
+        },
+        sidebarCards(){
+            return this.availableCards.filter(c=>c.position==='sidebar');
         },
         docState:{
             get(){
@@ -401,7 +424,7 @@ export default {
     color: #f5222d;
 }
 .nav{
-    margin-top: 20px;margin-left: 10px;
+    padding: 24px 24px 0 10px;
     > div{
         width: initial !important;
     }

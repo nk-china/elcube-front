@@ -108,7 +108,7 @@ export default {
         .right{
             top: 30px;
             right: 0;
-            width: 300px;
+            width: 360px;
             flex-shrink: 0;
 
             &.show{

@@ -21,10 +21,10 @@
                     <div>
                     </div>
                     <div class="nk-user">
-                        <div style="margin-right: 20px;" v-if="debugId">
+                        <div style="margin-right: 20px;" v-if="debugId && timeout">
                             <a-button type="default" @click="stopDebug">
                                 <a-icon type="border" :style="{color: '#aa2222','background-color':'#aa2222',height:'14px'}" />
-                                正在调试
+                                {{timeout}} 停止
                             </a-button>
                         </div>
                         <a-dropdown :trigger="['click']">
@@ -158,7 +158,7 @@ export default {
     },
     computed:{
         ...mapState('Debug',[
-            'debugId'
+            'debugId','timeout'
         ]),
         ...mapGetters('NkDoc',[
             'layoutConfig'
