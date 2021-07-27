@@ -7,7 +7,7 @@ import NkFormat from "../utils/NkFormat";
 import NkUtil from "../utils/NkUtil";
 
 function componentLoader(componentName, template, modules) {
-    return Vue.component( componentName,() => loadModule(
+    return Vue.component(componentName,() => loadModule(
         componentName+".vue",
         {
             moduleCache: {
@@ -28,7 +28,7 @@ function componentLoader(componentName, template, modules) {
 
 export default function(){
     return new Promise((resolve,reject)=>{
-        axios.get("/api/def/resources/vueTemplates")
+        axios.get("/api/def/resources/vue")
             .then(res=>{
 
                 let modules = {
