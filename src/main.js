@@ -5,10 +5,12 @@ import NkPageDefault from "./dashboards/NkPageDefault";
 
 Vue.use(NkModule);
 
-NkVueLoader();
+NkVueLoader.reloadVueResources()
+    .then(()=>{
+        new Vue({
+          router  : NkRouter([],undefined,NkPageDefault),
+          store   : NkVuexStore({}),
+          render  : h => h(App)
+        }).$mount('#app');
+    });
 
-new Vue({
-  router  : NkRouter([],undefined,NkPageDefault),
-  store   : NkVuexStore({}),
-  render  : h => h(App)
-}).$mount('#app');

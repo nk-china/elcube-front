@@ -21,12 +21,7 @@
                     <div>
                     </div>
                     <div class="nk-user">
-                        <div style="margin-right: 20px;" v-if="debugId && timeout">
-                            <a-button type="default" @click="stopDebug">
-                                <a-icon type="border" :style="{color: '#aa2222','background-color':'#aa2222',height:'14px'}" />
-                                {{timeout}} 停止
-                            </a-button>
-                        </div>
+                        <nk-debug-panel  style="margin-right: 20px;" />
                         <a-dropdown :trigger="['click']">
                             <div class="ant-dropdown-link" @click="e => e.preventDefault()" >
                                 <a-avatar class="a-avatar">
@@ -111,18 +106,19 @@
 
 <script>
 
-import {NkVueLoader} from "../boot";
-import {mapActions, mapGetters, mapMutations, mapState} from 'vuex';
+import {mapActions, mapGetters, mapMutations} from 'vuex';
 import NkTabs from "./NkLayoutTabs";
 import NkNav from "./NkNav";
 import NkHelper from "../pages/NkHelper";
+import NkDebugPanel from "../pages/debug/NkDebugPanel";
 
 export default {
     name: "NkLayout",
     components:{
         NkTabs,
         NkNav,
-        NkHelper
+        NkHelper,
+        NkDebugPanel
     },
     directives:{
         myfocus: {
@@ -158,9 +154,6 @@ export default {
         }
     },
     computed:{
-        ...mapState('Debug',[
-            'debugId','timeout'
-        ]),
         ...mapGetters('NkDoc',[
             'layoutConfig'
         ]),
@@ -188,9 +181,6 @@ export default {
         this.addPage(this.$route);
     },
     methods:{
-        ...mapMutations('Debug',[
-            'stopDebug'
-        ]),
         ...mapMutations('User',[
             'setUser','clearReLogin'
         ]),
@@ -349,23 +339,11 @@ export default {
             this.pages = items;
         },
         tabItemRefresh(item){
-
-            if(this.debugId){
-                NkVueLoader().then(()=>{
-                    let c = item.component;
-                    item.component = undefined;
-                    this.$nextTick(()=>{
-                        item.component=c
-                    });
-                });
-            }else{
-                let c = item.component;
-                item.component = undefined;
-                this.$nextTick(()=>{
-                    item.component=c
-                });
-            }
-
+            let c = item.component;
+            item.component = undefined;
+            this.$nextTick(()=>{
+                item.component=c;
+            });
         },
         dragstart(e){
             console.log(e)

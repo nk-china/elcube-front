@@ -18,9 +18,9 @@ import NkCard from "./NkCard";
 /**
  * 设置界面
  */
-import NkSettingsAuthLimit from "./NkSettingsAuthLimit";
-import NkSettingsAuthPerm from "./NkSettingsAuthPerm";
-import NkSettingsAuthGroup from "./NkSettingsAuthGroup";
+import NkSettingsAuthLimit from "./settings/NkSettingsAuthLimit";
+import NkSettingsAuthPerm from "./settings/NkSettingsAuthPerm";
+import NkSettingsAuthGroup from "./settings/NkSettingsAuthGroup";
 
 /**
  * 配置页面
@@ -31,10 +31,9 @@ import NkDefPartnerType from "./NkDefPartnerType";
 import NkDefDocs from "./def/NkDefDocs";
 import NkDefDocType from "./def/NkDefDocType";
 // 脚本
-import NkDefScriptsTreeVersion from "./NkDefScriptsTreeVersion";
-import NkDefScripts from "./NkDefScripts";
-import NkDefScriptEditor from "./NkDefScriptEditor";
-import NkScriptLabel from "./components/NkScriptLabel";
+import NkDefScripts from "./def/NkDefScripts";
+import NkDefScriptDetail from "./def/NkDefScriptDetail";
+import NkScriptLabel from "./def/NkDefScriptLabel";
 // 常量
 import NkDefConstant from "./NkDefConstant";
 // 自定义搜索
@@ -47,7 +46,7 @@ import NkDefBpmProcessDefinitionDetail from "./NkDefBpmProcessDefinitionDetail";
 import NkDefBpmDesigner from "./NkDefBpmDesigner";
 import NkDefBpmDeployments from "./NkDefBpmDeployments";// 待删除
 
-import NkSettingsMenus from "./NkSettingsMenus";
+import NkSettingsMenus from "./settings/NkSettingsMenus";
 
 /**
  * Vue 模块对象
@@ -231,19 +230,14 @@ module.routes = [
         component: NkDefScripts,
         children: [
           {
-            name: "脚本导航",
-            path: 'tree',
-            component: NkDefScriptsTreeVersion
-          },
-          {
             name: "脚本编辑器",
-            path: 'editor/:mode',
-            component: NkDefScriptEditor
+            path: ':mode/:script/:version',
+            component: NkDefScriptDetail
           },
           {
             name: "新建脚本",
-            path: 'editor/:mode/:scriptName',
-            component: NkDefScriptEditor
+            path: ':mode/:scriptName',
+            component: NkDefScriptDetail
           },
         ]
       },

@@ -1,6 +1,6 @@
 <template>
     <span>
-        <router-link v-if="scriptName" :to="`/apps/def/script/editor/detail/${scriptName}`">{{value}} </router-link>
+        <router-link v-if="scriptName" :to="`/apps/def/script/detail/${scriptName}/@`">{{value}} </router-link>
         <span v-else :style="{
             color: (scriptName===''?'red':'')
         }">
