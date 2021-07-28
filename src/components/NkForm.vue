@@ -52,8 +52,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.nk-form{
+<style lang="scss" scoped>
+::v-deep.nk-form{
 
     .title {
         font-size: 14px;
