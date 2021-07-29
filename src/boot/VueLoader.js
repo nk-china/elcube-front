@@ -18,6 +18,7 @@ function componentLoader(componentName, template, modules) {
         {
             moduleCache: {
                 vue: Vue,
+                'nk-ts5-platform': modules,
                 ...modules
             },
             getFile() {
