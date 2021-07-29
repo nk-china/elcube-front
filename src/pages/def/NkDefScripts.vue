@@ -77,7 +77,7 @@ export default {
                 });
         },
         create(){
-            this.$router.push("/apps/def/script/editor/create")
+            this.$router.push("/apps/def/script/create")
         }
     }
 }

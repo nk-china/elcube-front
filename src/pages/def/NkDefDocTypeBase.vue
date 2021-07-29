@@ -27,7 +27,7 @@
                 </div>
             </nk-form-item>
             <nk-form-item term="单据处理程序" :validateFor="docDef.refObjectType" required message="请选择单据处理程序">
-                <nk-script-label :value="docDef.refObjectType"></nk-script-label>
+                <nk-script-label :key="docDef.refObjectType" :value="docDef.refObjectType"></nk-script-label>
                 <a-select size="small" v-model="docDef.refObjectType"
                           placeholder="请选择单据处理程序"
                           style="width: 60%" slot="edit"

@@ -21,6 +21,7 @@
             {{value}}<a-tag color="red" style="margin-left: 5px;">NotFound</a-tag>
         </span>
     </span>
+    <span v-else>{{value}}</span>
 </template>
 
 <script>

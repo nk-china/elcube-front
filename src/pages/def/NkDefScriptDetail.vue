@@ -64,7 +64,19 @@
             </a-layout-sider>
             <a-layout-content style="padding-left: 20px;">
                 <a-card v-if="selected.key==='info'" title="组件信息" :key="'base-'+selected.cardKey">
+                    <a-button slot="extra" @click="addComponentDef" size="small">添加配置视图</a-button>
                     <nk-form :col="1" :edit="editMode">
+                        <nk-form-item title="类别">
+                            {{script.scriptType}}
+                            <a-select v-model="script.scriptType"
+                                      size="small"
+                                      style="max-width: 200px;"
+                                      default-value="Card"
+                                      slot="edit">
+                                <a-select-option key="Card">Card</a-select-option>
+                                <a-select-option key="Service">Service</a-select-option>
+                            </a-select>
+                        </nk-form-item>
                         <nk-form-item title="名称">
                             {{script.scriptName}}
                             <a-input v-if="routeParams.mode==='create'"
@@ -87,6 +99,9 @@
                         <nk-form-item title="版本">
                             {{script.version}}
                         </nk-form-item>
+                        <nk-form-item title="状态">
+                            {{script.state}}
+                        </nk-form-item>
                     </nk-form>
                 </a-card>
                 <a-card v-if="selected.key==='groovy'" title="处理程序" :key="'base-'+selected.cardKey">
@@ -107,7 +122,8 @@
                         ></codemirror>
                     </div>
                 </a-card>
-                <a-card v-if="selected.key && selected.key.startsWith('vue-def')" :title="`配置视图${selected.seq}`" :key="'base-'+selected.cardKey">
+                <a-card v-if="selected.key && selected.key.startsWith('vueDef')" :title="`配置视图${selected.seq}`" :key="'base-'+selected.cardKey">
+                    <a-button slot="extra" @click="removeComponentDef(selected)" size="small">移除</a-button>
                     <div class="editor">
                         <codemirror ref="codemirror3"
                                     :options="codeMirrorOptionsVue"
@@ -127,7 +143,7 @@ import {mapState} from "vuex";
 import {NkVueLoader} from "../../boot";
 
 import { codemirror } from 'vue-codemirror';
-import 'codemirror/lib/codemirror.css'
+import 'codemirror/lib/codemirror.css';
 import "codemirror/theme/panda-syntax.css";
 import "codemirror/addon/hint/show-hint.css";
 
@@ -180,7 +196,7 @@ export default {
             fullScreen:false,
             markdownOption,
 
-            script: {},
+            script: {scriptType:'Card'},
             vueDefs: undefined,
 
             loading:true,
@@ -250,7 +266,6 @@ export default {
 
         Promise.all(promises)
             .then((res)=>{
-                //this.options = res[0].data;
                 if(this.isCreate){
                     this.$emit('setTab',`新建单据类型`);
                     this.editMode = true;
@@ -262,12 +277,13 @@ export default {
                             this.vueDefs = arr.map(code=>{
                                 const seq = arr.indexOf(code)+1;
                                 return {
-                                    key:'vue-def'+seq,
+                                    key:'vueDef'+seq,
                                     seq,
                                     code
                                 }
-                            })
+                            });
                         }
+                        this.selected = this.menus[0];
                         this.$emit('setTab',`组件:${this.script.scriptName}`);
                     }
                 }
@@ -287,7 +303,6 @@ export default {
         },
         doRun(){
             this.valid().then(()=>{
-                this.startDebug();
                 this.loading = true;
 
                 if(this.script.vueMain){
@@ -383,6 +398,21 @@ export default {
                     })
             });
         },
+        addComponentDef(){
+            if(!this.vueDefs){
+                this.$set(this,'vueDefs',[]);
+            }
+            const seq = this.vueDefs.length + 1;
+            this.vueDefs.push({
+                key:'vueDef'+seq,
+                seq,
+                code: 'code'
+            });
+        },
+        removeComponentDef(item){
+              this.vueDefs.splice(this.vueDefs.indexOf(item),1);
+              this.selected = this.menus[0];
+        },
         valid(){
             this.script.vueDefs = this.vueDefs && JSON.stringify(this.vueDefs.map(i=>i.code));
             return new Promise((resolve)=>{
@@ -418,6 +448,9 @@ export default {
         }
     }
     ::v-deep {
+        .ant-card-extra{
+            padding: 0;
+        }
         .ant-card + .ant-card{
             margin-top: 20px;
         }

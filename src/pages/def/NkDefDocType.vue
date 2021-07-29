@@ -56,6 +56,14 @@
                         {{i.cardName || '未命名卡片'}}
                     </a-list-item>
                 </a-list>
+                <a-list item-layout="horizontal" :data-source="histories" style="margin-top: 2px">
+                    <a-list-item slot="renderItem"
+                                 slot-scope="i"
+                                 @click="toVersion(i)">
+                            <span>{{i.version}}</span>
+                            <a-tag>{{i.state}}</a-tag>
+                    </a-list-item>
+                </a-list>
             </a-layout-sider>
             <a-layout-content style="padding-left: 20px;padding-bottom: 100px;">
                 <a-card v-if="selected.cardHandler" title="卡片信息" :key="'base-'+selected.cardKey">
@@ -189,6 +197,7 @@ export default {
             loading:true,
             editMode:false,
             routeParams:undefined,
+            histories:[],
             options:{},
             selected: {},
             cards:[{
@@ -234,6 +243,7 @@ export default {
         promises.push(this.$http.get(`/api/def/doc/type/options?classify=${this.def.docClassify||''}`));
         if(!this.isCreate){
             promises.push(this.$http.get(`/api/def/doc/type/detail/${this.routeParams.type}/${this.routeParams.version}`));
+            promises.push(this.$http.get(`/api/def/doc/type/list/${this.routeParams.type}/${this.routeParams.version}/1`));
         }
 
         Promise.all(promises)
@@ -244,6 +254,7 @@ export default {
                     this.editMode = true;
                 }else{
                     this.def = res[1].data;
+                    this.histories = res[2].data;
                     this.$emit('setTab',`单据类型:${this.def.docType}`);
                 }
                 this.loading = false;
@@ -335,6 +346,12 @@ export default {
                         this.loading = false;
                     })
             });
+        },
+        toVersion(i){
+            if(i.version!==this.def.version){
+                this.loading = true;
+                this.$emit('replace',`/apps/def/doc/detail/${i.docType}/${i.version}`);
+            }
         },
         valid(){
             return new Promise((resolve)=>{

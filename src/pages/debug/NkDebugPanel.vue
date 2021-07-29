@@ -70,7 +70,7 @@ export default {
         showModel(){
             this.$http.get("/api/debug/contexts")
                 .then((res)=>{
-                    this.debugContextList = res.data;
+                    this.debugContextList = res.data || [];
                     this.debugContextListVisible = true;
                 })
         },

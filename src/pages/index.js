@@ -236,7 +236,7 @@ module.routes = [
           },
           {
             name: "新建脚本",
-            path: ':mode/:scriptName',
+            path: ':mode',
             component: NkDefScriptDetail
           },
         ]

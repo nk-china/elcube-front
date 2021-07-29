@@ -26,8 +26,7 @@ function componentLoader(componentName, template, modules) {
             },
             addStyle(textContent) {
                 const style = Object.assign(document.createElement('style'), { textContent });
-                const ref = document.head.getElementsByTagName('style')[0] || null;
-                document.head.insertBefore(style, ref);
+                document.head.append(style);
             },
         }
     ));
