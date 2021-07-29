@@ -3,12 +3,12 @@
 export default {
 
   getToken(){
-    return localStorage.getItem("$NK-Auth-AccessToken");
+    return localStorage.getItem("$NK-Auth-AccessToken")||'';
   },
   state(){
 
     let now     = new Date().getTime();
-    let token   = localStorage.getItem("$NK-Auth-AccessToken")
+    let token   = localStorage.getItem("$NK-Auth-AccessToken")||'';
     let expire  = localStorage.getItem("$NK-Auth-Expire") - now;
     let refresh = localStorage.getItem("$NK-Auth-Refresh") - now;
 

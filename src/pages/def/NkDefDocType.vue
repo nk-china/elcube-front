@@ -3,7 +3,7 @@
         <div slot="action">
             <a-button-group>
                 <a-tooltip title="调试">
-                    <a-button type="primary" @click="doRun"       :disabled="def.state==='Active'" >
+                    <a-button type="primary" @click="doRun"       :disabled="!debugId" >
                         <a-icon type="play-circle" />
                     </a-button>
                 </a-tooltip>
@@ -110,7 +110,7 @@ import NkDefDocTypeBizFlow from "./NkDefDocTypeBizFlow";
 import NkDefDocTypeCycle from "./NkDefDocTypeCycle";
 import NkDefDocTypeCards from "./NkDefDocTypeCards";
 import NkUtil from "../../utils/NkUtil";
-import {mapMutations} from "vuex";
+import {mapState} from "vuex";
 
 const defaultCards = [
     {key:"doc",     name:"基本信息",    defComponentNames: [NkDefDocTypeBase,NkDefDocTypeStatus,NkDefDocTypeBizFlow]},
@@ -216,6 +216,9 @@ export default {
         }
     },
     computed:{
+        ...mapState('Debug',[
+            'debugId'
+        ]),
         isCreate(){
             return this.routeParams.mode==='create';
         }
@@ -247,17 +250,12 @@ export default {
             })
     },
     methods:{
-        ...mapMutations('Debug',[
-            'startDebug','stopDebug'
-        ]),
         init(){
         },
         menuClick(menu){
             this.selected = menu;
-            console.log(this.def)
         },
         doRun(){
-            this.startDebug();
             this.loading = true;
             this.$http.postJSON(`/api/def/doc/type/debug`,this.def)
                 .then(()=>{

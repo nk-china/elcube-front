@@ -161,13 +161,10 @@ export default (Vue) => {
         AuthUtils.setToken(res.data);
         resolve.apply(that,arguments)
       }).catch(()=>{
-        //reject(e);
         if(fromRoute&&fromRoute.path==='/'){
-          //reject(e);
           next({path: '/'})
         }else{
           console.log("重新登陆");
-          //resolve.apply(this)
           User.state.reLogin=true;
           User.state.reLoginSuccess.push(resolve);
 
@@ -198,7 +195,6 @@ export default (Vue) => {
       return targetRequestFunction.apply(that,args);
     }else{
       return new Promise((resolve,reject)=>{
-        // if(state.refresh){
           refreshToken.apply(that,args)
             .then(()=>{
               targetRequestFunction
@@ -207,17 +203,6 @@ export default (Vue) => {
                 .catch(reject);
             })
             .catch(reject)
-        // }else{
-        //   reject({"message":"会话已超时"});
-        //   Vue.prototype.$warning({
-        //     centered: true,
-        //     title: '提示',
-        //     content: '会话已超时',
-        //   })
-        //   setTimeout(()=>{
-        //     location.reload();
-        //   },2000)
-        // }
       });
     }
   }
@@ -246,5 +231,7 @@ export default (Vue) => {
    postJSON (url,data,config) { return doRequest.apply(this,[instanceJSON.post,    arguments]) },
    // eslint-disable-next-line no-unused-vars
    putJSON  (url,data,config) { return doRequest.apply(this,[instanceJSON.put,     arguments]) },
+   instanceJSON,
+   instanceForm
  }
 }

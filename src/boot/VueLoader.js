@@ -38,10 +38,9 @@ function loadVueTemplate(componentName, template){
 }
 
 function reloadVueResources(){
-    return new Promise((resolve,reject)=>{
-        Vue.prototype.$http.get("/api/def/resources/vue")
+    return new Promise((resolve)=>{
+        Vue.prototype.$http.instanceJSON.get("/api/def/resources/vue")
             .then(res=>{
-
                 let count = 0;
                 for(let componentName in res.data){
                     if(res.data.hasOwnProperty(componentName)){
@@ -51,7 +50,10 @@ function reloadVueResources(){
                     count ++;
                 }
                 resolve([res.data,count]);
-            }).catch(reject);
+            }).catch(()=>{
+                localStorage.clear();
+                location.reload();
+            });
     })
 }
 

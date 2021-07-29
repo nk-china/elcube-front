@@ -3,7 +3,7 @@
         <div slot="action">
             <a-button-group>
                 <a-tooltip title="调试">
-                    <a-button type="primary" @click="doRun"       :disabled="script.state==='Active'" >
+                    <a-button type="primary" @click="doRun"       :disabled="!debugId" >
                         <a-icon type="play-circle" />
                     </a-button>
                 </a-tooltip>
@@ -123,7 +123,7 @@
 
 <script>
 import XNkPageLayout from "../../layout/template/XNkPageLayout";
-import {mapMutations} from "vuex";
+import {mapState} from "vuex";
 import {NkVueLoader} from "../../boot";
 
 import { codemirror } from 'vue-codemirror';
@@ -191,6 +191,9 @@ export default {
         }
     },
     computed:{
+        ...mapState('Debug',[
+            'debugId'
+        ]),
         isCreate(){
             return this.routeParams.mode==='create';
         },
@@ -272,9 +275,6 @@ export default {
             })
     },
     methods:{
-        ...mapMutations('Debug',[
-            'startDebug','stopDebug'
-        ]),
         menuClick(menu){
             this.selected = menu;
         },
