@@ -1,34 +1,36 @@
 <template>
     <x-nk-page-layout :title="def.docType" :sub-title="def.docName" :spinning="loading">
+
+        <div slot="top" v-if="def.debug" style="padding: 10px 10px 0 10px;">
+            <a-alert message="正在调试" type="warning" show-icon />
+        </div>
+
         <div slot="action">
             <a-button-group>
                 <a-tooltip title="调试">
-                    <a-button type="primary" @click="doRun"       :disabled="!debugId" >
+                    <a-button type="primary" @click="doRun"       :disabled="!debugId || def.state!=='InActive'" >
                         <a-icon type="play-circle" />
                     </a-button>
                 </a-tooltip>
                 <a-tooltip title="激活">
-                    <a-button type="danger"  @click="doActive"    :disabled="isCreate || def.state==='Active'" >
+                    <a-button type="danger"  @click="doActive"    :disabled="isCreate || def.state!=='InActive'" >
                         <a-icon type="exclamation-circle" />
                     </a-button>
                 </a-tooltip>
                 <a-tooltip title="编辑">
-                    <a-button                @click="doEdit"      :disabled="editMode"             >
+                    <a-button                @click="doEdit"      :disabled="editMode || def.state!=='InActive'">
                         <a-icon type="edit" />
                     </a-button>
                 </a-tooltip>
                 <a-tooltip title="保存">
-                    <a-button                @click="doUpdate"    :disabled="!editMode"            >
+                    <a-button                @click="doUpdate"    :disabled="!editMode || def.debug"            >
                         <a-icon type="save" />
                     </a-button>
                 </a-tooltip>
                 <a-dropdown>
                     <a-menu slot="overlay" @click="handleMenuClick">
                         <a-menu-item key="doBreach" :disabled="isCreate">
-                            <a-icon type="branches" /> 创建分支
-                        </a-menu-item>
-                        <a-menu-item key="showHistory" :disabled="isCreate">
-                            <a-icon type="clock-circle" /> 历史版本
+                            <a-icon type="branches" /> 复制
                         </a-menu-item>
                         <a-menu-item key="doDelete" :disabled="isCreate || def.state==='Active'">
                             <a-icon type="delete" /> 删除
@@ -57,22 +59,26 @@
                     </a-list-item>
                 </a-list>
                 <a-list item-layout="horizontal" :data-source="histories" style="margin-top: 2px">
+                    <div slot="header">
+                        版本记录
+                    </div>
                     <a-list-item slot="renderItem"
                                  slot-scope="i"
+                                 :class="{active:i.version===def.version}"
                                  @click="toVersion(i)">
-                            <span>{{i.version}}</span>
+                            <span>{{i.version | formatVersion}}</span>
                             <a-tag>{{i.state}}</a-tag>
                     </a-list-item>
                 </a-list>
             </a-layout-sider>
             <a-layout-content style="padding-left: 20px;padding-bottom: 100px;">
-                <a-card v-if="selected.cardHandler" title="卡片信息" :key="'base-'+selected.cardKey">
+                <a-card v-if="selected.beanName" title="卡片信息" :key="'base-'+selected.cardKey">
                     <nk-form :col="2">
                         <nk-form-item title="KEY">
                             {{selected.cardKey}}
                         </nk-form-item>
                         <nk-form-item title="逻辑对象">
-                            <nk-script-label :value="selected.cardHandler"></nk-script-label>
+                            <nk-script-label :value="selected.beanName"></nk-script-label>
                         </nk-form-item>
                         <nk-form-item title="计算次数">
                             {{selected.calcTimes}}
@@ -88,15 +94,7 @@
                         </nk-form-item>
                     </nk-form>
                 </a-card>
-                <component
-                           v-for="(item,index) in selected.defComponentNames"
-                           :key="index"
-                           :is="item"
-                           :doc-def="def"
-                           :card-key="selected.cardKey"
-                           :doc-options="options"
-                           :edit-mode="editMode" />
-                <a-card v-if="selected.cardHandler" title="文档" :key="'document-'+selected.cardKey">
+                <a-card v-if="selected.beanName" title="文档" :key="'document-'+selected.cardKey">
                     <mavon-editor v-model="selected.markdown"
                                   :subfield="false"
                                   :toolbarsFlag="editMode"
@@ -105,6 +103,14 @@
                                   style="min-height: 180px;"
                     />
                 </a-card>
+                <component
+                           v-for="(item,index) in selected.defComponentNames"
+                           :key="index"
+                           :is="item"
+                           :doc-def="def"
+                           :card-key="selected.cardKey"
+                           :doc-options="options"
+                           :edit-mode="editMode" />
             </a-layout-content>
         </a-layout>
     </x-nk-page-layout>
@@ -165,6 +171,11 @@ export default {
         NkDefDocTypeStatus,
         NkDefDocTypeCycle,
         NkDefDocTypeCards
+    },
+    filters:{
+        formatVersion : (v)=>{
+            return v.split('-')[0];
+        }
     },
     data(){
         return {
@@ -243,18 +254,19 @@ export default {
         promises.push(this.$http.get(`/api/def/doc/type/options?classify=${this.def.docClassify||''}`));
         if(!this.isCreate){
             promises.push(this.$http.get(`/api/def/doc/type/detail/${this.routeParams.type}/${this.routeParams.version}`));
-            promises.push(this.$http.get(`/api/def/doc/type/list/${this.routeParams.type}/${this.routeParams.version}/1`));
+            promises.push(this.$http.get(`/api/def/doc/type/list/${this.routeParams.type}/1`));
         }
 
         Promise.all(promises)
             .then((res)=>{
                 this.options = res[0].data;
                 if(this.isCreate){
-                    this.$emit('setTab',`新建单据类型`);
                     this.editMode = true;
+                    this.$emit('setTab',`新建单据类型`);
                 }else{
                     this.def = res[1].data;
                     this.histories = res[2].data;
+                    this.editMode = this.def.state === 'InActive' || this.editMode;
                     this.$emit('setTab',`单据类型:${this.def.docType}`);
                 }
                 this.loading = false;
@@ -312,22 +324,7 @@ export default {
             });
         },
         doEdit(){
-            //this.valid().then(()=>{
-                this.loading = true;
-                this.$http.postJSON(`/api/def/doc/type/edit`,this.def)
-                    .then((res)=>{
-                        if(this.def.version!==res.data.version){
-                            this.$emit("replace",`/apps/def/doc/detail/${this.def.docType}/${res.data.version}`)
-                        }else{
-                            this.editMode = true;
-                            this.def = res.data;
-                            this.loading = false;
-                        }
-                    })
-                    .catch(()=>{
-                        this.loading = false;
-                    })
-            //});
+            this.editMode = true;
         },
         doUpdate(){
             this.valid().then(()=>{
@@ -337,7 +334,6 @@ export default {
                         if(!this.def.version){
                             this.$emit("replace",`/apps/def/doc/detail/${this.def.docType}/${res.data.version}`)
                         }else{
-                            this.editMode = false;
                             this.def = res.data;
                             this.loading = false;
                         }
@@ -401,6 +397,9 @@ export default {
         .v-note-wrapper{
             z-index: 1;
         }
+    }
+    .active{
+        color: #1890ff;
     }
 
 </style>

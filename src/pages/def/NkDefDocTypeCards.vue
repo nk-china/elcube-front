@@ -17,7 +17,7 @@
             header-cell-class-name="headerCellClassName"
             :edit-config="{trigger: 'click', mode: 'row', showIcon: editMode, activeMethod: ()=>{return editMode}}"
             :data="docDef.cards">
-            <vxe-table-column   title="卡片"         field="cardHandler"        width="24%"  :edit-render="{
+            <vxe-table-column   title="卡片"         field="beanName"        width="24%"  :edit-render="{
                         name: '$select',
                         options: docOptions.cards,
                         optionProps: {value: 'key', label: 'name'},
@@ -71,7 +71,7 @@ export default {
     methods:{
         addComponent(){
             let row = {
-                cardHandler:'',
+                beanName:'',
                 cardKey:'',
                 cardName:'',
                 calcOrder:1,
@@ -84,14 +84,14 @@ export default {
         },
         componentChange({row}){
 
-            this.$http.get(`/api/def/doc/card/${row.cardHandler}`)
+            this.$http.get(`/api/def/doc/card/${row.beanName}`)
                 .then(res=>{
                     row.dataComponentName       = res.data.dataComponentName;
                     row.defComponentNames       = res.data.defComponentNames;
                     row.cardName = res.data.cardName;
 
-                    if(!this.docDef.cards.find(i=>i.cardKey===res.data.cardHandler)){
-                        row.cardKey = res.data.cardHandler;
+                    if(!this.docDef.cards.find(i=>i.cardKey===res.data.beanName)){
+                        row.cardKey = res.data.beanName;
                     }
 
                     // if(NkUtil.isRepeat(this.docDef.cards,["cardKey"])){

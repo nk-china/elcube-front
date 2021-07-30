@@ -37,9 +37,6 @@
                         <a-menu-item key="doBreach" :disabled="isCreate">
                             <a-icon type="branches" /> 复制
                         </a-menu-item>
-<!--                        <a-menu-item key="showHistory" :disabled="isCreate">-->
-<!--                            <a-icon type="clock-circle" /> 历史版本-->
-<!--                        </a-menu-item>-->
                         <a-menu-item key="doDelete" :disabled="isCreate || script.state!=='InActive'">
                             <a-icon type="delete" /> 删除
                         </a-menu-item>
@@ -372,22 +369,7 @@ export default {
             });
         },
         doEdit(){
-            this.valid().then(()=>{
-                this.loading = true;
-                this.$http.postJSON(`/api/def/script/edit`,this.script)
-                    .then((res)=>{
-                        if(this.script.version!==res.data.version){
-                            this.$emit("replace",`/apps/def/script/detail/${this.script.scriptName}/${res.data.version}`)
-                        }else{
-                            this.editMode = true;
-                            this.script = res.data;
-                            this.loading = false;
-                        }
-                    })
-                    .catch(()=>{
-                        this.loading = false;
-                    })
-            });
+            this.editMode = true;
         },
         doUpdate(){
             this.valid().then(()=>{

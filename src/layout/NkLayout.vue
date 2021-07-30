@@ -315,11 +315,11 @@ export default {
             }
         },
         tabReplace(item, path){
-            setTimeout(()=>{
+            // setTimeout(()=>{
                 this.activePage = this.pages[this.pages.indexOf(item)-1].path;
                 this.tabClose(item, true);
                 location.replace(`${location.href.toString().replace(location.hash, '')}#${path}`);
-            },800)
+            // },100)
         },
         tabUpdate(item,options){
             if(options){

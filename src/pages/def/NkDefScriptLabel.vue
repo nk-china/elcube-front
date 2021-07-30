@@ -13,6 +13,10 @@
                 <router-link :to="`/apps/def/script/detail/${beanDescribe.className}/${beanDescribe.version}`" style="color: #1890ff">{{value}}</router-link>
                 <a-tag color="blue"   style="margin-left: 5px;">InActive</a-tag>
             </template>
+            <template v-else-if="beanDescribe.state==='Native'">
+                <router-link :to="`/apps/def/script/detail/${beanDescribe.className}/${beanDescribe.version}`" style="color: #1890ff">{{value}}</router-link>
+                <a-tag color="blue"   style="margin-left: 5px;">Native</a-tag>
+            </template>
         </template>
         <span v-else-if="beanDescribe.className">
             {{value}}<a-tag color="blue" style="margin-left: 5px;">Native</a-tag>

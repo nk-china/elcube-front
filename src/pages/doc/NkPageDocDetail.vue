@@ -10,6 +10,10 @@
                       :right-bar="true"
                       :header-indent="false"
     >
+        <div slot="top" v-if="doc.def && doc.def.debug" style="padding: 10px 10px 0 10px;">
+            <a-alert message="正在调试" type="warning" show-icon />
+        </div>
+
         <div v-if="history" slot="top" style="padding: 20px 20px 0 20px;">
             <div class="ant-alert ant-alert-warning ant-alert-closable">
                 <a-icon class="ant-alert-icon" type="info-circle" theme="filled"/>
@@ -26,23 +30,25 @@
 
         <a-row slot="content">
             <a-col :span="18">
-                <template v-for="(c) in availableCards">
-                    <component ref="components"
-                               v-if="c.position==='header' && c.dataComponentName"
-                               :class="`nk-page-layout-card ${historyClass(c.cardKey)}`"
-                               :is="c.dataComponentName"
-                               :id="buildAnchorLink(c.cardKey)"
-                               :key="c.cardKey"
-                               :card="c"
-                               :doc="doc"
-                               :editMode="editMode && c.writeable"
-                               :createMode="createMode"
-                               @nk-reload="reload"
-                               @nk-save="doSave"
-                               @nk-calc="nkCalc(c,$event)"
-                               @nk-changed="nkChanged($event,c)"
-                    />
-                </template>
+                <div style="min-height: 100px;">
+                    <template v-for="(c) in availableCards">
+                        <component ref="components"
+                                   v-if="c.position==='header' && c.dataComponentName"
+                                   :class="`nk-page-layout-card ${historyClass(c.cardKey)}`"
+                                   :is="c.dataComponentName"
+                                   :id="buildAnchorLink(c.cardKey)"
+                                   :key="c.cardKey"
+                                   :card="c"
+                                   :doc="doc"
+                                   :editMode="editMode && c.writeable"
+                                   :createMode="createMode"
+                                   @nk-reload="reload"
+                                   @nk-save="doSave"
+                                   @nk-calc="nkCalc(c,$event)"
+                                   @nk-changed="nkChanged($event,c)"
+                        />
+                    </template>
+                </div>
             </a-col>
             <a-col :span="6">
                 <a-statistic title="状态" :value="doc.docState | nkFromList(doc.def&&doc.def.status,'docStateDesc','docState')"/>

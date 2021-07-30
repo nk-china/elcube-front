@@ -16,6 +16,10 @@
 
 <script>
 import qs from 'qs';
+
+const formatVersion = ({cellValue})=>{
+    return cellValue.split('-')[0];
+}
 const classifies = [
     {label: "伙伴",value:"PARTNER"},
     {label: "交易",value:"TRANSACTION"},
@@ -83,7 +87,7 @@ export default {
               },
               { field: 'docType',       title: '单据类型', width: '9%',editRender: { name: 'input' },sortable:true, params:{ orderField: 'DOC_TYPE' } },
               { field: 'docName',       title: '类型描述', width: '20%',editRender: { name: 'input' } },
-              { field: 'version',       title: '版本',    width: '8%',editRender: { name: 'input' },sortable:true, params:{ orderField: 'VERSION' } },
+              { field: 'version',       title: '版本',    width: '8%',editRender: { name: 'input' },sortable:true, params:{ orderField: 'VERSION' }, formatter: formatVersion },
               { field: 'validFrom',     title: '有效期起', width: '10%'},
               { field: 'validTo',       title: '有效期至', width: '10%'},
               { field: 'state',         title: '状态',     width: '10%', editRender: { name: 'input' },sortable:true, params:{ orderField: 'STATE' },
