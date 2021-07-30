@@ -8,22 +8,22 @@
         <div slot="action">
             <a-button-group>
                 <a-tooltip title="调试">
-                    <a-button type="primary" @click="doRun"       :disabled="!debugId || script.state!=='InActive' || script.version==='@'" >
+                    <a-button type="primary" @click="doRun"       :disabled="disabledOnlineEditing || !debugId || script.state!=='InActive' || script.version==='@'" >
                         <a-icon type="play-circle" />
                     </a-button>
                 </a-tooltip>
                 <a-tooltip title="激活">
-                    <a-button type="danger"  @click="doActive"    :disabled="isCreate || script.state!=='InActive'" >
+                    <a-button type="danger"  @click="doActive"    :disabled="disabledOnlineEditing || isCreate || script.state!=='InActive'" >
                         <a-icon type="exclamation-circle" />
                     </a-button>
                 </a-tooltip>
                 <a-tooltip title="编辑">
-                    <a-button                @click="doEdit"      :disabled="editMode || script.state!=='InActive' || script.version==='@' " >
+                    <a-button                @click="doEdit"      :disabled="disabledOnlineEditing || editMode || script.state!=='InActive' || script.version==='@' " >
                         <a-icon type="edit" />
                     </a-button>
                 </a-tooltip>
                 <a-tooltip title="保存">
-                    <a-button                @click="doUpdate"    :disabled="!editMode || script.debug"            >
+                    <a-button                @click="doUpdate"    :disabled="disabledOnlineEditing || !editMode || script.debug"            >
                         <a-icon type="save" />
                     </a-button>
                 </a-tooltip>
@@ -34,10 +34,10 @@
                 </a-tooltip>
                 <a-dropdown>
                     <a-menu slot="overlay" @click="handleMenuClick">
-                        <a-menu-item key="doBreach" :disabled="isCreate">
+                        <a-menu-item key="doBreach" :disabled="disabledOnlineEditing || isCreate">
                             <a-icon type="branches" /> 复制
                         </a-menu-item>
-                        <a-menu-item key="doDelete" :disabled="isCreate || script.state!=='InActive'">
+                        <a-menu-item key="doDelete" :disabled="disabledOnlineEditing || isCreate || script.state!=='InActive'">
                             <a-icon type="delete" /> 删除
                         </a-menu-item>
                     </a-menu>
@@ -198,6 +198,7 @@ export default {
         return {
             fullScreen:false,
             markdownOption,
+            disabledOnlineEditing:true,
 
             script: {scriptType:'Card'},
             vueDefs: undefined,
@@ -263,6 +264,7 @@ export default {
 
         this.loading = true;
         let promises = [];
+        promises.push(this.$http.get(`/api/def/script/online/editing`));
         if(!this.isCreate){
             promises.push(this.$http.get(`/api/def/script/detail/${this.routeParams.script}/${this.routeParams.version}`));
         }
@@ -273,8 +275,9 @@ export default {
                     this.$emit('setTab',`新建单据类型`);
                     this.editMode = true;
                 }else{
-                    if(res[0].data){
-                        this.script = res[0].data;
+                    this.disabledOnlineEditing = res[0].data;
+                    if(res[1].data){
+                        this.script = res[1].data;
                         if(this.script.vueDefs){
                             const arr = JSON.parse(this.script.vueDefs);
                             this.vueDefs = arr.map(code=>{
@@ -287,7 +290,7 @@ export default {
                             });
                         }
                         this.selected = this.menus[0];
-                        this.editMode = this.script.state === 'InActive' || this.editMode;
+                        this.editMode = !this.disabledOnlineEditing && this.script.state === 'InActive' || this.editMode;
                         this.$emit('setTab',`组件:${this.script.scriptName}`);
                     }
                 }
