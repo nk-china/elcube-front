@@ -2,7 +2,7 @@
     <x-nk-page-layout :title="script.scriptName" :sub-title="script.scriptDesc" :spinning="loading" :class="{'full-screen':fullScreen}">
 
         <div slot="top" v-if="script.debug" style="padding: 10px 10px 0 10px;">
-            <a-alert message="正在调试" type="warning" show-icon />
+            <a-alert message="卡片程序正在调试" type="warning" show-icon />
         </div>
 
         <div slot="action">

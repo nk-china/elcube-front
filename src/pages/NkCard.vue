@@ -13,7 +13,7 @@
             @tabChange="tabChange"
     >
 
-        <div  v-if=" nkOptions.componentName || title" slot="title" @dblclick="editMode !==undefined && switchExpand()" style="user-select: none">{{nkOptions.componentName||title}}</div>
+        <div  v-if=" card.cardName || title" slot="title" @dblclick="editMode !==undefined && switchExpand()" style="user-select: none">{{card.cardName||title}}</div>
         <slot v-else slot="title" name="title"></slot>
         <slot slot="actions" name="actions"></slot>
         <slot slot="cover" name="cover"></slot>
@@ -25,7 +25,8 @@
         </div>
         <div slot="extra">
             <slot name="extra" v-if="expand"></slot>
-            <nk-help-link v-if="nkOptions.markdownFlag" slot="extra" :nk-options="nkOptions" />
+            <nk-script-label v-if="card.debug" :value="card.beanName"></nk-script-label>
+            <nk-help-link v-if="nkOptions.markdownFlag" :nk-options="nkOptions" />
             <a-icon v-if="editMode !==undefined && !tabList" v-show="!expand" class="expand" type="caret-up"    @click="switchExpand"></a-icon>
             <a-icon v-if="editMode !==undefined && !tabList" v-show=" expand" class="expand" type="caret-down"  @click="switchExpand"></a-icon>
         </div>
@@ -90,6 +91,12 @@ export default {
         defaultActiveTabKey:String,
         tabList:Array,
         cardKey:String,
+        card:{
+            type:Object,
+            default(){
+                return {}
+            }
+        },
         nkOptions:{
             type:Object,
             default(){

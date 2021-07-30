@@ -2,7 +2,7 @@
     <x-nk-page-layout :title="def.docType" :sub-title="def.docName" :spinning="loading">
 
         <div slot="top" v-if="def.debug" style="padding: 10px 10px 0 10px;">
-            <a-alert message="正在调试" type="warning" show-icon />
+            <a-alert message="单据配置正在调试" type="warning" show-icon />
         </div>
 
         <div slot="action">

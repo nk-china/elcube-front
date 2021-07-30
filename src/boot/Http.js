@@ -28,6 +28,12 @@ export default (Vue) => {
     }
     return Promise.resolve(config)
   };
+  let onRequestNoneToken = config => {
+    if(StateDebug.state.debugId){
+      config.headers.common['NK-Debug'] = StateDebug.state.debugId;
+    }
+    return Promise.resolve(config)
+  };
   let onRequestRejected = error => {
     return Promise.reject(error)
   };
@@ -100,11 +106,16 @@ export default (Vue) => {
   const instanceJSON = axios.create(Object.assign({
     headers: {'Content-Type': 'application/json; charset=utf-8'}
   },defaultConfig));
+  const instanceNone = axios.create(Object.assign({
+    headers: {'Content-Type': 'application/json; charset=utf-8'}
+  },defaultConfig));
 
   instanceForm.interceptors.request.use(onRequestFulfilled, onRequestRejected);
   instanceForm.interceptors.response.use(onResponseSuccess, onResponseError);
   instanceJSON.interceptors.request.use(onRequestFulfilled, onRequestRejected);
   instanceJSON.interceptors.response.use(onResponseSuccess, onResponseError);
+  instanceNone.interceptors.request.use(onRequestNoneToken, onRequestRejected);
+  instanceNone.interceptors.response.use(onResponseSuccess, onResponseError);
 
   let interval = undefined;
   let time = 90;
@@ -231,7 +242,6 @@ export default (Vue) => {
    postJSON (url,data,config) { return doRequest.apply(this,[instanceJSON.post,    arguments]) },
    // eslint-disable-next-line no-unused-vars
    putJSON  (url,data,config) { return doRequest.apply(this,[instanceJSON.put,     arguments]) },
-   instanceJSON,
-   instanceForm
+   instanceNone
  }
 }

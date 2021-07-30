@@ -12,7 +12,6 @@ NkVueLoader.reloadVueResources()
           store   : NkVuexStore({}),
           render  : h => h(App)
         }).$mount('#app');
-    }).catch((e)=>{
-        console.log(e.response)
+    }).catch(()=>{
     });
 

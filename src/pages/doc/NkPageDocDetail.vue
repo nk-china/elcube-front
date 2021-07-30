@@ -10,8 +10,8 @@
                       :right-bar="true"
                       :header-indent="false"
     >
-        <div slot="top" v-if="doc.def && doc.def.debug" style="padding: 10px 10px 0 10px;">
-            <a-alert message="正在调试" type="warning" show-icon />
+        <div slot="top" v-if="this.doc.def && this.doc.def.debug" style="padding: 10px 10px 0 10px;">
+            <a-alert message="单据配置正在调试" type="warning" show-icon />
         </div>
 
         <div v-if="history" slot="top" style="padding: 20px 20px 0 20px;">
@@ -34,7 +34,7 @@
                     <template v-for="(c) in availableCards">
                         <component ref="components"
                                    v-if="c.position==='header' && c.dataComponentName"
-                                   :class="`nk-page-layout-card ${historyClass(c.cardKey)}`"
+                                   :class="`nk-page-layout-card ${historyClass(c.cardKey)} ${debugClass(c.debug)}`"
                                    :is="c.dataComponentName"
                                    :id="buildAnchorLink(c.cardKey)"
                                    :key="c.cardKey"
@@ -117,7 +117,7 @@
         <template v-for="(c) in availableCards">
             <component ref="components"
                        v-if="c.position==='default' && c.dataComponentName"
-                       :class="`nk-page-layout-card ${historyClass(c.cardKey)}`"
+                       :class="`nk-page-layout-card ${historyClass(c.cardKey)} ${debugClass(c.debug)}`"
                        :is="c.dataComponentName"
                        :id="buildAnchorLink(c.cardKey)"
                        :key="c.cardKey"
@@ -154,7 +154,7 @@
 
             <component  v-for="(c) in sidebarCards"
                         ref="components"
-                        :class="`nk-page-layout-card ${historyClass(c.cardKey)}`"
+                        :class="`nk-page-layout-card ${historyClass(c.cardKey)} ${debugClass(c.debug)}`"
                         :is="c.dataComponentName"
                         :id="buildAnchorLink(c.cardKey)"
                         :key="c.cardKey"
@@ -414,6 +414,11 @@ export default {
             this.loading = true;
             this.editMode = false;
             this.initData();
+        },
+        debugClass(debug){
+            if(debug){
+                return "debug"
+            }
         }
     }
 }
@@ -445,5 +450,9 @@ export default {
     .ant-card-head{
         margin-bottom: 0;
     }
+}
+.debug{
+    border:1px solid #ffe58f;
+    background-color: #fffbe6;
 }
 </style>
