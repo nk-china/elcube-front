@@ -202,8 +202,7 @@ export default {
                 bpm:{},
                 validFrom:'',
                 validTo:'',
-                state:'InActive',
-                debug:false
+                state:'InActive'
             },
 
             loading:true,

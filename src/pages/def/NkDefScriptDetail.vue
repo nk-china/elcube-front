@@ -200,7 +200,7 @@ export default {
             markdownOption,
             disabledOnlineEditing:true,
 
-            script: {scriptType:'Card',debug:false},
+            script: {scriptType:'Card'},
             vueDefs: undefined,
 
             loading:true,
