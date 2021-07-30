@@ -200,7 +200,7 @@ export default {
             markdownOption,
             disabledOnlineEditing:true,
 
-            script: {scriptType:'Card'},
+            script: {scriptType:'Card',debug:false},
             vueDefs: undefined,
 
             loading:true,
@@ -326,7 +326,8 @@ export default {
             this.valid().then(()=>{
                 this.loading = true;
                 this.$http.postJSON(`/api/def/script/debug`,this.script)
-                    .then(()=>{
+                    .then((res)=>{
+                        this.script = res.data;
                         this.regVueTemplate();
                         this.$message.info("配置已运行")
                     })
