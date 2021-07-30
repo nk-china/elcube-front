@@ -16,6 +16,11 @@
 
 <script>
 import qs from "qs";
+
+const formatVersion = ({cellValue})=>{
+    return cellValue.split('-')[0];
+}
+
 export default {
     computed:{
         searchItemsDefault(){
@@ -50,9 +55,9 @@ export default {
                 { type: 'seq',          title: '#',      width: '4%', },
                 { field: 'scriptName',  title: '组件',    width: '25%', sortable:true, params:{ orderField: 'SCRIPT_NAME'}},
                 { field: 'scriptDesc',  title: '描述',    width: '30%', sortable:true, params:{ orderField: 'SCRIPT_DESC'}},
-                { field: 'version',     title: '版本',    width: '10%', sortable:true, params:{ orderField: 'VERSION'}},
+                { field: 'version',     title: '版本',    width: '10%', sortable:true, params:{ orderField: 'VERSION'},formatter: formatVersion},
                 { field: 'state',       title: '状态',    width: '10%', sortable:true, params:{ orderField: 'STATE'}},
-                { field: 'updatedTime', title: '更新时间', width: '10%', sortable:true, params:{ orderField: 'UPDATED_TIME', formatter: 'nkDatetimeFriendly' }},
+                { field: 'updatedTime', title: '更新时间', width: '10%', sortable:true, params:{ orderField: 'UPDATED_TIME'}, formatter: 'nkDatetimeFriendly' },
                 {                       title: 'ACTION',
                     slots: { default: ({row},h) => {
                             return [h(

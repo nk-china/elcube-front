@@ -1,24 +1,29 @@
 <template>
     <x-nk-page-layout :title="script.scriptName" :sub-title="script.scriptDesc" :spinning="loading" :class="{'full-screen':fullScreen}">
+
+        <div slot="top" v-if="script.debug" style="padding: 10px 10px 0 10px;">
+            <a-alert message="正在调试" type="warning" show-icon />
+        </div>
+
         <div slot="action">
             <a-button-group>
                 <a-tooltip title="调试">
-                    <a-button type="primary" @click="doRun"       :disabled="!debugId" >
+                    <a-button type="primary" @click="doRun"       :disabled="!debugId || script.state!=='InActive' || script.version==='@'" >
                         <a-icon type="play-circle" />
                     </a-button>
                 </a-tooltip>
                 <a-tooltip title="激活">
-                    <a-button type="danger"  @click="doActive"    :disabled="isCreate || script.state==='Active'" >
+                    <a-button type="danger"  @click="doActive"    :disabled="isCreate || script.state!=='InActive'" >
                         <a-icon type="exclamation-circle" />
                     </a-button>
                 </a-tooltip>
                 <a-tooltip title="编辑">
-                    <a-button                @click="doEdit"      :disabled="editMode"             >
+                    <a-button                @click="doEdit"      :disabled="editMode || script.state!=='InActive' || script.version==='@' " >
                         <a-icon type="edit" />
                     </a-button>
                 </a-tooltip>
                 <a-tooltip title="保存">
-                    <a-button                @click="doUpdate"    :disabled="!editMode"            >
+                    <a-button                @click="doUpdate"    :disabled="!editMode || script.debug"            >
                         <a-icon type="save" />
                     </a-button>
                 </a-tooltip>
@@ -30,12 +35,12 @@
                 <a-dropdown>
                     <a-menu slot="overlay" @click="handleMenuClick">
                         <a-menu-item key="doBreach" :disabled="isCreate">
-                            <a-icon type="branches" /> 创建分支
+                            <a-icon type="branches" /> 复制
                         </a-menu-item>
-                        <a-menu-item key="showHistory" :disabled="isCreate">
-                            <a-icon type="clock-circle" /> 历史版本
-                        </a-menu-item>
-                        <a-menu-item key="doDelete" :disabled="isCreate || script.state==='Active'">
+<!--                        <a-menu-item key="showHistory" :disabled="isCreate">-->
+<!--                            <a-icon type="clock-circle" /> 历史版本-->
+<!--                        </a-menu-item>-->
+                        <a-menu-item key="doDelete" :disabled="isCreate || script.state!=='InActive'">
                             <a-icon type="delete" /> 删除
                         </a-menu-item>
                     </a-menu>
@@ -64,11 +69,12 @@
             </a-layout-sider>
             <a-layout-content style="padding-left: 20px;">
                 <a-card v-if="selected.key==='info'" title="组件信息" :key="'base-'+selected.cardKey">
-                    <a-button slot="extra" @click="addComponentDef" size="small">添加配置视图</a-button>
+                    <a-button v-if="editMode" slot="extra" @click="addComponentDef" size="small">添加配置视图</a-button>
                     <nk-form :col="1" :edit="editMode">
                         <nk-form-item title="类别">
                             {{script.scriptType}}
                             <a-select v-model="script.scriptType"
+                                      v-if="isCreate"
                                       size="small"
                                       style="max-width: 200px;"
                                       default-value="Card"
@@ -123,7 +129,7 @@
                     </div>
                 </a-card>
                 <a-card v-if="selected.key && selected.key.startsWith('vueDef')" :title="`配置视图${selected.seq}`" :key="'base-'+selected.cardKey">
-                    <a-button slot="extra" @click="removeComponentDef(selected)" size="small">移除</a-button>
+                    <a-button v-if="editMode" slot="extra" @click="removeComponentDef(selected)" size="small">移除</a-button>
                     <div class="editor">
                         <codemirror ref="codemirror3"
                                     :options="codeMirrorOptionsVue"
@@ -284,6 +290,7 @@ export default {
                             });
                         }
                         this.selected = this.menus[0];
+                        this.editMode = this.script.state === 'InActive' || this.editMode;
                         this.$emit('setTab',`组件:${this.script.scriptName}`);
                     }
                 }
@@ -301,26 +308,26 @@ export default {
                 this.vueDefs.find(i=>i.key===key).code = e;
             }
         },
+        regVueTemplate(){
+            if(this.script.vueMain){
+                NkVueLoader.loadVueTemplate(this.script.scriptName, this.script.vueMain)
+            }
+            if(this.vueDefs){
+                this.vueDefs.forEach(i=>{
+                    if(i.code){
+                        let index = this.vueDefs.indexOf(i);
+                        index = index ? index : '';
+                        NkVueLoader.loadVueTemplate(this.script.scriptName+'Def'+index, i.code)
+                    }
+                })
+            }
+        },
         doRun(){
             this.valid().then(()=>{
                 this.loading = true;
-
-                if(this.script.vueMain){
-                    NkVueLoader.loadVueTemplate(this.script.scriptName, this.script.vueMain)
-                }
-                if(this.vueDefs){
-                    this.vueDefs.forEach(i=>{
-                        if(i.code){
-                            let index = this.vueDefs.indexOf(i);
-                            index = index ? index : '';
-                            NkVueLoader.loadVueTemplate(this.script.scriptName+'Def'+index, i.code)
-                        }
-                    })
-                }
-
-
                 this.$http.postJSON(`/api/def/script/debug`,this.script)
                     .then(()=>{
+                        this.regVueTemplate();
                         this.$message.info("配置已运行")
                     })
                     .finally(()=>{
@@ -343,8 +350,9 @@ export default {
                 this.loading = true;
                 this.$http.postJSON(`/api/def/script/active`,this.script)
                     .then((res)=>{
+                        this.regVueTemplate();
                         this.editMode = false;
-                        this.def = res.data;
+                        this.script = res.data;
                     })
                     .finally(()=>{
                         this.loading = false;
@@ -356,7 +364,7 @@ export default {
                 this.loading = true;
                 this.$http.postJSON(`/api/def/script/breach`,this.script)
                     .then((res)=>{
-                        this.$emit("replace",`/apps/def/script/detail/${res.script.scriptName}/${res.data.version}`)
+                        this.$emit("replace",`/apps/def/script/detail/${res.data.scriptName}/${res.data.version}`)
                     })
                     .catch(()=>{
                         this.loading = false;
@@ -372,7 +380,7 @@ export default {
                             this.$emit("replace",`/apps/def/script/detail/${this.script.scriptName}/${res.data.version}`)
                         }else{
                             this.editMode = true;
-                            this.def = res.data;
+                            this.script = res.data;
                             this.loading = false;
                         }
                     })
@@ -386,10 +394,10 @@ export default {
                 this.loading = true;
                 this.$http.postJSON(`/api/def/script/update`,this.script)
                     .then((res)=>{
-                        if(!this.def.version){
+                        if(!this.script.version){
                             this.$emit("replace",`/apps/def/script/detail/${this.script.scriptName}/${res.data.version}`)
                         }else{
-                            this.def = res.data;
+                            this.script = res.data;
                             this.loading = false;
                         }
                     })
