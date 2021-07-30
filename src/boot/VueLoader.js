@@ -37,7 +37,7 @@ function loadVueTemplate(componentName, template){
 }
 
 function reloadVueResources(){
-    return new Promise((resolve)=>{
+    return new Promise((resolve,reject)=>{
         Vue.prototype.$http.instanceJSON.get("/api/def/resources/vue")
             .then(res=>{
                 let count = 0;
@@ -49,9 +49,7 @@ function reloadVueResources(){
                     count ++;
                 }
                 resolve([res.data,count]);
-            }).catch(()=>{
-                alert("初始化错误");
-            });
+            }).catch(reject);
     })
 }
 
