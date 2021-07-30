@@ -50,8 +50,7 @@ function reloadVueResources(){
                 }
                 resolve([res.data,count]);
             }).catch(()=>{
-                localStorage.clear();
-                location.reload();
+                alert("初始化错误");
             });
     })
 }
