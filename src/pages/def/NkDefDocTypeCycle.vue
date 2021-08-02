@@ -7,7 +7,7 @@
             </template>
         </vxe-toolbar>
         <vxe-table
-            ref="xTableComponent"
+            ref="xTableCycle"
             row-key
             auto-resize
             size="mini"
@@ -26,12 +26,9 @@
             }" />
             <vxe-table-column   title="处理程序"         field="refObjectType"  width="30%"  :edit-render="{
                     name: '$select',
-                    options: valueOptions(),
+                    options: valueOptions,
                     optionProps: {value: 'key', label: 'name'}
             }">
-<!--                <template v-slot:edit="{row}">-->
-<!--                    <nk-script-label v-if="row.refObjectType" :value="row.refObjectType"></nk-script-label>-->
-<!--                </template>-->
                 <template v-slot="{row}">
                     <nk-script-label v-if="row.refObjectType" :value="row.refObjectType"></nk-script-label>
                 </template>
@@ -69,6 +66,7 @@ export default {
     data(){
         return {
             editActive:undefined,
+            valueOptions:[],
             eventOptions:[
                 {key:'beforeCreate',        name:'[创建]beforeCreate',        ref:'docCreateInterceptors'},
                 {key:'afterCreated',        name:'[创建]afterCreated',        ref:'docCreateInterceptors'},
@@ -88,21 +86,19 @@ export default {
             ]
         }
     },
-    computed:{
-    },
     methods:{
-        valueOptions(){
-            return this.editActive && this.docOptions[this.editActive.ref];
-        },
         eventChanged({row}){
             row.refObjectType = undefined;
+            this.editActived({row});
         },
         editActived({ row }){
             this.editActive = this.eventOptions.find(i=>i.key===row.docCycle);
+            this.valueOptions = this.editActive && this.docOptions[this.editActive.ref];
         },
         add(){
-            this.docDef.lifeCycles.push({docCycle:'',refObjectType:''});
-            console.log(this.docDef)
+            const row = {docCycle:'',refObjectType:''};
+            this.docDef.lifeCycles.push(row);
+            this.$refs.xTableCycle.setActiveRow(row);
         }
     }
 }

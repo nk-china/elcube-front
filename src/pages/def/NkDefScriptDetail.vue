@@ -34,7 +34,7 @@
                 </a-tooltip>
                 <a-dropdown>
                     <a-menu slot="overlay" @click="handleMenuClick">
-                        <a-menu-item key="doBreach" :disabled="disabledOnlineEditing || isCreate">
+                        <a-menu-item key="doBreach" :disabled="disabledOnlineEditing || isCreate || script.scriptType === 'Unknown'">
                             <a-icon type="branches" /> 复制
                         </a-menu-item>
                         <a-menu-item key="doDelete" :disabled="disabledOnlineEditing || isCreate || script.state!=='InActive'">
@@ -55,7 +55,7 @@
                         {{i.name}}
                     </a-list-item>
                 </a-list>
-                <a-list v-if="vueDefs" item-layout="horizontal" :data-source="vueDefs">
+                <a-list v-if="script.scriptType==='Card'" item-layout="horizontal" :data-source="vueDefs">
                     <a-list-item slot="renderItem"
                                  slot-scope="i"
                                  @click="menuClick(i)"
