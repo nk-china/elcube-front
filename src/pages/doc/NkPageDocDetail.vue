@@ -81,7 +81,7 @@
             <a-dropdown v-if="!bpmTask && !preview && !editMode && docTypes.length" :trigger="['click']">
                 <a-button type="primary"><a-icon type="file-add" /> </a-button>
                 <a-menu slot="overlay">
-                    <a-menu-item v-for="item in docTypes" :key="item.docType" @click="toCreateDoc(item)" :disabled="item.disabled">
+                    <a-menu-item v-for="item in docTypes" :key="item.docType" @click="toCreateDoc(item)" :disabled="!item.visible">
                         {{item.docType}} | {{item.docName || item.docType}}
                     </a-menu-item>
                 </a-menu>
@@ -212,7 +212,7 @@ export default {
             return (this.doc.definedDoc && this.doc.definedDoc.docHeaderComponent) || 'nk-page-doc-header-loading';
         },
         docTypes(){
-            return this.doc.def && this.doc.def.flows && this.doc.def.flows;
+            return this.doc.def && this.doc.def.nextFlows && this.doc.def.nextFlows;
         },
         // 对卡片进行预处理，判断卡片是否缺失
         availableCards(){

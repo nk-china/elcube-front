@@ -1,151 +1,110 @@
 <template>
-    <div class="cycle">
-        <a-card title="创建">
-            <nk-form :col="1" :edit="editMode">
-                <nk-form-item term="beforeCreate">
-                    <span>
-                        <a-button type="link" size="small">NkFawDocCreateProcessor</a-button>
-                        <a type="link">
-                            <a-icon type="close" />
-                        </a>
+    <a-card title="生命周期">
+
+        <vxe-toolbar v-if="editMode">
+            <template v-slot:buttons>
+                <vxe-button icon="fa fa-plus" status="perfect" size="mini" @click="add()">新增</vxe-button>
+            </template>
+        </vxe-toolbar>
+        <vxe-table
+            ref="xTableComponent"
+            row-key
+            auto-resize
+            size="mini"
+            border=inner
+            resizable
+            highlight-hover-row
+            header-cell-class-name="headerCellClassName"
+            :edit-config="{trigger: 'dblclick', mode: 'row', showIcon: editMode, activeMethod: ()=>{return editMode}}"
+            :data="docDef.lifeCycles"
+            @edit-actived="editActived">
+            <vxe-table-column   title="事件"         field="docCycle"        width="20%"  :edit-render="{
+                    name: '$select',
+                    options: eventOptions,
+                    optionProps: {value: 'key', label: 'name'},
+                    events: {change: eventChanged}
+            }" />
+            <vxe-table-column   title="处理程序"         field="refObjectType"  width="30%"  :edit-render="{
+                    name: '$select',
+                    options: valueOptions(),
+                    optionProps: {value: 'key', label: 'name'}
+            }">
+<!--                <template v-slot:edit="{row}">-->
+<!--                    <nk-script-label v-if="row.refObjectType" :value="row.refObjectType"></nk-script-label>-->
+<!--                </template>-->
+                <template v-slot="{row}">
+                    <nk-script-label v-if="row.refObjectType" :value="row.refObjectType"></nk-script-label>
+                </template>
+            </vxe-table-column>
+            <vxe-table-column   title=""            field=""                   width="10%">
+                <template v-slot="{seq,row}">
+                <span v-if="editMode" class="drag-btn" style="margin-right: 10px;">
+                        <i class="vxe-icon--menu"></i>
                     </span>
-                    <a-dropdown :trigger="['click']" style="margin-left: 10px;">
-                        <a class="ant-dropdown-link" @click="e => e.preventDefault()">
-                            <a-icon type="plus-square" />
-                        </a>
-                        <a-menu slot="overlay">
-                            <a-menu-item>
-                                <a href="javascript:;">1st menu item</a>
-                            </a-menu-item>
-                            <a-menu-item>
-                                <a href="javascript:;">2nd menu item</a>
-                            </a-menu-item>
-                            <a-menu-item>
-                                <a href="javascript:;">3rd menu item</a>
-                            </a-menu-item>
-                        </a-menu>
-                    </a-dropdown>
-                </nk-form-item>
-                <nk-form-item term="beforeCardsCreate">
-                    <a-dropdown :trigger="['click']">
-                        <a class="ant-dropdown-link" @click="e => e.preventDefault()">
-                            <a-icon type="plus-square" />
-                        </a>
-                        <a-menu slot="overlay">
-                            <a-menu-item>
-                                <a href="javascript:;">1st menu item</a>
-                            </a-menu-item>
-                            <a-menu-item>
-                                <a href="javascript:;">2nd menu item</a>
-                            </a-menu-item>
-                            <a-menu-item>
-                                <a href="javascript:;">3rd menu item</a>
-                            </a-menu-item>
-                        </a-menu>
-                    </a-dropdown>
-                </nk-form-item>
-                <nk-form-item term="afterCardsCreated">
-                    <a-dropdown :trigger="['click']">
-                        <a class="ant-dropdown-link" @click="e => e.preventDefault()">
-                            <a-icon type="plus-square" />
-                        </a>
-                        <a-menu slot="overlay">
-                            <a-menu-item>
-                                <a href="javascript:;">1st menu item</a>
-                            </a-menu-item>
-                            <a-menu-item>
-                                <a href="javascript:;">2nd menu item</a>
-                            </a-menu-item>
-                            <a-menu-item>
-                                <a href="javascript:;">3rd menu item</a>
-                            </a-menu-item>
-                        </a-menu>
-                    </a-dropdown>
-                </nk-form-item>
-                <nk-form-item term="afterCreated">
-                    <a-dropdown :trigger="['click']">
-                        <a class="ant-dropdown-link" @click="e => e.preventDefault()">
-                            <a-icon type="plus-square" />
-                        </a>
-                        <a-menu slot="overlay">
-                            <a-menu-item>
-                                <a href="javascript:;">1st menu item</a>
-                            </a-menu-item>
-                            <a-menu-item>
-                                <a href="javascript:;">2nd menu item</a>
-                            </a-menu-item>
-                            <a-menu-item>
-                                <a href="javascript:;">3rd menu item</a>
-                            </a-menu-item>
-                        </a-menu>
-                    </a-dropdown>
-                </nk-form-item>
-            </nk-form>
-        </a-card>
-        <a-card title="计算">
-            <nk-form :col="1">
-                <nk-form-item term="beforeCardsCalculate">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-                <nk-form-item term="afterCardsCalculated">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-            </nk-form>
-        </a-card>
-        <a-card title="更新">
-            <nk-form :col="1">
-                <nk-form-item term="beforeUpdate">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-                <nk-form-item term="beforeCardsUpdate">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-                <nk-form-item term="afterCardsUpdated">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-                <nk-form-item term="afterFuncExecuted">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-                <nk-form-item term="afterUpdated">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-                <nk-form-item term="afterStateChanged">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-                <nk-form-item term="afterTransactionCommit">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-            </nk-form>
-        </a-card>
-        <a-card title="复制">
-            <nk-form :col="1">
-                <nk-form-item term="afterCopied">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-            </nk-form>
-        </a-card>
-        <a-card title="删除">
-            <nk-form :col="1">
-                <nk-form-item term="beforeDelete">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-                <nk-form-item term="afterDeleted">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-                <nk-form-item term="afterTransactionCommit">
-                    <a-select size="small"></a-select>
-                </nk-form-item>
-            </nk-form>
-        </a-card>
-    </div>
+                    <span v-if="editMode" style="margin-right: 10px;" @click="$nkSortableRemove(docDef.lifeCycles,seq)">
+                        <i class="vxe-icon--remove"></i>
+                    </span>
+                </template>
+            </vxe-table-column>
+        </vxe-table>
+
+    </a-card>
 </template>
 
 <script>
+import MixinSortable from "../../utils/MixinSortable";
 export default {
+    mixins:[MixinSortable()],
     props:{
         editMode:Boolean,
-        docDef:Object
+        docDef:Object,
+        docOptions:Object,
     },
+    created() {
+        this.$nkSortableVxeTable(true);
+        if(!this.docDef.lifeCycles){
+            this.$set(this.docDef,"lifeCycles", []);
+        }
+    },
+    data(){
+        return {
+            editActive:undefined,
+            eventOptions:[
+                {key:'beforeCreate',        name:'[创建]beforeCreate',        ref:'docCreateInterceptors'},
+                {key:'afterCreated',        name:'[创建]afterCreated',        ref:'docCreateInterceptors'},
+
+                {key:'beforeCalculate',     name:'[计算]beforeCalculate',     ref:'docExecuteInterceptors'},
+                {key:'afterCalculated',     name:'[计算]afterCalculated',     ref:'docExecuteInterceptors'},
+
+                {key:'beforeUpdate',        name:'[更新]beforeUpdate',        ref:'docUpdateInterceptors'},
+                {key:'afterUpdated',        name:'[更新]afterUpdated',        ref:'docUpdateInterceptors'},
+                {key:'afterUpdateCommit',   name:'[更新]afterUpdateCommit',   ref:'docCommittedInterceptors'},
+
+                {key:'afterCopied',         name:'[复制]afterCopied',         ref:'docCreateInterceptors'},
+
+                {key:'beforeDelete',        name:'[删除]beforeDelete',        ref:'docExecuteInterceptors'},
+                {key:'afterDeleted',        name:'[删除]afterDeleted',        ref:'docExecuteInterceptors'},
+                {key:'afterDeleteCommit',   name:'[删除]afterDeleteCommit',   ref:'docCommittedInterceptors'},
+            ]
+        }
+    },
+    computed:{
+    },
+    methods:{
+        valueOptions(){
+            return this.editActive && this.docOptions[this.editActive.ref];
+        },
+        eventChanged({row}){
+            row.refObjectType = undefined;
+        },
+        editActived({ row }){
+            this.editActive = this.eventOptions.find(i=>i.key===row.docCycle);
+        },
+        add(){
+            this.docDef.lifeCycles.push({docCycle:'',refObjectType:''});
+            console.log(this.docDef)
+        }
+    }
 }
 </script>
 
