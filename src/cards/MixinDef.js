@@ -18,16 +18,16 @@ export default (defaultValue)=>{
       },
       def:{
         get(){
-          return this.card.config || defaultValue;
+          return this.card.config;
         },
         set(value){
-          this.docDef.cards.find(card=>card.cardKey===this.cardKey).config = value;
+          this.card.config = value;
         }
       }
     },
     created(){
-      if(!this.def){
-        this.def = defaultValue;
+      if(!this.card.config){
+        this.$set(this.card,'config',defaultValue);
       }
     }
   };

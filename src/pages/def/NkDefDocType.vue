@@ -122,6 +122,7 @@ import NkDefDocTypeBase from "./NkDefDocTypeBase";
 import NkDefDocTypeStatus from "./NkDefDocTypeStatus";
 import NkDefDocTypeBizFlow from "./NkDefDocTypeBizFlow";
 import NkDefDocTypeCycle from "./NkDefDocTypeCycle";
+import NkDefDocTypeBPM from "./NkDefDocTypeBPM";
 import NkDefDocTypeCards from "./NkDefDocTypeCards";
 import NkUtil from "../../utils/NkUtil";
 import {mapState} from "vuex";
@@ -129,6 +130,7 @@ import {mapState} from "vuex";
 const defaultCards = [
     {key:"doc",     name:"基本信息",    defComponentNames: [NkDefDocTypeBase,NkDefDocTypeStatus,NkDefDocTypeBizFlow]},
     {key:"cycle",   name:"生命周期",    defComponentNames: [NkDefDocTypeCycle]   },
+    {key:"bpm",     name:"审批流",      defComponentNames: [NkDefDocTypeBPM]   },
     {key:"cards",   name:"功能卡片",    defComponentNames: [NkDefDocTypeCards]   },
 ];
 
@@ -170,6 +172,7 @@ export default {
         NkDefDocTypeBase,
         NkDefDocTypeStatus,
         NkDefDocTypeCycle,
+        NkDefDocTypeBPM,
         NkDefDocTypeCards
     },
     filters:{

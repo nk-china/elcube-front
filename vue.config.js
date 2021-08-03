@@ -22,6 +22,11 @@ module.exports = {
         "pathRewrite":{
           "^/api": process.env.DEV_SERVER_PROXY_PATH
         }
+      },
+      "^/bpm": {
+        "target": process.env.DEV_SERVER_PROXY_TARGET,
+        "ws": true,
+        "changeOrigin": true
       }
     },
     "overlay": {

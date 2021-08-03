@@ -2,7 +2,7 @@
 /**
  * 页面
  */
-import NkPageTasks from "./NkPageTasks";
+import NkPageTasks from "./task/NkPageTasks";
 import NkPageTaskDetail from "./NkPageTaskDetail";
 import NkPageDocs from "./doc/NkPageDocs";
 import NkPageDocHeaderDefault from "./NkPageDocHeaderDefault";
@@ -40,10 +40,10 @@ import NkDefConstant from "./NkDefConstant";
 import NkDefSearch from "./NkDefSearch";
 import NkDefDeploy from "./NkDefDeploy";
 // 工作流
-import NkDefBpmProcessInstances from "./NkDefBpmProcessInstances";
-import NkDefBpmProcessDefinitions from "./NkDefBpmProcessDefinitions";
-import NkDefBpmProcessDefinitionDetail from "./NkDefBpmProcessDefinitionDetail";
-import NkDefBpmDesigner from "./NkDefBpmDesigner";
+import NkDefBpmProcessInstances from "./def/NkDefBpmProcessInstances";
+import NkDefBpmProcessDefinitions from "./def/NkDefBpmProcessDefinitions";
+import NkDefBpmProcessDefinitionDetail from "./def/NkDefBpmProcessDefinitionDetail";
+import NkDefBpmDesigner from "./def/NkDefBpmDesigner";
 import NkDefBpmDeployments from "./NkDefBpmDeployments";// 待删除
 
 import NkSettingsMenus from "./settings/NkSettingsMenus";

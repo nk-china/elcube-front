@@ -19,9 +19,6 @@ export default {
     },
     computed:{
         to(){
-            if(this.doc.itemType==='BPM:TASK'||this.doc.classify==='bpmTask'){
-                return '/apps/tasks/task/'+(this.doc['itemId']||this.doc['taskId']);
-            }
             return '/apps/docs/detail/'+this.doc['docId'];
         }
     },
