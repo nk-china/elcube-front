@@ -19,6 +19,7 @@ export default (Vue) => {
   let errorMsg = null;
 
   let onRequestFulfilled = config => {
+    config.headers.common['NK-App'] = 'ts5-beebattle';
     let token = AuthUtils.getToken();
     if(token){
       config.headers.common['NK-Token'] = token;
@@ -128,7 +129,11 @@ export default (Vue) => {
         os: "Browser",
         username: username,
         password: sha1(password)
-      })).then(res=>{
+      }),{
+        headers: {
+          'NK-App': 'ts5-beebattle',
+        }
+      }).then(res=>{
         User.state.reLogin=false;
         AuthUtils.setToken(res.data);
         resolve.apply(this,[res]);
@@ -146,6 +151,7 @@ export default (Vue) => {
       axios.post("/api/authentication/clear",{},{
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
+          'NK-App': 'ts5-beebattle',
           'NK-Token': AuthUtils.getToken()
         }
       })
@@ -166,6 +172,7 @@ export default (Vue) => {
       axios.post("/api/authentication/refresh_token",{},{
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
+          'NK-App': 'ts5-beebattle',
           'NK-Token': AuthUtils.getToken()
         }
       }).then(res=>{
