@@ -58,11 +58,24 @@
         </nk-card>
 
         <nk-card title="Variables">
+            <nk-empty :data="variables" />
             <nk-form :col="1">
                 <nk-form-item v-for="item in variables" :key="item.key" :title="item.key">
                     {{item.value}}
                 </nk-form-item>
             </nk-form>
+        </nk-card>
+
+        <nk-card title="BPMN">
+            <div slot="extra">
+                <a-button-group size="small">
+                    <a-button @click="zoom( 1)">+</a-button>
+                    <a-button @click="zoom(-1)">-</a-button>
+                </a-button-group>
+            </div>
+            <a-spin :spinning="loadingCanvas">
+                <div class="canvas" ref="js-canvas" style="height: 300px;"></div>
+            </a-spin>
         </nk-card>
 
 
@@ -71,6 +84,8 @@
 
 <script>
 import XNkPageLayout from "../../layout/template/XNkPageLayout";
+import BpmnViewer from "bpmn-js/lib/NavigatedViewer";
+import Modeling from "bpmn-js/lib/features/modeling";
 
 export default {
     components:{
@@ -80,9 +95,10 @@ export default {
         return {
             spinning:false,
             loading: true,
+            loadingCanvas:true,
 
+            processDefinition: {},
             processInstance:{
-                bpmProcessDefinition:{},
                 bpmTask:[],
                 bpmVariables:{}
             }
@@ -109,11 +125,38 @@ export default {
                     this.processInstance = response.data;
                     this.$emit('setTab',this.processInstance.processDefinitionName);
                     this.loading = false
+
+                    this.loadBpmn();
                 }).catch(res=>{
-                if(res.response.status===403){
-                    this.$emit("close")
-                }
+                    if(res.response.status===403){
+                        this.$emit("close")
+                    }
+                });
+        },
+        loadBpmn(){
+            this.$http.get("/api/def/bpm/process/definition/detail?definitionId="+this.processInstance.processDefinitionId)
+                .then(response=>{
+                    this.loading = false;
+                    this.processDefinition = response.data;
+                    this.$emit("setTab",this.processDefinition.name);
+                    this.$nextTick().then(this.render);
+                });
+        },
+        render(){
+            this.viewer = new BpmnViewer({
+                container: this.$refs['js-canvas'],
+                keyboard: {bindTo: window},
+                additionalModules: [Modeling],
             });
+            this.viewer.importXML(this.processDefinition.bpmnXml)
+                .then(() => {
+                    this.viewer.get('canvas').zoom('fit-viewport',{});
+                    this.loadingCanvas = false;
+                }).catch(() => {});
+            this.$refs['js-canvas'].getElementsByTagName("a")[0].style.transform='scale(0.6)';
+        },
+        zoom(flag) {
+            this.viewer.get('zoomScroll').stepZoom(flag)
         },
         kill(){
             this.loading = true

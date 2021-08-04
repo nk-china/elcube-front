@@ -22,11 +22,13 @@ import NkCardHelpLink from "./NkCardHelpLink";
 import NkRequiredMark from "./NkRequiredMark";
 import NkDashboardCard from "./NkDashboardCard";
 import NkDocException from "./NkDocException";
+import NkEmpty from "./NkEmpty";
 import VueHighlight from "./vue-highlight";
 import 'highlight.js/styles/github.css';
 
 function install(Vue){
   Vue.component("nk-required-mark", NkRequiredMark);
+  Vue.component("nk-empty", NkEmpty);
 
   Vue.component("nk-edit-slot", NkEditSlot);
 
