@@ -27,7 +27,7 @@
                         <a-icon type="save" />
                     </a-button>
                 </a-tooltip>
-                <a-dropdown>
+                <a-dropdown :trigger="['click']" placement="bottomRight">
                     <a-menu slot="overlay" @click="handleMenuClick">
                         <a-menu-item key="doBreach" :disabled="isCreate">
                             <a-icon type="branches" /> 复制

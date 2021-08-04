@@ -3,12 +3,9 @@
                       :title="doc.docName||'单据详情'"
                       ref="nav"
                       sub-title="单据详情"
-                      :loading="loading"
-                      :spinning="spinning"
-                      :showPageNav="!preview"
-                      :showPageBar="!preview"
-                      :right-bar="true"
-                      :header-indent="false"
+                      :spinning="loading"
+                      :right-bar="rightBar"
+                      :header-indent="headerIndent"
     >
         <div slot="top" v-if="this.doc.def && this.doc.def.debug" style="padding: 10px 10px 0 10px;">
             <a-alert message="单据配置正在调试" type="warning" show-icon />
@@ -28,57 +25,64 @@
             </div>
         </div>
 
-        <a-row slot="content">
-            <a-col :span="18">
-                <div style="min-height: 100px;">
-                    <template v-for="(c) in availableCards">
-                        <component ref="components"
-                                   v-if="c.position==='header' && c.dataComponentName"
-                                   :class="`nk-page-layout-card ${historyClass(c.cardKey)} ${debugClass(c.debug)}`"
-                                   :is="c.dataComponentName"
-                                   :id="buildAnchorLink(c.cardKey)"
-                                   :key="c.cardKey"
-                                   :card="c"
-                                   :doc="doc"
-                                   :editMode="editMode && c.writeable"
-                                   :createMode="createMode"
-                                   @nk-reload="reload"
-                                   @nk-save="doSave"
-                                   @nk-calc="nkCalc(c,$event)"
-                                   @nk-changed="nkChanged($event,c)"
-                        />
-                    </template>
-                </div>
-            </a-col>
-            <a-col :span="6">
-                <a-statistic title="状态" :value="doc.docState | nkFromList(doc.def&&doc.def.status,'docStateDesc','docState')"/>
-            </a-col>
-        </a-row>
+        <div slot="content" style="min-height: 100px;">
+            <template v-for="(c) in availableCards">
+                <component ref="components"
+                           v-if="c.position==='header' && c.dataComponentName"
+                           :class="`nk-page-layout-card ${historyClass(c.cardKey)} ${debugClass(c.debug)}`"
+                           :is="c.dataComponentName"
+                           :id="buildAnchorLink(c.cardKey)"
+                           :key="c.cardKey"
+                           :card="c"
+                           :doc="doc"
+                           :editMode="editMode && c.writeable"
+                           :createMode="createMode"
+                           @nk-reload="reload"
+                           @nk-save="doSave"
+                           @nk-calc="nkCalc(c,$event)"
+                           @nk-changed="nkChanged($event,c)"
+                />
+            </template>
+        </div>
+        <a-statistic slot="extra" title="状态" :value="doc.docState | nkFromList(doc.def&&doc.def.status,'docStateDesc','docState')"/>
 
-        <a-button-group v-if="!history && !loading && !diffTarget" slot="extra">
+        <a-button-group v-if="!history && !loading && !diffTarget" slot="action">
             <slot       v-if="!editMode" name="buttons"></slot>
 
+            <!--编辑-->
             <a-button   v-if="!editMode" :type="preview?'default':'primary'" :disabled="!docEditable" @click="nkEditModeChanged(true)">
                 <a-icon type="edit" />
             </a-button>
-            <a-dropdown-button v-if=" editMode" :type="'primary'" @click="doSave()" :trigger="['click']">
-                <a-icon type="save" />
-                <a-menu slot="overlay">
-                    <a-menu-item key="" disabled style="font-size: 8px;padding: 1px 30px 1px 8px;cursor: default;">保存为：</a-menu-item>
-                    <a-menu-divider />
-                    <a-menu-item v-for="item in availableStatus"
-                                 :key="item.docState"
-                                 @click="doSave(item.docState)"
-                    >
-                        {{item.docStateDesc}}
-                    </a-menu-item>
-                </a-menu>
-            </a-dropdown-button>
+
+            <!--保存-->
+            <template v-if="editMode">
+                <a-button type="primary" v-for="item in availablePrimaryStatus" :key="item.docState" @click="doSave(item.docState)">
+                    <a-icon type="step-forward" /> {{item.docStateDesc}}
+                </a-button>
+                <a-dropdown-button v-if="availableStatus.length" :type="availablePrimaryStatus.length?'default':'primary'" @click="doSave()" :trigger="['click']" :placement="placement">
+                    <a-icon type="save" />
+                    <a-icon slot="icon" type="step-forward" />
+                    <a-icon slot="icon" type="ellipsis" />
+                    <a-menu slot="overlay">
+                        <a-menu-item key="" disabled style="font-size: 8px;padding: 1px 30px 1px 8px;cursor: default;">保存为：</a-menu-item>
+                        <a-menu-divider />
+                        <a-menu-item v-for="item in availableStatus" :key="item.docState" @click="doSave(item.docState)">
+                            <a-icon type="step-forward" /> {{item.docStateDesc}}
+                        </a-menu-item>
+                    </a-menu>
+                </a-dropdown-button>
+                <a-button v-else @click="doSave()" :type="availablePrimaryStatus.length?'default':'primary'">
+                    <a-icon type="save" />
+                </a-button>
+            </template>
+
+            <!--取消-->
             <a-button   v-if=" editMode" type="default" @click="cancel()">
                 <a-icon type="rollback" />
             </a-button>
 
-            <a-dropdown v-if="!bpmTask && !preview && !editMode && docTypes.length" :trigger="['click']">
+            <!--创建-->
+            <a-dropdown v-if="!preview && !editMode && docTypes.length" :trigger="['click']" :placement="placement">
                 <a-button type="primary"><a-icon type="file-add" /> </a-button>
                 <a-menu slot="overlay">
                     <a-menu-item v-for="item in docTypes" :key="item.docType" @click="toCreateDoc(item)" :disabled="!item.visible">
@@ -87,18 +91,20 @@
                 </a-menu>
             </a-dropdown>
 
+            <!--历史-->
             <a-button v-if="!editMode" :type="histories?'primary':'default'"
                       @click="$emit('nk-show-history')">
                 <a-icon type="clock-circle" />
             </a-button>
 
+            <!--文档-->
             <a-button v-if="doc.def&&doc.def.markdownFlag"
                       :type="'default'"
                       @click="doSetDocumentPage('nkdn://user/'+doc.definedDoc.docType+'/'+doc.definedDoc.version)">
                 <a-icon type="question-circle" />
             </a-button>
 
-            <!-- 配置按钮 -->
+            <!-- 配置 -->
             <a-button v-if="!preview && user&&user.authorities&&user.authorities.find(a=>{return a.authority==='*:*'||a.authority==='DEF:*'})"
                       @click="$router.push(`/apps/def/doc/detail/${doc.docType}/${doc.def.version}`)">
                 <a-icon type="deployment-unit" />
@@ -111,6 +117,8 @@
 
         <!--todo 历史记录 需迁移到右边栏-->
         <nk-card-historys v-if="histories" class="nk-page-layout-card" :doc="doc" />
+
+        <nk-card-bpm-executer v-if="doc.bpmTask" :task="doc.bpmTask" :editMode="editMode" v-model="loading" @complete="initData" />
 
         <!--卡片列表-->
         <slot name="component"></slot>
@@ -177,17 +185,19 @@ import qs from 'qs'
 import DocDetailMixin from "./NkPageDocDetailMixin";
 import XNkPageLayout from "../../layout/template/XNkPageLayout";
 import {mapActions} from 'vuex';
+import NkCardBpmExecuter from "../task/NkCardBpmExecuter";
 
 export default {
     mixins:[DocDetailMixin],
     components:{
+        NkCardBpmExecuter,
         XNkPageLayout,
     },
     props:{
+        preview: Boolean
     },
     data(){
         return {
-            spinning:false,
             loading: true,
             editMode:false,
             createMode:false,
@@ -206,6 +216,15 @@ export default {
         this.initData();
     },
     computed:{
+        rightBar(){
+            return !this.preview;
+        },
+        headerIndent(){
+            return !this.preview && this.sidebarCards.length === 0;
+        },
+        placement(){
+            return this.headerIndent?'bottomLeft':'bottomRight';
+        },
         headerComponent(){
             return (this.doc.definedDoc && this.doc.definedDoc.docHeaderComponent) || 'nk-page-doc-header-loading';
         },
@@ -264,7 +283,14 @@ export default {
         },
         availableStatus(){
             return this.doc.def && this.doc.def.status.filter(
-                state => state.preDocState === this.doc.docState || state.docState === this.doc.docState
+                state => (state.preDocState === this.doc.docState)
+                    && !state.displayPrimary
+            );
+        },
+        availablePrimaryStatus(){
+            return this.doc.def && this.doc.def.status.filter(
+                state => (state.preDocState === this.doc.docState)
+                    && state.displayPrimary
             );
         },
         contextParams(){
@@ -353,8 +379,9 @@ export default {
             }
 
             const originalState = this.doc.docState
-            this.spinning = true;
-            this.doc.docState = this.docState = state||this.docState;
+            this.loading = true;
+            this.docState = state||this.docState;
+            this.doc.docState = this.docState;
             this.$http.postJSON(`/api/doc/update`, this.doc)
                 .then((response) => {
                     if (this.$route.params.mode === 'create') {
@@ -366,17 +393,18 @@ export default {
                         this.$emit('setTab', this.doc.docName);
                         this.nkEditModeChanged(false);
                         this.histories = undefined;
-                        this.spinning = false;
+                        this.loading = false;
                     }
                 })
                 .catch(() => {
-                    this.spinning = false;
-                    this.doc.docState = this.docState = originalState;
+                    this.loading = false;
+                    this.docState = originalState;
+                    this.doc.docState = this.docState;
                 });
         },
         nkCalc(card,options){
 
-            this.spinning=true;
+            this.loading=true;
             this.$http.postJSON(`/api/doc/calculate`,{doc:this.doc,cardKey:card.cardKey,options})
                 .then(response=>{
                     this.doc = response.data;
@@ -387,7 +415,7 @@ export default {
                     })
                 })
                 .finally(()=>{
-                    this.spinning=false;
+                    this.loading=false;
                 })
         },
         cancel(){

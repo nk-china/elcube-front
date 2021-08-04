@@ -1,8 +1,8 @@
 <template>
     <x-nk-page-layout class="mini"
-                      :title="'流程详情'"
+                      :title="processInstance.processDefinitionName"
                       ref="nav"
-                      sub-title="流程实例"
+                      sub-title="Process Instance Detail"
                       :spinning="loading"
                       :showPageNav="false"
                       :showPageBar="false"
@@ -45,13 +45,16 @@
                 header-cell-class-name="headerCellClassName"
                 @current-change="currentTaskChange"
                 :data="processInstance.bpmTask">
-                <vxe-table-column title="Name" field="name"></vxe-table-column>
-                <vxe-table-column title="Assignee" field="assignee"></vxe-table-column>
-                <vxe-table-column title="Candidate" field="candidate"></vxe-table-column>
-                <vxe-table-column title="StartTime" field="startTime" :formatter="['nkDatetimeISO']"></vxe-table-column>
-                <vxe-table-column title="EndTime" field="endTime" :formatter="['nkDatetimeISO']"></vxe-table-column>
-                <vxe-table-column title="Action">
+                <vxe-table-column title="Name" field="name" width="15%"></vxe-table-column>
+                <vxe-table-column title="Assignee" field="assignee" width="15%"></vxe-table-column>
+                <vxe-table-column title="Candidate" field="candidate" width="20%"></vxe-table-column>
+                <vxe-table-column title="StartTime" field="startTime" width="15%" :formatter="['nkDatetimeISO']"></vxe-table-column>
+                <vxe-table-column title="EndTime" field="endTime" width="15%" :formatter="['nkDatetimeISO']"></vxe-table-column>
+                <vxe-table-column title="Action | Comment">
                     <template v-slot="{row}">
+                        <template v-if="row.deleteReason && row.deleteReason!=='completed'">
+                            'TERMINATED | ' {{row.deleteReason}}
+                        </template>
                         <template v-for="(comment) in row.comments">{{comment}}</template>
                         <a-button-group size="small">
                             <a-button v-for="transition in row.transitions"
@@ -74,16 +77,14 @@
             </nk-form>
         </nk-card>
 
-        <nk-card title="BPMN">
+        <nk-card title="BPMN" v-if="processInstance.processDefinitionId">
             <div slot="extra">
                 <a-button-group size="small">
-                    <a-button @click="zoom( 1)">+</a-button>
-                    <a-button @click="zoom(-1)">-</a-button>
+                    <a-button @click="$refs.bpmn.zoom( 1)">+</a-button>
+                    <a-button @click="$refs.bpmn.zoom(-1)">-</a-button>
                 </a-button-group>
             </div>
-            <a-spin :spinning="loadingCanvas">
-                <div class="canvas" ref="js-canvas" style="height: 300px;"></div>
-            </a-spin>
+            <nk-bpmn-view ref="bpmn" :process-definition-id="processInstance.processDefinitionId" />
         </nk-card>
 
         <a-modal v-model="completeVisible" :title="completeTask.title" ok-text="Ok" cancel-text="Cancel" @ok="completeTaskOk">
@@ -95,11 +96,11 @@
 
 <script>
 import XNkPageLayout from "../../layout/template/XNkPageLayout";
-import BpmnViewer from "bpmn-js/lib/NavigatedViewer";
-import Modeling from "bpmn-js/lib/features/modeling";
+import NkBpmnView from "./NkBpmnView";
 
 export default {
     components:{
+        NkBpmnView,
         XNkPageLayout
     },
     data(){
@@ -135,46 +136,18 @@ export default {
         this.init(true);
     },
     methods:{
-        init(loadBpmn){
+        init(){
             this.$http.get("/api/ops/bpm/instance/detail?instanceId="+this.$route.params.id)
                 .then(response=>{
                     this.processInstance = response.data;
                     this.currentTask = undefined;
                     this.$emit('setTab','流程实例:'+this.processInstance.processDefinitionName);
                     this.loading = false;
-
-                    if(loadBpmn===true){
-                        this.loadBpmn();
-                    }
                 }).catch(res=>{
                     if(res.response.status===403){
                         this.$emit("close")
                     }
                 });
-        },
-        loadBpmn(){
-            this.$http.get("/api/def/bpm/process/definition/detail?definitionId="+this.processInstance.processDefinitionId)
-                .then(response=>{
-                    this.loading = false;
-                    this.processDefinition = response.data;
-                    this.$nextTick().then(this.render);
-                });
-        },
-        render(){
-            this.viewer = new BpmnViewer({
-                container: this.$refs['js-canvas'],
-                keyboard: {bindTo: window},
-                additionalModules: [Modeling],
-            });
-            this.viewer.importXML(this.processDefinition.bpmnXml)
-                .then(() => {
-                    this.viewer.get('canvas').zoom('fit-viewport',{});
-                    this.loadingCanvas = false;
-                }).catch(() => {});
-            this.$refs['js-canvas'].getElementsByTagName("a")[0].style.transform='scale(0.6)';
-        },
-        zoom(flag) {
-            this.viewer.get('zoomScroll').stepZoom(flag)
         },
         killConfirm(){
             this.completeTask = {
@@ -211,9 +184,6 @@ export default {
                 }
             }
         }
-    },
-    destroyed() {
-        this.viewer&&this.viewer.destroy&&this.viewer.destroy();
     }
 }
 </script>

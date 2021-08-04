@@ -49,16 +49,20 @@
                     <nk-help-link page="doc-sys-state" />
                 </template>
             </vxe-table-column>
-                <vxe-table-column   title="扩展程序"   field="refObjectType"     width="30%" :edit-render="{
+            <vxe-table-column   title="扩展程序"   field="refObjectType"     width="22%" :edit-render="{
                     name:'$select',
                     options: docOptions.docStateInterceptors,
                     optionProps: {value: 'key', label: 'name'},
 
                 }" >
-                    <template v-slot="{ row }">
-                        <nk-script-label :value="row.refObjectType"></nk-script-label>
-                    </template>
-                </vxe-table-column>
+                <template v-slot="{ row }">
+                    <nk-script-label :value="row.refObjectType"></nk-script-label>
+                </template>
+            </vxe-table-column>
+            <vxe-table-column   title="显示"   field="displayPrimary" width="8%" :formatter="({cellValue})=>cellValue?'是':''" :edit-render="{
+                name: '$switch',
+                props: {'open-value':1,'close-value':0},
+            }" v-if="docDef.docClassify==='TRANSACTION'||docDef.docClassify==='PROJECT'"/>
             <vxe-table-column   title=""    field=""     width="10%">
                 <template v-slot="{seq,items}">
                         <span v-if="editMode" class="drag-btn" style="margin-right: 10px;">

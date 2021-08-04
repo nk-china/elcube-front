@@ -11,25 +11,25 @@
             <a-button type="primary" @click="create">编辑</a-button>
         </a-button-group>
 
-        <a-card title="流程图">
+        <a-card title="流程图" v-if="processDefinition.bpmnXml">
             <div slot="extra">
                 <a-button-group size="small">
-                    <a-button @click="zoom( 1)">+</a-button>
-                    <a-button @click="zoom(-1)">-</a-button>
+                    <a-button @click="$refs.bpmn.zoom( 1)">+</a-button>
+                    <a-button @click="$refs.bpmn.zoom(-1)">-</a-button>
                 </a-button-group>
             </div>
-            <a-spin :spinning="loadingCanvas">
-                <div class="canvas" ref="js-canvas" style="height: 400px;"></div>
-            </a-spin>
+            <nk-bpmn-view ref="bpmn" :bpmn="processDefinition.bpmnXml" />
         </a-card>
     </nk-page-layout>
 </template>
 
 <script>
-import BpmnViewer from 'bpmn-js/lib/NavigatedViewer';
-import Modeling   from 'bpmn-js/lib/features/modeling';
+import NkBpmnView from "./NkBpmnView";
 export default {
     name: "NkDefBpmnProcessDefinitionDetail",
+    components:{
+        NkBpmnView
+    },
     data(){
         return {
             loading: true,
@@ -51,24 +51,7 @@ export default {
                     this.loading = false;
                     this.processDefinition = response.data;
                     this.$emit("setTab",'流程定义:'+this.processDefinition.name);
-                    this.$nextTick().then(this.render);
                 });
-        },
-        render(){
-            this.viewer = new BpmnViewer({
-                container: this.$refs['js-canvas'],
-                keyboard: {bindTo: window},
-                additionalModules: [Modeling],
-            });
-            this.viewer.importXML(this.processDefinition.bpmnXml)
-                .then(() => {
-                    this.viewer.get('canvas').zoom('fit-viewport',{});
-                    this.loadingCanvas = false;
-                }).catch(() => {});
-            this.$refs['js-canvas'].getElementsByTagName("a")[0].style.transform='scale(0.6)';
-        },
-        zoom(flag) {
-            this.viewer.get('zoomScroll').stepZoom(flag)
         },
         create(){
             this.$router.push({

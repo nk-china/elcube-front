@@ -86,10 +86,10 @@ export default {
         }
 
         .ant-page-header{
-            padding: 16px 32px;
+            padding: 16px 54px 16px 32px;
 
             &.show-right{
-                padding-right: 332px;
+                padding-right: 384px;
             }
         }
     }
@@ -174,7 +174,7 @@ export default {
 }
 
 
-@media screen and ( max-width: 1400px ){
+@media screen and ( max-width: 1366px ){
 
     ::v-deep.nk-page-layout-header .ant-page-header{
         padding-right: 32px !important;

@@ -1,5 +1,5 @@
 <template>
-    <a-spin :spinning="loading">
+    <a-spin :spinning="loading" wrapperClassName="layout-spinning">
         <a-layout class="nk-layout-full">
             <a-layout-sider v-model="collapsed" :trigger="null" collapsible="collapsible" class="nk-layout-sider" width="256">
                 <div class="logo nk">
@@ -374,11 +374,16 @@ export default {
 
 <style scoped lang="scss">
 
-::v-deep{
-    .ant-spin-nested-loading > div > .ant-spin .ant-spin-dot{
-        position:fixed;
-        margin-left: 128px;
+::v-deep.layout-spinning{
+    & > div > .ant-spin{
+        bottom: 0;
+        max-height: inherit;
+        & > .ant-spin-dot{
+            position:fixed;
+        }
     }
+}
+::v-deep {
     .ant-layout-sider-collapsed{
         .logo.nk .z{
             display: none;

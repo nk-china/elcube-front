@@ -14,7 +14,7 @@
         <a-button-group slot="action">
         </a-button-group>
 
-        <nk-page-preview :params="previewParams" :visable.sync="preViewVisable" @close="previewClose"></nk-page-preview>
+        <nk-page-preview :params="previewParams" :visible.sync="preViewVisable" @close="previewClose"></nk-page-preview>
 
     </nk-query-layout>
 </template>
@@ -120,12 +120,10 @@ export default {
             this.$router.push("/apps/docs/create/"+docType)
         },
         selected({row}){
-            if(row.taskState==='11111create'){
-                this.preViewVisable = true;
-                this.previewParams  = {
-                    mode: "detail",
-                    docId:row.docId
-                }
+            this.preViewVisable = true;
+            this.previewParams  = {
+                mode: "detail",
+                docId:row.docId
             }
         },
         previewClose(){

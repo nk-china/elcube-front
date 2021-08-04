@@ -17,17 +17,17 @@
         </div>
 
         <a-button-group slot="action" v-if="creatableDocTypes && creatableDocTypes.length">
-            <a-dropdown :trigger="['click']">
+            <a-dropdown :trigger="['click']" placement="bottomRight">
                 <a-menu slot="overlay" >
                     <a-menu-item v-for="docDef in creatableDocTypes" :key="docDef.docType" @click="toCreate(docDef.docType)">
-                        <a-icon type="file" />{{docDef.docName}}
+                        <a-icon type="file" />{{docDef.docType}} | {{docDef.docName}}
                     </a-menu-item>
                 </a-menu>
-                <a-button type="primary"> 新建 <a-icon type="down" /> </a-button>
+                <a-button type="primary"> <a-icon type="file-add" /> <a-icon type="down" /> </a-button>
             </a-dropdown>
         </a-button-group>
 
-        <nk-page-preview :params="previewParams" :visable.sync="preViewVisable" @close="previewClose"></nk-page-preview>
+        <nk-page-preview :params="previewParams" :visible.sync="preViewVisable" @close="previewClose"></nk-page-preview>
 
     </nk-query-layout>
 </template>

@@ -1,11 +1,11 @@
 <template>
     <transition name="slide-fade">
-        <div class="preview" v-if="visable">
+        <div class="preview" v-if="visible">
             <div class="background" @click="hide"></div>
             <div class="foreground">
-                <component :is="component" :params="params" :preview="true">
-                    <nk-doc-link :doc="params" type="primary" slot="buttons" @click="hide">进入详情</nk-doc-link>
-                </component>
+                <nk-page-doc-detail :params="params" :preview="true">
+                    <nk-doc-link :doc="params" type="primary" slot="buttons" @click="hide"><a-icon type="enter" /></nk-doc-link>
+                </nk-page-doc-detail>
             </div>
         </div>
     </transition>
@@ -17,22 +17,14 @@ export default {
     },
     props:{
         params:Object,
-        visable:{
+        visible:{
             type:Boolean,
             default:false
         }
     },
-    computed:{
-        component(){
-            switch (this.params.classify){
-                default:
-                    return "nk-page-doc-detail";
-            }
-        }
-    },
     methods:{
         hide(){
-            this.$emit("update:visable",false);
+            this.$emit("update:visible",false);
             this.$emit("close");
         }
     }

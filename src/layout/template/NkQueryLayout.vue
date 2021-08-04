@@ -55,14 +55,14 @@
                     <nk-search-item :min="10">
                         <a-button-group class="nk-button">
                             <a-button type="primary" html-type="submit">
-                                检索
+                                <a-icon type="search" />
                             </a-button>
                             <a-button type="default" @click="reset({})">
-                                重置
+                                <a-icon type="rollback" />
                             </a-button>
                         </a-button-group>
                         <a-button v-if="saveAsSource" class="nk-button" type="default" @click="saveAs.visible=true">
-                            另存为...
+                            <a-icon type="save" />...
                         </a-button>
                     </nk-search-item>
                 </nk-search-box>

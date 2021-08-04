@@ -1,0 +1,65 @@
+<template>
+    <nk-card class="card" title="审批意见">
+        <nk-bpmn-view ref="bpmn" v-if="bpmnVisible" :process-definition-id="task.processDefinitionId" style="margin-bottom: 10px;" />
+        <a-input type="textarea" v-model="completeTask.comment" :auto-size="{ minRows: 4, maxRows: 6 }" placeholder="请输入审批意见"></a-input>
+        <div slot="actions" style="padding: 0 20px 0;text-align: right">
+            <a-button-group v-if="task">
+                <a-button v-for="transition in task.transitions"
+                          :key="transition.id"
+                          type="primary"
+                          :disabled="buttonDisabled"
+                          @click="completeTaskOk(transition)">
+                    {{ transition.name }}
+                </a-button>
+                <a-tooltip title="敬请期待"><a-button type="default">转办</a-button></a-tooltip>
+            </a-button-group>
+        </div>
+        <a-button-group size="small" slot="extra"  v-if="bpmnVisible">
+            <a-button @click="$refs.bpmn.zoom( 1)"><a-icon type="zoom-in" /></a-button>
+            <a-button @click="$refs.bpmn.zoom(-1)"><a-icon type="zoom-out" /></a-button>
+            <a-button size="small" @click="bpmnVisible=false"><a-icon type="close-circle" /></a-button>
+        </a-button-group>
+        <a-button slot="extra" type="link" size="small" v-if="!bpmnVisible" @click="bpmnVisible=true">查看流程图</a-button>
+    </nk-card>
+</template>
+
+<script>
+import NkBpmnView from "./NkBpmnView";
+export default {
+    components: {NkBpmnView},
+    props:{
+        task:Object,
+        doc:Object,
+        editMode:Boolean,
+        value:Boolean
+    },
+    data(){
+        return {
+            bpmnVisible: false,
+            completeTask: {}
+        }
+    },
+    computed:{
+        buttonDisabled(){
+            return this.editMode || !(this.completeTask.comment && this.completeTask.comment.replace(/\s/g,''));
+        }
+    },
+    methods:{
+        completeTaskOk(transition){
+            this.$emit("input",true);
+            this.completeTask = Object.assign(this.completeTask,{taskId:this.task.id,transition});
+            this.$http.postJSON(`/api/ops/bpm/instance/complete`,this.completeTask)
+                .then(()=>{
+                    this.$emit("complete",true);
+                    this.completeTask = {};
+                })
+                .finally(()=> {
+                    this.$emit("input",false);
+                });
+        }
+    }
+}
+</script>
+
+<style scoped lang="scss">
+</style>
