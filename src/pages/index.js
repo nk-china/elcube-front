@@ -40,7 +40,8 @@ import NkDefConstant from "./NkDefConstant";
 import NkDefSearch from "./NkDefSearch";
 import NkDefDeploy from "./NkDefDeploy";
 // 工作流
-import NkDefBpmProcessInstances from "./def/NkDefBpmProcessInstances";
+import NkPageProcessInstances from "./task/NkPageProcessInstances";
+import NkPageProcessDetail from "./task/NkPageProcessDetail";
 import NkDefBpmProcessDefinitions from "./def/NkDefBpmProcessDefinitions";
 import NkDefBpmProcessDefinitionDetail from "./def/NkDefBpmProcessDefinitionDetail";
 import NkDefBpmDesigner from "./def/NkDefBpmDesigner";
@@ -298,10 +299,17 @@ module.routes = [
       {
         name: "流程实例",
         path: 'process/instances',
-        component: NkDefBpmProcessInstances,
+        component: NkPageProcessInstances,
         meta:{
           title: "流程实例",
-        }
+        },
+        children: [
+          {
+            name: "流程实例详情",
+            path: 'detail/:id',
+            component: NkPageProcessDetail
+          },
+        ]
       },
     ]
   }

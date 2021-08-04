@@ -20,27 +20,24 @@
     data(){
       return {
         columns:[
-          { field: 'processDefinitionKey',      title: 'key',           width: '15%' },
-          { field: 'processDefinitionName',     title: 'Name',          width: '20%' },
+          { field: 'processDefinitionKey',      title: 'key',           width: '10%' },
+          { field: 'processDefinitionName',     title: 'Name',          width: '15%' },
           { field: 'processDefinitionVersion',  title: 'Version',       width: '8%'  },
-          { field: 'startTime',                 title: 'StartTime',     width: '25%' ,sortable:true },
+          { field: 'startTime',                 title: 'StartTime',     width: '15%' ,sortable:true, formatter:['nkDatetimeISO'] },
+          { field: 'endTime',                   title: 'EndTime',       width: '15%' ,sortable:true, formatter:['nkDatetimeISO'] },
+          { field: 'state',                     title: 'State',         width: '15%' ,sortable:true },
           {                                     title: 'Action',        width: '10%' ,
             slots: { default: ({row},h) => {
-                const that = this;
                 return [
                     h(
                         'router-link',
-                        {
-                            props:{to: '/apps/docs/detail/'+row.businessKey}
-                        },
-                        "详情"
+                        {props:{to: '/apps/docs/detail/'+row.businessKey}},
+                        "单据"
                     ),
                     h(
-                        'a',
-                        {
-                            on:{click(){that.kill(row);}}
-                        },
-                        "Kill"
+                        'router-link',
+                        {props:{to: '/apps/bpm/process/instances/detail/'+row.id}},
+                        "详情"
                     )]
               }}
           },
@@ -95,11 +92,6 @@
       },
       toCreate(){
         this.$router.push("/apps/def/partner/create")
-      },
-      kill(e){
-        this.$http.post(`/api/ops/bpm/instance/kill?instanceId=${e.id}`)
-          .then(()=>{
-          });
       }
     }
   }

@@ -56,6 +56,9 @@ export default {
       nkDatetime ({ cellValue },format) {
         return NkFormat.nkDatetime(cellValue,format)
       },
+      nkDatetimeISO ({ cellValue },format) {
+        return NkFormat.nkDatetimeISO(cellValue,format)
+      },
       nkNull({cellValue},defaultValue){
         return cellValue || defaultValue;
       },

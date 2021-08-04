@@ -98,7 +98,7 @@ export default {
     },
     methods:{
         search(params){
-            this.$http.postJSON("/api/bpm/tasks",NkUtil.toEsParams(params,this.preCondition))
+            this.$http.postJSON("/api/task/tasks",NkUtil.toEsParams(params,this.preCondition))
                 .then((res)=>{
                     this.$emit("setTab","任务");
                     if(this.$refs.layout)

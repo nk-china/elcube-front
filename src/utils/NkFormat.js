@@ -52,6 +52,9 @@ export default {
   nkDatetime(value,format){
     return value||value===0?moment(value * 1000).format(format||'Y/M/D'):'';
   },
+  nkDatetimeISO(value,format){
+    return value||value===0?moment(value).format(format||'Y/M/D HH:mm:ss'):'';
+  },
   nkCurrency(value){
     return value||value===0?numeral(value).format('$ 0,0.00'):'';
   },

@@ -57,6 +57,7 @@ function install(Vue){
   Vue.filter("nkNumber",NkFormat.nkNumber);
   Vue.filter("nkDatetime",NkFormat.nkDatetime);
   Vue.filter("nkDatetimeFriendly",NkFormat.nkDatetimeFriendly);
+  Vue.filter("nkDatetimeISO",NkFormat.nkDatetimeISO);
   Vue.filter("nkCurrency",NkFormat.nkCurrency);
   Vue.filter("nkPercent", NkFormat.nkPercent);
   Vue.filter("nkFromList",NkFormat.nkFromList);
