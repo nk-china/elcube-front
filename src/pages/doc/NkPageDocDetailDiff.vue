@@ -34,32 +34,28 @@
         />
 
 <!--        <nk-form ref="detailForm" :col="2" slot="content" :edit="editMode">-->
-<!--            <nk-form-item v-if="doc" term="交易类型" :col="2">-->
-<!--                {{doc && doc.docType}} | {{doc.definedDoc && doc.definedDoc.docName}}-->
+<!--            <nk-form-item :term="pageConfig.titleDocType">-->
+<!--                {{doc.definedDoc && doc.definedDoc.docType}} | {{doc.definedDoc && doc.definedDoc.docName}}-->
 <!--            </nk-form-item>-->
-<!--            <nk-form-item term="名称" :col="2">-->
-<!--                {{doc.refObject && doc.refObject.partnerName}}-->
+<!--            <nk-form-item :term="pageConfig.titlePartner">-->
+<!--                <router-link v-if="doc.partnerId" :to="`/apps/partners/detail/view/${doc.partnerId}`">{{doc.partnerName}}</router-link>-->
+<!--                <span v-else style="color: rgba(0, 0, 0, 0.45);">&lt;未选择&gt;</span>-->
 <!--                <span v-if="targetDoc.partnerName!==doc.partnerName" class="state-original">-->
 <!--                    {{targetDoc.partnerName}}-->
 <!--                </span>-->
 <!--            </nk-form-item>-->
-<!--            <nk-form-item term="类型">-->
-<!--                {{doc.refObject && doc.refObject.partnerType  | nkFromList([-->
-<!--                        {label:"自然人",value:'NATURAL'},-->
-<!--                        {label:"法人",value:'LEGAL'},-->
-<!--                        {label:"组织机构",value:'ORG'},-->
-<!--                    ])-->
-<!--                }}-->
+<!--            <nk-form-item :term="pageConfig.titleDocNumber">-->
+<!--                <span v-if="doc.docNumber">{{doc.docNumber}}</span>-->
+<!--                <span v-else style="color: rgba(0, 0, 0, 0.45);">&lt;未编号&gt;</span>-->
 <!--            </nk-form-item>-->
-<!--            <nk-form-item term="角色" v-if="doc.refObject">-->
-<!--                <span v-if="!doc.refObject.roles || !doc.refObject.roles.length">暂无角色</span>-->
-<!--                <a-tag v-for="role in doc.refObject.roles"-->
-<!--                       :key="role.docType"-->
-<!--                       :color="role.docType===doc.docType || (doc.partnerDoc && role.docType === doc.partnerDoc.docType) ?'blue':''"-->
-<!--                       @click="switchRole(role)"-->
-<!--                >-->
-<!--                    {{role.docName}}-->
-<!--                </a-tag>-->
+<!--            <nk-form-item :term="pageConfig.titleDocDesc" :validateFor="doc.docName"-->
+<!--                          :message="`请输入${pageConfig.titleDocDesc}`"-->
+<!--                          required len :max="20"-->
+<!--                          :lenMessage="`${pageConfig.titleDocDesc}1-20个字`">-->
+<!--                {{doc.docName}}-->
+<!--                <span v-if="targetDoc.docName!==doc.docName" class="state-original">-->
+<!--                    {{targetDoc.docName}}-->
+<!--                </span>-->
 <!--            </nk-form-item>-->
 <!--            <nk-form-item term="创建时间">{{doc.createdTime | nkDatetimeFriendly}}</nk-form-item>-->
 <!--            <nk-form-item term="更新时间">{{doc.updatedTime | nkDatetimeFriendly}}</nk-form-item>-->
@@ -147,9 +143,11 @@
 
 <script>
 import { mapActions} from 'vuex';
-import ClassifyMapping from "./ClassifyMapping";
+import ClassifyMapping from "../ClassifyMapping";
 
 export default {
+    components:{
+    },
     props:{
         params:Object,
         pageConfig:{
@@ -188,7 +186,7 @@ export default {
     },
     computed:{
         headerComponent(){
-            return (this.doc.definedDoc && this.doc.definedDoc.docHeaderComponent) || 'nk-page-partner-header-default';
+            return (this.doc.definedDoc && this.doc.definedDoc.docHeaderComponent) || 'nk-page-doc-header-loading';
         },
         breadcrumbs(){
             if(this.pageConfig.useDefaultBreadcrumbs){
@@ -306,14 +304,18 @@ export default {
     padding: 12px;
     margin: -12px;
     & + .componentLayout{
-        margin-top: 13px;
-        border-top: none !important;
+        margin-top: 12px;
     }
 
     &.changed {
         border: 1px solid #ffa39e;
         background-color: #fff1f0;
         padding: 11px;
+
+        & + .changed{
+            border-top: none !important;
+            padding-top: 12px;
+        }
     }
 
     & > .left{

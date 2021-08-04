@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import NkUtil from "../utils/NkUtil";
+import NkUtil from "../../utils/NkUtil";
 export default {
     data() {
         return {

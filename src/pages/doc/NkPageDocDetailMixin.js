@@ -1,5 +1,5 @@
-import NkCardHistorys from "./NkCardHistorys";
-import ClassifyMapping from "./ClassifyMapping";
+import NkCardHistorys from "../NkCardHistorys";
+import ClassifyMapping from "../ClassifyMapping";
 import {mapGetters} from "vuex";
 
 export default {

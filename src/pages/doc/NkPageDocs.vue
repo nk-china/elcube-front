@@ -34,7 +34,7 @@
 
 <script>
 import NkUtil from "../../utils/NkUtil";
-import NkPagePreview from "../NkPagePreview";
+import NkPagePreview from "./NkPagePreview";
 
 const classifies = [
     {value:'TRANSACTION',label:'交易'},

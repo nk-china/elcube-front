@@ -12,10 +12,8 @@
 </template>
 
 <script>
-import NkPageTaskDetail from "./NkPageTaskDetail";
 export default {
     components:{
-        NkPageTaskDetail,
     },
     props:{
         params:Object,
@@ -27,8 +25,6 @@ export default {
     computed:{
         component(){
             switch (this.params.classify){
-                case "bpmTask":
-                    return "nk-page-task-detail";
                 default:
                     return "nk-page-doc-detail";
             }

@@ -174,8 +174,7 @@
 
 <script>
 import qs from 'qs'
-import DocDetailMixin from "../NkPageDocDetailMixin";
-import NkPageDocHeaderLoading from "../NkPageDocHeaderLoading";
+import DocDetailMixin from "./NkPageDocDetailMixin";
 import XNkPageLayout from "../../layout/template/XNkPageLayout";
 import {mapActions} from 'vuex';
 
@@ -183,7 +182,6 @@ export default {
     mixins:[DocDetailMixin],
     components:{
         XNkPageLayout,
-        NkPageDocHeaderLoading
     },
     props:{
     },

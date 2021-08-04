@@ -83,7 +83,7 @@
     // const plainOptions = ['Apple', 'Pear', 'Orange'];
     // const defaultCheckedList = ['Apple', 'Orange'];
     import axios from "axios";
-    import AuthUtils from "../boot/AuthUtils";
+    import AuthUtils from "../../boot/AuthUtils";
 
     export default {
         data() {

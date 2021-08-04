@@ -3,16 +3,11 @@
  * 页面
  */
 import NkPageTasks from "./task/NkPageTasks";
-import NkPageTaskDetail from "./NkPageTaskDetail";
 import NkPageDocs from "./doc/NkPageDocs";
-import NkPageDocHeaderDefault from "./NkPageDocHeaderDefault";
-import NkPageDocHeaderProject from "./NkPageDocHeaderProject";
 import NkPageDocDetail from "./doc/NkPageDocDetail";
-import NkPageDocDetailDiff from "./NkPageDocDetailDiff";
-import NkPagePartnerDetail from "./NkPagePartnerDetail";
-import NkPagePartnerHeaderDefault from "./NkPagePartnerHeaderDefault";
-import NkPageCustomQuery from "./NkPageCustomQuery";
-import NkCard from "./NkCard";
+import NkPageDocDetailDiff from "./doc/NkPageDocDetailDiff";
+import NkPageCustomQuery from "./doc/NkPageCustomQuery";
+import NkCard from "./components/NkCard";
 
 
 /**
@@ -25,27 +20,23 @@ import NkSettingsAuthGroup from "./settings/NkSettingsAuthGroup";
 /**
  * 配置页面
  */
-import NkDefCardType from "./NkDefCardType";
-import NkDefPartners from "./NkDefPartners";
-import NkDefPartnerType from "./NkDefPartnerType";
-import NkDefDocs from "./def/NkDefDocs";
-import NkDefDocType from "./def/NkDefDocType";
+import NkDefDocs from "./doc/NkDefDocs";
+import NkDefDocType from "./doc/NkDefDocType";
 // 脚本
-import NkDefScripts from "./def/NkDefScripts";
-import NkDefScriptDetail from "./def/NkDefScriptDetail";
-import NkScriptLabel from "./def/NkDefScriptLabel";
+import NkDefScripts from "./doc/NkDefScripts";
+import NkDefScriptDetail from "./doc/NkDefScriptDetail";
+import NkScriptLabel from "./doc/NkDefScriptLabel";
 // 常量
-import NkDefConstant from "./NkDefConstant";
+import NkDefConstant from "./doc/NkDefConstant";
 // 自定义搜索
-import NkDefSearch from "./NkDefSearch";
-import NkDefDeploy from "./NkDefDeploy";
+import NkDefDeploy from "./devops/NkDefDeploy";
 // 工作流
 import NkPageProcessInstances from "./task/NkPageProcessInstances";
 import NkPageProcessDetail from "./task/NkPageProcessDetail";
-import NkDefBpmProcessDefinitions from "./def/NkDefBpmProcessDefinitions";
-import NkDefBpmProcessDefinitionDetail from "./def/NkDefBpmProcessDefinitionDetail";
-import NkDefBpmDesigner from "./def/NkDefBpmDesigner";
-import NkDefBpmDeployments from "./NkDefBpmDeployments";// 待删除
+import NkDefBpmProcessDefinitions from "./task/NkDefBpmProcessDefinitions";
+import NkDefBpmProcessDefinitionDetail from "./task/NkDefBpmProcessDefinitionDetail";
+import NkDefBpmDesigner from "./task/NkDefBpmDesigner";
+import NkDefBpmDeployments from "./task/NkDefBpmDeployments";// 待删除
 
 import NkSettingsMenus from "./settings/NkSettingsMenus";
 
@@ -65,12 +56,7 @@ module.install = function (Vue) {
   /**
    * 页面组件，工作流页面需要嵌套的部分
    */
-  Vue.component('nk-page-partner-detail',NkPagePartnerDetail);
   Vue.component('nk-page-doc-detail',NkPageDocDetail);
-  Vue.component('nk-page-doc-header-default',NkPageDocHeaderDefault);
-  Vue.component('nk-page-doc-header-project',NkPageDocHeaderProject);
-  Vue.component('nk-page-partner-header-default',NkPagePartnerHeaderDefault);
-  Vue.component('nk-page-partner-header-transaction',NkPagePartnerHeaderDefault);
 };
 
 module.routes = [
@@ -78,14 +64,6 @@ module.routes = [
     name: "任务",
     path: 'tasks',
     component: NkPageTasks,
-    children: [
-      {
-        name: "任务详情",
-        path: 'task/:taskId',
-        component: NkPageTaskDetail,
-        props:true,
-      },
-    ]
   },
   {
     name: "单据",
@@ -165,44 +143,6 @@ module.routes = [
     path: "def",
     children: [
       {
-        name: "卡片",
-        path: "card",
-        component: NkDefCardType,
-        children: [
-          {
-            name: "卡片配置",
-            path: ':mode',
-            component: NkDefCardType,
-            meta:{
-              title: "卡片配置",
-            }
-          },
-        ]
-      },
-      {
-        name: "交易伙伴角色",
-        path: 'partner',
-        component: NkDefPartners,
-        children: [
-          {
-            name: "交易伙伴角色详情",
-            path: ':mode',
-            component: NkDefPartnerType,
-            meta:{
-              title: "配置详情",
-            }
-          },
-          {
-            name: "交易伙伴角色编辑",
-            path: ':mode/:partnerRole',
-            component: NkDefPartnerType,
-            meta:{
-              title: "配置详情",
-            }
-          }
-        ]
-      },
-      {
         name: "单据类型",
         path: 'doc',
         component: NkDefDocs,
@@ -257,13 +197,6 @@ module.routes = [
         meta:{
           title: "部署",
         }
-      },
-      {
-        name: "自定义搜索",
-        path: 'search',
-        component: NkDefSearch,
-        children: [
-        ]
       },
       {
         name: "工作流部署记录",

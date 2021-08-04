@@ -109,8 +109,8 @@
 import {mapActions, mapGetters, mapMutations} from 'vuex';
 import NkTabs from "./NkLayoutTabs";
 import NkNav from "./NkNav";
-import NkHelper from "../pages/NkHelper";
-import NkDebugPanel from "../pages/debug/NkDebugPanel";
+import NkHelper from "../pages/components/NkHelper";
+import NkDebugPanel from "../pages/components/NkDebugPanel";
 
 export default {
     name: "NkLayout",

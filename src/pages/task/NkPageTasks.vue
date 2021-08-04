@@ -21,7 +21,7 @@
 
 <script>
 import NkUtil from "../../utils/NkUtil";
-import NkPagePreview from "../NkPagePreview";
+import NkPagePreview from "../doc/NkPagePreview";
 
 function formatterTaskState({cellValue}){
     switch (cellValue){

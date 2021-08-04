@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import NkUtil from "../utils/NkUtil";
+import NkUtil from "../../utils/NkUtil";
 import NkPagePreview from "./NkPagePreview";
 import {mapGetters} from "vuex";
 
