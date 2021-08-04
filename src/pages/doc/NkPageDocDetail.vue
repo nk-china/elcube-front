@@ -52,7 +52,7 @@
             <!--编辑-->
             <a-button   v-if="!editMode" :type="preview?'default':'primary'" :disabled="!docEditable" @click="nkEditModeChanged(true)">
                 <a-icon type="edit" />
-            </a-button>
+            </a-button> 
 
             <!--保存-->
             <template v-if="editMode">
