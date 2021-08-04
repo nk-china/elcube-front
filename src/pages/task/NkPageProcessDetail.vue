@@ -27,37 +27,45 @@
         </a-row>
 
         <a-button-group slot="extra">
-            <a-popconfirm
-                title="Are you sure KILL this process instance ?"
-                ok-text="Yes"
-                cancel-text="No"
-                @confirm="kill"
-                :disabled="processInstance.state!=='ACTIVE'"
-            >
-                <a-button   type="primary" :disabled="processInstance.state!=='ACTIVE'">
-                    <a-icon type="close-square" /> KILL
-                </a-button>
-            </a-popconfirm>
+            <a-button   type="primary" :disabled="processInstance.state!=='ACTIVE'" @click="killConfirm">
+                <a-icon type="close-square" /> KILL
+            </a-button>
         </a-button-group>
 
         <nk-card title="Tasks">
             <vxe-table
                 row-key
+                show-overflow="tooltip"
                 auto-resize
                 size="mini"
                 border=inner
                 resizable
                 highlight-hover-row
+                highlight-current-row
                 header-cell-class-name="headerCellClassName"
+                @current-change="currentTaskChange"
                 :data="processInstance.bpmTask">
                 <vxe-table-column title="Name" field="name"></vxe-table-column>
                 <vxe-table-column title="Assignee" field="assignee"></vxe-table-column>
+                <vxe-table-column title="Candidate" field="candidate"></vxe-table-column>
                 <vxe-table-column title="StartTime" field="startTime" :formatter="['nkDatetimeISO']"></vxe-table-column>
                 <vxe-table-column title="EndTime" field="endTime" :formatter="['nkDatetimeISO']"></vxe-table-column>
+                <vxe-table-column title="Action">
+                    <template v-slot="{row}">
+                        <template v-for="(comment) in row.comments">{{comment}}</template>
+                        <a-button-group size="small">
+                            <a-button v-for="transition in row.transitions"
+                                      :key="transition.id"
+                                      @click="completeConfirm(row,transition)">
+                                {{ transition.name }}
+                            </a-button>
+                        </a-button-group>
+                    </template>
+                </vxe-table-column>
             </vxe-table>
         </nk-card>
 
-        <nk-card title="Variables">
+        <nk-card title="Variables" class="variables">
             <nk-empty :data="variables" />
             <nk-form :col="1">
                 <nk-form-item v-for="item in variables" :key="item.key" :title="item.key">
@@ -78,6 +86,9 @@
             </a-spin>
         </nk-card>
 
+        <a-modal v-model="completeVisible" :title="completeTask.title" ok-text="Ok" cancel-text="Cancel" @ok="completeTaskOk">
+            <a-textarea v-model="completeTask.comment" placeholder="Comment"></a-textarea>
+        </a-modal>
 
     </x-nk-page-layout>
 </template>
@@ -97,6 +108,11 @@ export default {
             loading: true,
             loadingCanvas:true,
 
+            completeVisible:false,
+            completeTask: {},
+
+            currentTask: undefined,
+
             processDefinition: {},
             processInstance:{
                 bpmTask:[],
@@ -106,27 +122,30 @@ export default {
     },
     computed:{
         variables(){
+            let map = Object.assign({},this.processInstance.bpmVariables,this.currentTask && this.currentTask.bpmVariables);
             let array = [];
-            if(this.processInstance.bpmVariables){
-                for(let key in this.processInstance.bpmVariables){
-                    array[0]={key,value:this.processInstance.bpmVariables[key]}
-                }
+            for(let key in map){
+                if(map.hasOwnProperty(key))
+                    array.push({key,value:map[key]});
             }
-            return array;
+            return array.sort((a,b)=>a.key>b.key?1:-1)
         }
     },
     created() {
-        this.init();
+        this.init(true);
     },
     methods:{
-        init(){
+        init(loadBpmn){
             this.$http.get("/api/ops/bpm/instance/detail?instanceId="+this.$route.params.id)
                 .then(response=>{
                     this.processInstance = response.data;
-                    this.$emit('setTab',this.processInstance.processDefinitionName);
-                    this.loading = false
+                    this.currentTask = undefined;
+                    this.$emit('setTab','流程实例:'+this.processInstance.processDefinitionName);
+                    this.loading = false;
 
-                    this.loadBpmn();
+                    if(loadBpmn===true){
+                        this.loadBpmn();
+                    }
                 }).catch(res=>{
                     if(res.response.status===403){
                         this.$emit("close")
@@ -138,7 +157,6 @@ export default {
                 .then(response=>{
                     this.loading = false;
                     this.processDefinition = response.data;
-                    this.$emit("setTab",this.processDefinition.name);
                     this.$nextTick().then(this.render);
                 });
         },
@@ -158,19 +176,61 @@ export default {
         zoom(flag) {
             this.viewer.get('zoomScroll').stepZoom(flag)
         },
-        kill(){
-            this.loading = true
-            this.$http.post(`/api/ops/bpm/instance/kill?instanceId=${this.processInstance.id}`)
-                .then(this.init);
+        killConfirm(){
+            this.completeTask = {
+                kill:true,
+                title:'Kill Instance',
+            };
+            this.completeVisible = true;
+        },
+        currentTaskChange({row}){
+            this.currentTask = row;
+        },
+        completeConfirm(task,transition){
+            this.completeTask = {
+                taskId:task.id,
+                title:'Complete Task',
+                transition
+            };
+            this.completeVisible = true;
+        },
+        completeTaskOk(){
+            if(this.completeTask.comment && this.completeTask.comment.replace(/\s/g,'')){
+                this.loading = true
+                this.completeVisible = false;
+                if(this.completeTask.kill){
+                    this.$http.post(
+                            `/api/ops/bpm/instance/kill`,
+                            `instanceId=${this.processInstance.id}&deleteReason=${this.completeTask.comment}`)
+                        .then(this.init)
+                        .finally(()=>this.loading=false);
+                }else{
+                    this.$http.postJSON(`/api/ops/bpm/instance/complete`,this.completeTask)
+                        .then(this.init)
+                        .finally(()=>this.loading=false);
+                }
+            }
         }
+    },
+    destroyed() {
+        this.viewer&&this.viewer.destroy&&this.viewer.destroy();
     }
 }
 </script>
 
 <style scoped lang="scss">
-::v-deep.nk-form-item{
-    .term{
-        min-width: 160px;
+::v-deep{
+    .nk-form-item{
+        .term{
+            min-width: 160px;
+        }
+    }
+    .variables{
+        .nk-form-item{
+            .term{
+                min-width: 300px;
+            }
+        }
     }
 }
 </style>

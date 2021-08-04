@@ -27,7 +27,7 @@ function formatterTaskState({cellValue}){
     switch (cellValue){
         case 'create':  return '待办';
         case 'complete':return '办结';
-        case 'cancel':  return '取消';
+        case 'delete':  return '取消';
         default: return cellValue;
     }
 }

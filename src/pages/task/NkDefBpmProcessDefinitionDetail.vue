@@ -50,7 +50,7 @@ export default {
                 .then(response=>{
                     this.loading = false;
                     this.processDefinition = response.data;
-                    this.$emit("setTab",this.processDefinition.name);
+                    this.$emit("setTab",'流程定义:'+this.processDefinition.name);
                     this.$nextTick().then(this.render);
                 });
         },
