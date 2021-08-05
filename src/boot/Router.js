@@ -111,31 +111,8 @@ export default function(VueRouter,moduleRoutes,loginPage,defaultPage) {
                 next();
                 updateMeta(to);
               })
-
-          // new Promise((resolve, reject)=>{
-          //   if(state.refresh){
-          //     router.app.$http.refreshToken(from)
-          //       .then(resolve)
-          //       .catch(reject)
-          //   }else{
-          //     reject.apply(this);
-          //   }
-          // }).then(()=>{
-          //   next();
-          //   updateMeta(to);
-          // }).catch(()=>{
-          //   // 跳转到登陆
-          //   next({
-          //     path: '/'
-          //   })
-          // });
         }
       }
-    });
-
-    // eslint-disable-next-line no-unused-vars
-    router.afterEach((to, from) => {
-      //if(NProgress)NProgress.done()
     });
 
     return router;
