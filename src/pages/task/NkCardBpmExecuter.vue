@@ -1,6 +1,10 @@
 <template>
     <nk-card class="card" title="审批意见">
-        <nk-bpmn-view ref="bpmn" v-if="bpmnVisible" :process-definition-id="task.processDefinitionId" style="margin-bottom: 10px;" />
+        <nk-bpmn-view ref="bpmn"
+                      v-if="bpmnVisible"
+                      :process-definition-id="task.processDefinitionId"
+                      :task-definition-key="task.taskDefinitionKey"
+                      style="margin-bottom: 10px;" />
         <a-input type="textarea" v-model="completeTask.comment" :auto-size="{ minRows: 4, maxRows: 6 }" placeholder="请输入审批意见"></a-input>
         <div slot="actions" style="padding: 0 20px 0;text-align: right">
             <a-button-group v-if="task">
@@ -14,17 +18,28 @@
                 <a-tooltip title="敬请期待"><a-button type="default">转办</a-button></a-tooltip>
             </a-button-group>
         </div>
+        <a-button v-if="hasAuthority(['DEF:*','OPS:*'])"
+                  slot="extra"
+                  type="link"
+                  size="small"
+                  @click="$router.push(`/apps/bpm/process/instances/detail/${task.processInstanceId}`)">流程实例</a-button>
+        <a-button  v-if="!bpmnVisible"
+                   slot="extra"
+                   type="link"
+                   size="small"
+                   @click="bpmnVisible=true">查看流程图</a-button>
         <a-button-group size="small" slot="extra"  v-if="bpmnVisible">
             <a-button @click="$refs.bpmn.zoom( 1)"><a-icon type="zoom-in" /></a-button>
             <a-button @click="$refs.bpmn.zoom(-1)"><a-icon type="zoom-out" /></a-button>
             <a-button size="small" @click="bpmnVisible=false"><a-icon type="close-circle" /></a-button>
         </a-button-group>
-        <a-button slot="extra" type="link" size="small" v-if="!bpmnVisible" @click="bpmnVisible=true">查看流程图</a-button>
     </nk-card>
 </template>
 
 <script>
 import NkBpmnView from "./NkBpmnView";
+import { mapGetters } from "vuex";
+
 export default {
     components: {NkBpmnView},
     props:{
@@ -40,6 +55,9 @@ export default {
         }
     },
     computed:{
+        ...mapGetters('User',[
+            'hasAuthority'
+        ]),
         buttonDisabled(){
             return this.editMode || !(this.completeTask.comment && this.completeTask.comment.replace(/\s/g,''));
         }
@@ -52,11 +70,14 @@ export default {
                 .then(()=>{
                     this.$emit("complete",true);
                     this.completeTask = {};
+                    this.bpmnVisible = false;
                 })
                 .finally(()=> {
                     this.$emit("input",false);
                 });
         }
+    },
+    mounted() {
     }
 }
 </script>

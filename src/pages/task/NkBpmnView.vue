@@ -7,11 +7,13 @@
 <script>
 import BpmnViewer from "bpmn-js/lib/NavigatedViewer";
 import Modeling from "bpmn-js/lib/features/modeling";
+import looksBetter from "./ref/looksBetter";
 
 export default {
     props:{
+        bpmn:String,
         processDefinitionId:String,
-        bpmn:String
+        taskDefinitionKey:String
     },
     data(){
        return {
@@ -19,6 +21,12 @@ export default {
            viewer: undefined,
            bpmnXml : undefined
        }
+    },
+    watch:{
+        taskDefinitionKey(value){
+            if(this.viewer)
+                looksBetter(this.viewer,value)
+        }
     },
     created() {
         if(this.bpmn){
@@ -43,10 +51,14 @@ export default {
                 .then(() => {
                     this.viewer.get('canvas').zoom('fit-viewport',{});
                     this.loading = false;
-                }).catch(() => {});
+                    if(this.taskDefinitionKey){
+                        looksBetter(this.viewer,this.taskDefinitionKey)
+                    }
+                }).catch((e) => {console.log(e)});
             this.$refs['js-canvas'].getElementsByTagName("a")[0].style.transform='scale(0.6)';
         },
         zoom(flag) {
+            console.log(this.taskDefinitionKey)
             this.viewer.get('zoomScroll').stepZoom(flag)
         },
     },

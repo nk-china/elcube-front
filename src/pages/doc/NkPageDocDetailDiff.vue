@@ -143,7 +143,6 @@
 
 <script>
 import { mapActions} from 'vuex';
-import ClassifyMapping from "../ClassifyMapping";
 
 export default {
     components:{
@@ -265,7 +264,7 @@ export default {
             });
         },
         toDoc(){
-            this.$emit('replace',ClassifyMapping[this.doc.classify].detailUrl+this.doc.docId);
+            this.$emit('replace','/apps/docs/detail/'+this.doc.docId);
         },
         changedClass(c){
             if(c[0]&&c[1]){

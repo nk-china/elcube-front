@@ -27,6 +27,13 @@ export default {
         },
         user: (state) => {
             return state.user;
+        },
+        hasAuthority:(state)=>(authority)=>{
+            authority = typeof authority === 'object' ? authority : [authority];
+            return !!(state.user.authorities
+                &&state.user.authorities.find(a=>{
+                    return a.authority==='*:*'|| authority.indexOf(a.authority)>=0;
+                }));
         }
     }
 }

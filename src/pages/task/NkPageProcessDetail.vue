@@ -32,6 +32,15 @@
             </a-button>
         </a-button-group>
 
+        <nk-card title="Variables" class="variables">
+            <nk-empty :data="variables" />
+            <nk-form :col="1">
+                <nk-form-item v-for="item in variables" :key="item.key" :title="item.key">
+                    {{item.value}}
+                </nk-form-item>
+            </nk-form>
+        </nk-card>
+
         <nk-card title="Tasks">
             <vxe-table
                 row-key
@@ -68,15 +77,6 @@
             </vxe-table>
         </nk-card>
 
-        <nk-card title="Variables" class="variables">
-            <nk-empty :data="variables" />
-            <nk-form :col="1">
-                <nk-form-item v-for="item in variables" :key="item.key" :title="item.key">
-                    {{item.value}}
-                </nk-form-item>
-            </nk-form>
-        </nk-card>
-
         <nk-card title="BPMN" v-if="processInstance.processDefinitionId">
             <div slot="extra">
                 <a-button-group size="small">
@@ -84,7 +84,10 @@
                     <a-button @click="$refs.bpmn.zoom(-1)">-</a-button>
                 </a-button-group>
             </div>
-            <nk-bpmn-view ref="bpmn" :process-definition-id="processInstance.processDefinitionId" />
+            <nk-bpmn-view ref="bpmn"
+                          :process-definition-id="processInstance.processDefinitionId"
+                          :task-definition-key="currentTask && currentTask.taskDefinitionKey"
+            />
         </nk-card>
 
         <a-modal v-model="completeVisible" :title="completeTask.title" ok-text="Ok" cancel-text="Cancel" @ok="completeTaskOk">

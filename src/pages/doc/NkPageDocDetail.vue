@@ -105,7 +105,7 @@
             </a-button>
 
             <!-- 配置 -->
-            <a-button v-if="!preview && user&&user.authorities&&user.authorities.find(a=>{return a.authority==='*:*'||a.authority==='DEF:*'})"
+            <a-button v-if="!preview && hasAuthority(['DEF:*','DEF:*'])"
                       @click="$router.push(`/apps/def/doc/detail/${doc.docType}/${doc.def.version}`)">
                 <a-icon type="deployment-unit" />
             </a-button>
@@ -182,19 +182,22 @@
 
 <script>
 import qs from 'qs'
-import DocDetailMixin from "./NkPageDocDetailMixin";
 import XNkPageLayout from "../../layout/template/XNkPageLayout";
-import {mapActions} from 'vuex';
+import {mapActions, mapGetters} from 'vuex';
 import NkCardBpmExecuter from "../task/NkCardBpmExecuter";
 
 export default {
-    mixins:[DocDetailMixin],
     components:{
         NkCardBpmExecuter,
         XNkPageLayout,
     },
     props:{
-        preview: Boolean
+        bpmTask: Object,
+        params: Object,
+        preview: {
+            type:Boolean,
+            default:false,
+        }
     },
     data(){
         return {
@@ -216,6 +219,9 @@ export default {
         this.initData();
     },
     computed:{
+        ...mapGetters('User',[
+            'hasAuthority'
+        ]),
         rightBar(){
             return !this.preview;
         },
@@ -418,6 +424,17 @@ export default {
                     this.loading=false;
                 })
         },
+        nkChanged(e,component){
+            Object.assign(e,{$source:component && component.component});
+            this.$refs.components&&this.$refs.components.forEach(c=>c.docUpdate&&c.docUpdate(e));
+        },
+        nkEditModeChanged(editMode){
+            this.editMode = editMode;
+            this.$emit("editModeChanged",this.editMode);
+            this.$nextTick(()=>{
+                this.$refs.components&&this.$refs.components.forEach(c=>c.docEditModeChanged &&c.docEditModeChanged(this.editMode));
+            });
+        },
         cancel(){
             if(this.contextParams.mode==='create') {
                 this.$emit("close");
@@ -445,6 +462,16 @@ export default {
             if(debug){
                 return "debug"
             }
+        },
+        toDoc(){
+            this.$emit('replace','/apps/docs/detail/'+this.doc.docId);
+        },
+        historyClass(componentName){
+            return this.history && this.history.changedComponents && this.history.changedComponents.indexOf(componentName)>=0
+                ?'changed':'';
+        },
+        buildAnchorLink(component){
+            return (this.history?this.history.id:this.doc.docId) + '-' + component;
         }
     }
 }
