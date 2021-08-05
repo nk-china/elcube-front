@@ -81,8 +81,8 @@ export default (Vue) => {
     return Promise.reject(error);
   }
 
-  // 系统运行异常
-  const onException = error => {
+  // 用户操作错误或警告提示
+  const onCaution = error => {
     Vue.prototype.$message.error(error.response.data.msg)
     return Promise.reject(error)
   }
@@ -91,7 +91,7 @@ export default (Vue) => {
              error.response.status <   600) { return onSystemError(error);
     }else if(error.response.status === 401) { return onUnauthorizedError(error);
     }else if(error.response.status === 403) { return onForbiddenError(error);
-    }else if(error.response.status === 400) { return onException(error);
+    }else if(error.response.status === 400) { return onCaution(error);
     }else{                                    return Promise.reject(error); // 其他未知的错误
     }
   };
