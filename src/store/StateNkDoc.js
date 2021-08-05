@@ -101,11 +101,5 @@ export default {
         }
     },
     getters: {
-        layoutConfig: (state) => {
-            return state.layoutConfig;
-        },
-        helperConfig: (state) => {
-            return state.helperConfig;
-        },
     }
 }

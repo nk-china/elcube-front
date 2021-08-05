@@ -106,7 +106,7 @@
 
 <script>
 
-import {mapActions, mapGetters, mapMutations} from 'vuex';
+import {mapState, mapActions, mapGetters, mapMutations} from 'vuex';
 import NkTabs from "./NkLayoutTabs";
 import NkNav from "./NkNav";
 import NkHelper from "../pages/components/NkHelper";
@@ -148,23 +148,23 @@ export default {
             }
         };
     },
-    watch: {
-        '$route': function (newRoute, oldRoute) {
-            this.addPage(newRoute, oldRoute);
-        }
-    },
     computed:{
-        ...mapGetters('NkDoc',[
-            'layoutConfig'
-        ]),
-        ...mapGetters('UI',[
+        ...mapState('UI',[
             'loading'
+        ]),
+        ...mapState('NkDoc',[
+            'layoutConfig'
         ]),
         ...mapGetters('User',[
             'user','reLogin','reLoginTime'
         ]),
         logoutText(){
             return '退出('+this.reLoginTime+')';
+        }
+    },
+    watch: {
+        '$route': function (newRoute, oldRoute) {
+            this.addPage(newRoute, oldRoute);
         }
     },
     created(){

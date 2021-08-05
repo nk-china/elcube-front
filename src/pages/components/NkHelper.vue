@@ -16,11 +16,11 @@
 
 <script>
 
-import {mapActions, mapGetters, mapMutations} from 'vuex';
+import {mapActions, mapState, mapMutations} from 'vuex';
 
 export default {
     computed:{
-        ...mapGetters('NkDoc', {
+        ...mapState('NkDoc', {
             config:'helperConfig'
         })
     },
