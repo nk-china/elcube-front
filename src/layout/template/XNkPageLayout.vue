@@ -21,7 +21,7 @@
                 <slot name="avatar"     slot="avatar"></slot>
                 <slot name="backIcon"   slot="backIcon"></slot>
                 <slot name="action"     slot="extra"></slot>
-                <a-row>
+                <a-row v-if="$slots.content||$slots.extra">
                     <a-col :span="18">
                         <slot name="content"></slot>
                     </a-col>
@@ -97,6 +97,7 @@ export default {
     .nk-page-layout-content{
 
         display: flex;
+        padding-bottom: 80px;
 
         // 内容
         .content{

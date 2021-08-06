@@ -110,7 +110,8 @@ import {mapState, mapActions, mapGetters, mapMutations} from 'vuex';
 import NkTabs from "./NkLayoutTabs";
 import NkNav from "./NkNav";
 import NkHelper from "../pages/components/NkHelper";
-import NkDebugPanel from "../pages/components/NkDebugPanel";
+import NkDebugPanel from "./NkDebugPanel";
+import NkVueLoader from "../boot/VueLoader";
 
 export default {
     name: "NkLayout",
@@ -151,6 +152,9 @@ export default {
     computed:{
         ...mapState('UI',[
             'loading'
+        ]),
+        ...mapState('Debug',[
+            'debugId'
         ]),
         ...mapState('NkDoc',[
             'layoutConfig'
@@ -339,6 +343,13 @@ export default {
             this.pages = items;
         },
         tabItemRefresh(item){
+
+            if(this.debugId){
+                NkVueLoader.reloadVueResources().then((e)=>{
+                    this.$message.info(`Debug: 重新载入Vue组件${e[1]}个`)
+                });
+            }
+
             let c = item.component;
             item.component = undefined;
             this.$nextTick(()=>{

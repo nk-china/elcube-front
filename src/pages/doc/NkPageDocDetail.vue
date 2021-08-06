@@ -7,22 +7,22 @@
                       :right-bar="rightBar"
                       :header-indent="headerIndent"
     >
-        <div slot="top" v-if="this.doc.def && this.doc.def.debug" style="padding: 10px 10px 0 10px;">
-            <a-alert message="单据配置正在调试" type="warning" show-icon />
-        </div>
 
-        <div v-if="history" slot="top" style="padding: 20px 20px 0 20px;">
+        <div v-if="doc.historyVersion" slot="top" class="alert">
             <div class="ant-alert ant-alert-warning ant-alert-closable">
                 <a-icon class="ant-alert-icon" type="info-circle" theme="filled"/>
                 <span class="ant-alert-message">
                     快照 Snapshot ：
-                    Revised form {{history.updatedTime | nkDatetimeFriendly}} By {{history.userRealname}} To Version {{history.version}}
+                    Revised form {{doc.updatedTime | nkDatetimeFriendly}} By {{doc.historyUserRealName}} To Version {{doc.historyVersion}}
 
                 </span>
-                <a type="button" tabindex="0" class="ant-alert-close-icon" @click="toDoc">
+                <a type="button" tabindex="0" class="ant-alert-close-icon" @click="$emit('replace','/apps/docs/detail/'+doc.docId)">
                     <span class="ant-alert-close-text">返回单据</span>
                 </a>
             </div>
+        </div>
+        <div slot="top" v-else-if="this.doc.def && this.doc.def.debug" class="alert">
+            <a-alert message="单据配置正在调试" type="warning" show-icon />
         </div>
 
         <div slot="content" style="min-height: 100px;">
@@ -46,7 +46,7 @@
         </div>
         <a-statistic slot="extra" title="状态" :value="doc.docState | nkFromList(doc.def&&doc.def.status,'docStateDesc','docState')"/>
 
-        <a-button-group v-if="!history && !loading && !diffTarget" slot="action">
+        <a-button-group v-if="!doc.historyVersion && !loading" slot="action">
             <slot       v-if="!editMode" name="buttons"></slot>
 
             <!--编辑-->
@@ -208,10 +208,7 @@ export default {
             doc:{},
             docStateTemp:undefined,
 
-            history :undefined,
             histories : undefined,
-
-            diffTarget:undefined
         }
     },
 
@@ -344,13 +341,10 @@ export default {
                             this.$emit("close")
                         }
                     });
-            }else{
-                this.$http.get("/api/doc/detail/history/"+this.contextParams.docId)
+            }else if(this.contextParams.mode==='snapshot'){
+                this.$http.get("/api/doc/detail/snapshot/"+this.contextParams.docId)
                     .then(response=>{
-                        this.history=response.data;
-                        this.history.changedComponents = this.history.cardNames?this.history.cardNames.split(','):[];
-                        this.doc = JSON.parse(response.data.data);
-                        this.history.data=undefined;
+                        this.doc=response.data;
                         this.$emit('setTab','Snapshot:'+this.doc.docName);
                         this.loading = false
                     });
@@ -463,15 +457,12 @@ export default {
                 return "debug"
             }
         },
-        toDoc(){
-            this.$emit('replace','/apps/docs/detail/'+this.doc.docId);
-        },
         historyClass(componentName){
-            return this.history && this.history.changedComponents && this.history.changedComponents.indexOf(componentName)>=0
+            return this.doc.historyChangedCards && this.doc.historyChangedCards.indexOf(componentName)>=0
                 ?'changed':'';
         },
         buildAnchorLink(component){
-            return (this.history?this.history.id:this.doc.docId) + '-' + component;
+            return this.doc.docId + '-' + component;
         }
     }
 }
@@ -507,5 +498,8 @@ export default {
 .debug{
     border:1px solid #ffe58f;
     background-color: #fffbe6;
+}
+.alert{
+    padding: 10px 10px 0 10px;
 }
 </style>

@@ -43,9 +43,12 @@ export default ()=>{
       }
     },
     methods:{
-      $nkCall(event){
+      nk$call(options){
         return new Promise((resolve,reject)=>{
-          this.$http.postJSON(`/api/doc/call/${this.doc.docType}?component=${this.componentOptions.component}&event=${event}`,this.doc)
+          this.$http.postJSON(
+              `/api/doc/call`,
+              {doc:this.doc,fromCard:this.card.cardKey,options}
+              )
               .then(response=>{
                 resolve(response.data);
               })
@@ -55,7 +58,7 @@ export default ()=>{
               })
         })
       },
-      $nkCalc(options){
+      nk$calc(options){
         this.$emit("nk-calc",options);
       }
     }

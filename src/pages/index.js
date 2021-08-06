@@ -78,7 +78,7 @@ module.routes = [
       },
       {
         name: "单据对比",
-        path: 'diff/:sourceDocId/:targetDocId',
+        path: 'diff/:leftId/:rightId',
         component: NkPageDocDetailDiff
       }
     ]
