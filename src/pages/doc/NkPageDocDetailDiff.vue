@@ -153,7 +153,7 @@ export default {
             });
         },
         diffH(){
-            return ['docName','docNumber','docState','docBusinessKey','updatedTime'].filter(i=>{
+            return ['docName','docNumber','docState','docBusinessKey'].filter(i=>{
                 return this.left[i] !== this.right[i]
             }).length;
         },
