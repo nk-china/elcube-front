@@ -7,6 +7,10 @@
         <a-icon type="question-circle"/>
         <slot v-if="false"></slot>
     </a>
+    <a v-else class="helper-link">
+        <a-icon type="question-circle"/>
+        <slot v-if="false"></slot>
+    </a>
 </template>
 
 <script>
@@ -14,7 +18,8 @@ import { mapActions} from 'vuex';
 export default {
     props:{
         page:String,
-        nkOptions:Object
+        nkOptions:Object,
+        markdown:String
     },
     methods:{
         ...mapActions('NkDoc',[

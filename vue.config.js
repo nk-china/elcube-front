@@ -33,6 +33,19 @@ module.exports = {
     }
   },
   chainWebpack: config => {
+    config.module.rule('md')
+      .test(/\.md$/)
+      .use('vue-loader')
+      .loader('vue-loader')
+      .end()
+      .use('vue-markdown-loader')
+      .loader('vue-markdown-loader/lib/markdown-compiler')
+      .tap(() => {
+        return {
+          raw: true
+        }
+      })
+      .end()
     config.module
       .rule("i18n")
       .resourceQuery(/blockType=i18n/)

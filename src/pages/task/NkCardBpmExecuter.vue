@@ -1,5 +1,5 @@
 <template>
-    <nk-card class="card" title="审批意见">
+    <nk-card title="审批意见">
         <nk-bpmn-view ref="bpmn"
                       v-if="bpmnVisible"
                       :process-definition-id="task.processDefinitionId"

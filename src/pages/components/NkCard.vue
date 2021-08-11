@@ -13,25 +13,27 @@
             @tabChange="tabChange"
     >
 
-        <div  v-if=" card.cardName || title" slot="title" @dblclick="editMode !==undefined && switchExpand()" style="user-select: none">{{card.cardName||title}}</div>
+        <div  v-if="(card.cardName) || title" slot="title" @dblclick="card.cardKey && switchExpand()" style="user-select: none">
+            {{(card.cardName)||title}}
+        </div>
         <slot v-else slot="title" name="title"></slot>
         <slot slot="actions" name="actions"></slot>
         <slot slot="cover" name="cover"></slot>
 
         <div slot="tabBarExtraContent">
-            <a-icon v-if="editMode !==undefined && tabList" v-show="!expand" class="expand" type="caret-up"    @click="switchExpand"></a-icon>
-            <a-icon v-if="editMode !==undefined && tabList" v-show=" expand" class="expand" type="caret-down"  @click="switchExpand"></a-icon>
+            <a-icon v-if="card.cardKey && tabList" v-show="!expand" class="expand" type="caret-up"    @click="switchExpand"></a-icon>
+            <a-icon v-if="card.cardKey && tabList" v-show=" expand" class="expand" type="caret-down"  @click="switchExpand"></a-icon>
             <slot name="tabBarExtraContent"></slot>
         </div>
         <div slot="extra">
             <slot name="extra" v-if="expand"></slot>
             <nk-script-label v-if="card.debug" :value="card.beanName"></nk-script-label>
-            <nk-help-link v-if="nkOptions.markdownFlag" :nk-options="nkOptions" />
-            <a-icon v-if="editMode !==undefined && !tabList" v-show="!expand" class="expand" type="caret-up"    @click="switchExpand"></a-icon>
-            <a-icon v-if="editMode !==undefined && !tabList" v-show=" expand" class="expand" type="caret-down"  @click="switchExpand"></a-icon>
+            <nk-help-link v-if="cardComponent.$docs" />
+            <a-icon v-if="card.cardKey && !tabList" v-show="!expand" class="expand" type="caret-up"    @click="switchExpand"></a-icon>
+            <a-icon v-if="card.cardKey && !tabList" v-show=" expand" class="expand" type="caret-down"  @click="switchExpand"></a-icon>
         </div>
         <div v-show="expand">
-            <slot v-if="expand||editMode"></slot>
+            <slot v-if="expand||docEditMode"></slot>
         </div>
     </a-card>
 </template>
@@ -54,7 +56,7 @@ let getKey = (component)=>{
     if(parent){
         keyPre = `${parent.doc.docType}:`;
     }
-    return `${keyPre}${component.cardKey || component.$parent.$vnode.key}`;
+    return `${keyPre}${component.card && component.card.cardKey || component.$parent.$vnode.key}`;
 };
 let getExpand = (component)=>{
     const key = getKey(component);
@@ -90,23 +92,25 @@ export default {
         activeTabKey:String,
         defaultActiveTabKey:String,
         tabList:Array,
-        cardKey:String,
-        card:{
-            type:Object,
-            default(){
-                return {}
-            }
-        },
-        nkOptions:{
-            type:Object,
-            default(){
-                return {}
-            }
+        expandable:{
+            type:Boolean,
+            default:true
         },
         editMode:{
-            default(){
-                return undefined
-            }
+            type:Boolean,
+            default:false
+        },
+        component:Object
+    },
+    computed:{
+        cardComponent(){
+            return this.component || this.$parent;
+        },
+        card(){
+            return this.cardComponent.card || {};
+        },
+        docEditMode(){
+            return this.editMode || this.$parent.editMode;
         }
     },
     data(){
