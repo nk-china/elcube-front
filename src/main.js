@@ -1,16 +1,13 @@
-import Vue from 'vue';
-
-import {NkModule,NkRouter,NkVuexStore,App,NkVueLoader} from './boot';
+import {App,NkRouter,NkVuexStore,reloadVueResources,i18n} from './boot';
 import NkPageDefault from "./dashboards/NkPageDefault";
 
-Vue.use(NkModule);
-
-NkVueLoader.reloadVueResources()
-    .then(()=>{
+reloadVueResources()
+    .then(({Vue})=>{
         new Vue({
           router  : NkRouter([],undefined,NkPageDefault),
           store   : NkVuexStore({}),
-          render  : h => h(App)
+          render  : h => h(App),
+          i18n
         }).$mount('#app');
     }).catch(()=>{
     });

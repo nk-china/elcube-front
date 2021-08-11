@@ -1091,6 +1091,14 @@
     cssnano-preset-default "^4.0.0"
     postcss "^7.0.0"
 
+"@kazupon/vue-i18n-loader@^0.5.0":
+  version "0.5.0"
+  resolved "http://ns.nkpro.cn/repository/npm-public/@kazupon/vue-i18n-loader/-/vue-i18n-loader-0.5.0.tgz#64819fc9dbe21bac523e3436b7e15c32bcd33b92"
+  integrity sha1-ZIGfydviG6xSPjQ2t+FcMrzTO5I=
+  dependencies:
+    js-yaml "^3.13.1"
+    json5 "^2.1.1"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "http://ns.nkpro.cn/repository/npm-public/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -6248,7 +6256,7 @@ json5@^1.0.1:
   dependencies:
     minimist "^1.2.0"
 
-json5@^2.1.2:
+json5@^2.1.1, json5@^2.1.2:
   version "2.2.0"
   resolved "http://ns.nkpro.cn/repository/npm-public/json5/-/json5-2.2.0.tgz#2dfefe720c6ba525d9ebd909950f0515316c89a3"
   integrity sha1-Lf7+cgxrpSXZ69kJlQ8FFTFsiaM=
@@ -9894,6 +9902,11 @@ vue-hot-reload-api@^2.3.0:
   version "2.3.4"
   resolved "http://ns.nkpro.cn/repository/npm-public/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"
   integrity sha1-UylVzB6yCKPZkLOp+acFdGV+CPI=
+
+vue-i18n@^8.25.0:
+  version "8.25.0"
+  resolved "http://ns.nkpro.cn/repository/npm-public/vue-i18n/-/vue-i18n-8.25.0.tgz#1037d9295fa2845a230b771de473481edb2cfc4c"
+  integrity sha1-EDfZKV+ihFojC3cd5HNIHtss/Ew=
 
 vue-json-viewer@^2.2.19:
   version "2.2.19"

@@ -1,7 +1,9 @@
 
 
 // 基础依赖
+import Vue from 'vue';
 import Vuex from 'vuex';
+import VueI18n from 'vue-i18n'
 import VueRouter from "vue-router";
 
 import Antd from 'ant-design-vue';
@@ -15,7 +17,6 @@ import 'mavon-editor/dist/css/index.css'
 import Router from './Router';
 import Stores from '../store';
 import Http from "./Http";
-import NkVueLoader from "./VueLoader";
 
 // UI组件
 import NkComponent from "../components";
@@ -32,37 +33,56 @@ import Mixin from "../cards/Mixin";
 import MixinDef from "../cards/MixinDef";
 import NkFormat from "../utils/NkFormat";
 import NkUtil from "../utils/NkUtil";
-
-function install(Vue){
-
-  Vue.config.productionTip = false;
-  Vue.prototype.$http = new Http(Vue);
-
-  Vue.use(Vuex);
-  Vue.use(VueRouter);
-
-  Vue.use(Antd);
-  Vue.use(VXETable);
-  Vue.use(mavonEditor);
-
-  Vue.use(NkComponent);
-  Vue.use(NkCards);
-  Vue.use(NkDashboards);
-  Vue.use(NkDocuments);
-  Vue.use(NkPages);
+import {loadModule} from "vue3-sfc-loader/dist/vue2-sfc-loader";
 
 
-  Vue.component('nk-component-lost',NkCardLost);
+Vue.config.productionTip = false;
+Vue.prototype.$http = new Http(Vue);
 
-  Vue.filter("nkNumber",NkFormat.nkNumber);
-  Vue.filter("nkDatetime",NkFormat.nkDatetime);
-  Vue.filter("nkDatetimeFriendly",NkFormat.nkDatetimeFriendly);
-  Vue.filter("nkDatetimeISO",NkFormat.nkDatetimeISO);
-  Vue.filter("nkCurrency",NkFormat.nkCurrency);
-  Vue.filter("nkPercent", NkFormat.nkPercent);
-  Vue.filter("nkFromList",NkFormat.nkFromList);
+Vue.use(Vuex);
+Vue.use(VueI18n);
+Vue.use(VueRouter);
 
-}
+Vue.use(Antd);
+Vue.use(VXETable);
+Vue.use(mavonEditor);
+
+Vue.use(NkComponent);
+Vue.use(NkCards);
+Vue.use(NkDashboards);
+Vue.use(NkDocuments);
+Vue.use(NkPages);
+
+
+Vue.component('nk-component-lost',NkCardLost);
+
+Vue.filter("nkNumber",NkFormat.nkNumber);
+Vue.filter("nkDatetime",NkFormat.nkDatetime);
+Vue.filter("nkDatetimeFriendly",NkFormat.nkDatetimeFriendly);
+Vue.filter("nkDatetimeISO",NkFormat.nkDatetimeISO);
+Vue.filter("nkCurrency",NkFormat.nkCurrency);
+Vue.filter("nkPercent", NkFormat.nkPercent);
+Vue.filter("nkFromList",NkFormat.nkFromList);
+
+Vue.mixin({
+  beforeCreate: function () {
+    const docs = this.$options.__docs
+    if (docs) {
+      this.$docs = docs;
+    }
+  }
+});
+
+const modules = {
+  Mixin,
+  MixinDef,
+  NkFormat,
+  NkUtil
+};
+
+const i18n = new VueI18n({
+  locale: 'zh_CN', // 设置语言环境
+});
 
 function NkVuexStore(moduleStores){
   return new Vuex.Store({
@@ -80,11 +100,74 @@ function NkRouter(moduleRoutes,loginPage,defaultPage) {
   ],loginPage,defaultPage);
 }
 
-let NkModule = {install};
+
+function componentLoader(componentName, template, modules) {
+
+  return Vue.component(componentName,() => {
+
+    return new Promise((resolve,reject)=>{
+      let i18n,markdown;
+      loadModule(
+        componentName+".vue",
+        {
+          moduleCache: {
+            vue: Vue,
+            'nk-ts5-platform': modules,
+            ...modules
+          },
+          getFile() {
+            return template;
+          },
+          addStyle(textContent) {
+            document.head.append(Object.assign(document.createElement('style'), { textContent }));
+          },
+          customBlockHandler(block) {
+            if ( block.type === 'i18n' ){
+              i18n = block.content;
+            }
+            if ( block.type === 'docs' ){
+              markdown = block.content;
+            }
+          }
+        }
+      ).then(component=>{
+        if(i18n){
+          component.__i18n = [i18n];
+        }
+        if(markdown){
+          component.__docs = markdown.trim();
+        }
+        resolve(component);
+      }).catch(reject);
+    });
+  });
+}
+
+function loadVueTemplate(componentName, template){
+  return componentLoader(componentName, template, modules)
+}
+
+function reloadVueResources(){
+  return new Promise((resolve,reject)=>{
+    Vue.prototype.$http.instanceNone.get("/api/def/resources/vue")
+      .then(res=>{
+        let count = 0;
+        for(let componentName in res.data){
+          if(res.data.hasOwnProperty(componentName)){
+            componentLoader(componentName, res.data[componentName], modules, i18n)
+          }
+          count ++;
+        }
+        resolve({
+          Vue,
+          count,
+          data:res.data
+        });
+      }).catch(reject);
+  })
+}
 
 export {
-
-  NkModule,
 
   NkRouter,
   NkVuexStore,
@@ -95,5 +178,8 @@ export {
   NkFormat,
   NkUtil,
 
-  NkVueLoader
+  i18n,
+
+  reloadVueResources,
+  loadVueTemplate
 }

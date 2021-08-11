@@ -4,15 +4,20 @@
     </a-config-provider>
 </template>
 <script>
-import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN';
-export default {
+  import zh_CN from 'ant-design-vue/lib/locale-provider/zh_CN';
+  export default {
     name: 'App',
     data() {
-        return {
-            zh_CN,
-        };
+      return {
+        zh_CN,
+      };
     },
-};
+    created() {
+      if(this.$i18n){
+        this.$i18n.locale = this.$route.query.lang||'zh_CN';
+      }
+    }
+  };
 </script>
 <style  lang="scss">
 </style>

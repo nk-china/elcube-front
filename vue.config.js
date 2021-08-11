@@ -1,8 +1,6 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 
-//console.log(process)
-
 module.exports = {
   "pages": {
     "index": {
@@ -35,32 +33,26 @@ module.exports = {
     }
   },
   chainWebpack: config => {
-    config.module.rule('md')
-        .test(/\.md$/)
-        .use('vue-loader')
-          .loader('vue-loader')
-        .end()
-        .use('vue-markdown-loader')
-          .loader('vue-markdown-loader/lib/markdown-compiler')
-          .tap(() => {
-            return {
-              raw: true
-            }
-          })
-        .end()
+    config.module
+      .rule("i18n")
+      .resourceQuery(/blockType=i18n/)
+      .type('javascript/auto')
+      .use("i18n")
+      .loader("@kazupon/vue-i18n-loader")
+      .end();
+    config.module
+      .rule("docs")
+      .resourceQuery(/blockType=docs/)
+      .type('javascript/auto')
+      .use("docs")
+      .loader("./src/boot/docs-loader.js")
+      .end();
   },
   configureWebpack: (config)=>{
 
     if(process.env.npm_lifecycle_event.startsWith('build-')){
       config.mode='production';
     }
-
-    // config.externals={
-    //   'vue':'Vuex',
-    //   'vue-router':'VueRouter',
-    //   'vuex':'Vuex',
-    //   'axios':'axios'
-    // }
 
     config.plugins.push(
         new CopyWebpackPlugin({

@@ -143,7 +143,7 @@
 <script>
 import XNkPageLayout from "../../layout/template/XNkPageLayout";
 import {mapState} from "vuex";
-import {NkVueLoader} from "../../boot";
+import {loadVueTemplate} from "../../boot";
 
 import { codemirror } from 'vue-codemirror';
 import 'codemirror/lib/codemirror.css';
@@ -310,14 +310,14 @@ export default {
         },
         regVueTemplate(){
             if(this.script.vueMain){
-                NkVueLoader.loadVueTemplate(this.script.scriptName, this.script.vueMain)
+                loadVueTemplate(this.script.scriptName, this.script.vueMain)
             }
             if(this.vueDefs){
                 this.vueDefs.forEach(i=>{
                     if(i.code){
                         let index = this.vueDefs.indexOf(i);
                         index = index ? index : '';
-                        NkVueLoader.loadVueTemplate(this.script.scriptName+'Def'+index, i.code)
+                        loadVueTemplate(this.script.scriptName+'Def'+index, i.code)
                     }
                 })
             }

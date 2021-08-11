@@ -1,7 +1,7 @@
 <template>
     <div class="bg">
         <a-spin :spinning="spinning">
-            <a-card title="登录" :bordered="false" style="width: 300px">
+            <a-card :title="$t('login')" :bordered="false" style="width: 300px">
                 <a-alert v-if="error" type="error" :message="error.data" banner />
                 <a-form :form="form" @submit="handleSubmit">
                     <a-form-item :validate-status="userNameError() ? 'error' : ''" :help="userNameError() || ''">
@@ -10,7 +10,7 @@
                                   'username',
                                   { rules: [{ required: true, message: 'Please input your username!' }] },
                                 ]"
-                            placeholder="Username"
+                            :placeholder="$t('username')"
                         >
                             <a-icon slot="prefix" type="user" style="color:rgba(0,0,0,.25)" />
                         </a-input>
@@ -22,14 +22,14 @@
                                   { rules: [{ required: true, message: 'Please input your Password!' }] },
                                 ]"
                             type="password"
-                            placeholder="Password"
+                            :placeholder="$t('password')"
                         >
                             <a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" />
                         </a-input>
                     </a-form-item>
                     <a-form-item>
                         <a-button ref="submit" type="primary" html-type="submit" :disabled="hasErrors(form.getFieldsError())">
-                            Log in
+                            {{$t('login')}}
                         </a-button>
                         <a-button v-if="false" style="margin-left: 10px;" type="default" @click="defaultLogin">
                             Default User
@@ -114,3 +114,18 @@ export default {
     align-items: center;
 }
 </style>
+
+<i18n>
+{
+    "zh_CN": {
+        "login": "登陆",
+        "username": "用户名",
+        "password": "密码"
+    },
+    "en": {
+        "login": "Login",
+        "username": "Username",
+        "password": "Password"
+    }
+}
+</i18n>

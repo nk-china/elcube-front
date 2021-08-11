@@ -42,7 +42,7 @@
 
 <script>
 import {mapMutations, mapState} from "vuex";
-import {NkVueLoader} from "../boot";
+import {reloadVueResources} from "../boot";
 
 export default {
     name: "NkDebugPanel",
@@ -63,8 +63,8 @@ export default {
             'suspendDebug', 'startDebug'
         ]),
         reloadVueResources(){
-            NkVueLoader.reloadVueResources().then((e)=>{
-                this.$message.info(`Debug: 重新载入Vue组件${e[1]}个`)
+            reloadVueResources().then((e)=>{
+                this.$message.info(`Debug: 重新载入Vue组件${e.count}个`)
             });
         },
         showModel(){

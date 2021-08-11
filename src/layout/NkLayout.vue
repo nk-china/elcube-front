@@ -111,7 +111,7 @@ import NkTabs from "./NkLayoutTabs";
 import NkNav from "./NkNav";
 import NkHelper from "../pages/components/NkHelper";
 import NkDebugPanel from "./NkDebugPanel";
-import NkVueLoader from "../boot/VueLoader";
+import {reloadVueResources} from "../boot";
 
 export default {
     name: "NkLayout",
@@ -345,8 +345,8 @@ export default {
         tabItemRefresh(item){
 
             if(this.debugId){
-                NkVueLoader.reloadVueResources().then((e)=>{
-                    this.$message.info(`Debug: 重新载入Vue组件${e[1]}个`)
+                reloadVueResources().then((e)=>{
+                    this.$message.info(`Debug: 重新载入Vue组件${e.count}个`)
                 });
             }
 
@@ -492,3 +492,7 @@ export default {
     }
 }
 </style>
+
+<docs>
+    - markdown
+</docs>
