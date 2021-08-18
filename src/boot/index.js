@@ -31,10 +31,14 @@ import './nk.scss'
 import App from "../layout/NkApp";
 import Mixin from "../cards/Mixin";
 import MixinDef from "../cards/MixinDef";
+import MixinSortable from "../utils/MixinSortable";
 import NkFormat from "../utils/NkFormat";
 import NkUtil from "../utils/NkUtil";
 import {loadModule} from "vue3-sfc-loader/dist/vue2-sfc-loader";
-
+import moment from "moment";
+import numeral from "numeral";
+import * as ant from 'ant-design-vue';
+import eval5 from "eval5";
 
 Vue.config.productionTip = false;
 Vue.prototype.$http = new Http(Vue);
@@ -76,8 +80,9 @@ Vue.mixin({
 const modules = {
   Mixin,
   MixinDef,
+  MixinSortable,
   NkFormat,
-  NkUtil
+  NkUtil,
 };
 
 const i18n = new VueI18n({
@@ -112,6 +117,10 @@ function componentLoader(componentName, template, modules) {
         {
           moduleCache: {
             vue: Vue,
+            "ant-design-vue":ant,
+            moment,
+            numeral,
+            eval5,
             'nk-ts5-platform': modules,
             ...modules
           },
@@ -138,7 +147,10 @@ function componentLoader(componentName, template, modules) {
           component.__docs = markdown.trim();
         }
         resolve(component);
-      }).catch(reject);
+      }).catch((e)=>{
+        console.log(e);
+        reject(e);
+      });
     });
   });
 }
@@ -175,6 +187,7 @@ export {
   App,
   Mixin,
   MixinDef,
+  MixinSortable,
   NkFormat,
   NkUtil,
 
