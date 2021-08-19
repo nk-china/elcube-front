@@ -233,7 +233,7 @@ export default {
             return Object.assign({
                 mode:"groovy",
                 theme: "panda-syntax",
-                lineWrapping:true,
+                lineWrapping:false,
                 indentUnit:4,
                 tabSize: 4,
                 lineNumbers: true,
@@ -246,7 +246,7 @@ export default {
             return Object.assign({
                 mode:"vue",
                 theme: "panda-syntax",
-                lineWrapping:true,
+                lineWrapping:false,
                 indentUnit:4,
                 tabSize: 4,
                 lineNumbers: true,

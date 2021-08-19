@@ -94,15 +94,6 @@
                         </nk-form-item>
                     </nk-form>
                 </a-card>
-                <a-card v-if="selected.beanName" title="文档" :key="'document-'+selected.cardKey">
-                    <mavon-editor v-model="selected.markdown"
-                                  :subfield="false"
-                                  :toolbarsFlag="editMode"
-                                  :defaultOpen="editMode?'edit':'preview'"
-                                  :toolbars="markdownOption"
-                                  style="min-height: 180px;"
-                    />
-                </a-card>
                 <component
                            v-for="(item,index) in selected.defComponentNames"
                            :key="index"
@@ -111,6 +102,24 @@
                            :card-key="selected.cardKey"
                            :doc-options="options"
                            :edit-mode="editMode" />
+                <a-card v-if="selected.beanName" title="文档"
+                        :key="'document-'+selected.cardKey"
+                        class="doc">
+                    <a slot="extra" @click="mavonEdit = true" style="font-size: 12px;">编辑</a>
+                    <div @click="mavonEdit = true">
+                        <nk-empty v-if="!mavonEdit && !selected.markdown" :data="selected.markdown" style="margin: 40px 0;"></nk-empty>
+                        <mavon-editor v-else
+                                      v-model="selected.markdown"
+                                      :subfield="false"
+                                      :toolbarsFlag="mavonEdit"
+                                      :defaultOpen="mavonEdit?'edit':'preview'"
+                                      :toolbars="markdownOption"
+                                      style="min-height: 360px;box-shadow:none;"
+                                      :style="mavonEdit?'':'box-shadow:none;'"
+                                      @click="mavonEdit=true"
+                        />
+                    </div>
+                </a-card>
             </a-layout-content>
         </a-layout>
     </x-nk-page-layout>
@@ -210,6 +219,7 @@ export default {
 
             loading:true,
             editMode:false,
+            mavonEdit:false,
             routeParams:undefined,
             histories:[],
             options:{},
@@ -279,6 +289,7 @@ export default {
         init(){
         },
         menuClick(menu){
+            this.mavonEdit = false;
             this.selected = menu;
         },
         doRun(){
@@ -399,6 +410,9 @@ export default {
         }
         .v-note-wrapper{
             z-index: 1;
+        }
+        .ant-card.doc .ant-card-body{
+            padding: 1px;
         }
     }
     .active{

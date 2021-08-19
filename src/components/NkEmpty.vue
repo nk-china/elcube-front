@@ -13,6 +13,7 @@ export default {
     },
     computed:{
         visible(){
+            console.log(this.data)
             return !this.data || this.data.length === 0;
         }
     }

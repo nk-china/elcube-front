@@ -7,6 +7,15 @@
     <a-spin class="nk-page-layout" :spinning="spinning">
         <div class="nk-page-layout-header">
             <slot name="top"></slot>
+            <nk-sticky :stickyTop="-10" :z-index="5">
+                <div class="nk-page-layout-stick" :class="{'show-right':headerIndent && rightBar}" style="padding-top: 20px;">
+                    <div>
+                        <span class="ant-page-header-heading-title">{{title}}</span>
+                        <span class="ant-page-header-heading-sub-title">{{subTitle}}</span>
+                    </div>
+                    <slot name="action"></slot>
+                </div>
+            </nk-sticky>
             <slot name="custom"></slot>
             <a-page-header
                 v-if="!$slots.custom"
@@ -46,8 +55,12 @@
 
 <script>
 
+import NkSticky from "../../components/NkSticky";
 export default {
     name: "NkPageLayout",
+    components: {
+        NkSticky
+    },
     props: {
         title:        String,
         subTitle:     String,
@@ -68,6 +81,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+
+.nk-page-layout-stick{
+    display: flex;
+    justify-content: space-between;
+    height: 65px;
+    background:white;
+    border-bottom: 1px solid #e8e8e8;
+    width: 100%;
+    padding: 10px 54px 10px 32px;
+    box-shadow:0 1px 4px rgba(0, 21, 41, 0.08);
+
+    &.show-right{
+        padding-right: 384px;
+    }
+}
 
 .nk-page-layout{
 
