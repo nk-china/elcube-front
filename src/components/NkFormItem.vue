@@ -86,21 +86,21 @@ export default {
                 for(let index in validateForList) {
                     if(validateForList.hasOwnProperty(index)){
                         let v = validateForList[index];
-                        if ((this.required || this.len || this.max || this.min)
+                        if ((this.required || this.len || typeof this.max === 'number' || typeof this.min === 'number')
                             && (v === undefined || v === null || v === '')) {
                             return this.message;
                         }
 
-                        if (this.len !== undefined && this.max !== undefined && v && v.length > this.max) {
+                        if (this.len && typeof this.max === 'number' && v && v.length > this.max) {
                             return this.lenMessage || this.message;
                         }
-                        if (this.len !== undefined && this.min !== undefined && v && v.length < this.min) {
+                        if (this.len && typeof this.min === 'number' && v && v.length < this.min) {
                             return this.lenMessage || this.message;
                         }
-                        if (this.len === undefined && this.max !== undefined && v && v > this.max) {
+                        if (this.len && typeof this.max === 'number' && v && v > this.max) {
                             return this.lenMessage || this.message;
                         }
-                        if (this.len === undefined && this.min !== undefined && v && v < this.min) {
+                        if (this.len && typeof this.min === 'number' && v && v < this.min) {
                             return this.lenMessage || this.message;
                         }
 

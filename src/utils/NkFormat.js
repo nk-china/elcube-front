@@ -50,7 +50,9 @@ export default {
     return value.format('Y/M/D HH:mm')
   },
   nkDatetime(value,format){
-    return value||value===0?moment(value * 1000).format(format||'Y/M/D'):'';
+    value = typeof value === 'number' ? moment(value * 1000):value;
+    value = typeof value === 'string' ? moment(value):value;
+    return value?value.format(format||'Y/M/D'):'';
   },
   nkDatetimeISO(value,format){
     return value||value===0?moment(value).format(format||'Y/M/D HH:mm:ss'):'';
