@@ -1,4 +1,8 @@
 
+import NkScriptLabel from "./doc/NkDefScriptLabel";
+import NkCard from "./components/NkCard";
+import NkDocSelectModal from "./components/NkDocSelectModal";
+import NkDocSelectDef from "./components/NkDocSelectDef";
 /**
  * 页面
  */
@@ -7,8 +11,6 @@ import NkPageDocs from "./doc/NkPageDocs";
 import NkPageDocDetail from "./doc/NkPageDocDetail";
 import NkPageDocDetailDiff from "./doc/NkPageDocDetailDiff";
 import NkPageCustomQuery from "./doc/NkPageCustomQuery";
-import NkCard from "./components/NkCard";
-
 
 /**
  * 设置界面
@@ -16,30 +18,25 @@ import NkCard from "./components/NkCard";
 import NkSettingsAuthLimit from "./settings/NkSettingsAuthLimit";
 import NkSettingsAuthPerm from "./settings/NkSettingsAuthPerm";
 import NkSettingsAuthGroup from "./settings/NkSettingsAuthGroup";
+import NkSettingsMenus from "./settings/NkSettingsMenus";
 
 /**
  * 配置页面
  */
-import NkDefDocs from "./doc/NkDefDocs";
-import NkDefDocType from "./doc/NkDefDocType";
-// 脚本
+import NkDefConstant from "./doc/NkDefConstant";
 import NkDefScripts from "./doc/NkDefScripts";
 import NkDefScriptDetail from "./doc/NkDefScriptDetail";
-import NkScriptLabel from "./doc/NkDefScriptLabel";
-// 常量
-import NkDefConstant from "./doc/NkDefConstant";
-// 自定义搜索
-import NkDefDeploy from "./devops/NkDefDeploy";
-// 工作流
-import NkPageProcessInstances from "./task/NkPageProcessInstances";
-import NkPageProcessDetail from "./task/NkPageProcessDetail";
+import NkDefDocs from "./doc/NkDefDocs";
+import NkDefDocType from "./doc/NkDefDocType";
 import NkDefBpmProcessDefinitions from "./task/NkDefBpmProcessDefinitions";
 import NkDefBpmProcessDefinitionDetail from "./task/NkDefBpmProcessDefinitionDetail";
 import NkDefBpmDesigner from "./task/NkDefBpmDesigner";
 import NkDefBpmDeployments from "./task/NkDefBpmDeployments";// 待删除
 
-import NkSettingsMenus from "./settings/NkSettingsMenus";
+import NkPageProcessInstances from "./task/NkPageProcessInstances";
+import NkPageProcessDetail from "./task/NkPageProcessDetail";
 
+import NkDefDeploy from "./devops/NkDefDeploy";
 /**
  * Vue 模块对象
  * @type {null}
@@ -52,9 +49,11 @@ module.install = function (Vue) {
    */
   Vue.component('nk-script-label',NkScriptLabel);
   Vue.component('nk-card',NkCard);
+  Vue.component('nk-doc-select-def',NkDocSelectDef);
+  Vue.component('nk-doc-select-modal',NkDocSelectModal);
 
   /**
-   * 页面组件，工作流页面需要嵌套的部分
+   * 页面组件，预览页面需要嵌套的部分
    */
   Vue.component('nk-page-doc-detail',NkPageDocDetail);
 };
