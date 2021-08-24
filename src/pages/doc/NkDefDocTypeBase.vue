@@ -9,7 +9,7 @@
                          slot="edit"
                          :maxLength="4"
                          allowClear
-                         @blur="()=>{docDef.docType=docDef.docType.toUpperCase()}"
+                         @blur="()=>{docDef.docType=docDef.docType && docDef.docType.toUpperCase()}"
                          style="width: 120px" />
             </nk-form-item>
             <nk-form-item term="交易类型描述" :validateFor="docDef.docName" message="请输入交易类型描述" required len :max="20" lenMessage="交易类型描述1-20个字">
