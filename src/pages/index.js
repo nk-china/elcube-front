@@ -1,6 +1,7 @@
 
 import NkScriptLabel from "./doc/NkDefScriptLabel";
 import NkCard from "./components/NkCard";
+import NkDefCard from "./components/NkDefCard";
 import NkDocSelectModal from "./components/NkDocSelectModal";
 import NkDocSelectDef from "./components/NkDocSelectDef";
 /**
@@ -49,6 +50,7 @@ module.install = function (Vue) {
    */
   Vue.component('nk-script-label',NkScriptLabel);
   Vue.component('nk-card',NkCard);
+  Vue.component('nk-def-card',NkDefCard);
   Vue.component('nk-doc-select-def',NkDocSelectDef);
   Vue.component('nk-doc-select-modal',NkDocSelectModal);
 
