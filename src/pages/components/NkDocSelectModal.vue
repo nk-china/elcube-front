@@ -134,6 +134,7 @@ export default {
                 });
         },
         selected(row) {
+            delete row._XID;
             this.visible = false;
             this.$emit("select",row);
         },

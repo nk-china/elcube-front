@@ -10002,6 +10002,11 @@ vuex@^3.4.0:
   resolved "http://ns.nkpro.cn/repository/npm-public/vuex/-/vuex-3.6.2.tgz#236bc086a870c3ae79946f107f16de59d5895e71"
   integrity sha1-I2vAhqhww655lG8QfxbeWdWJXnE=
 
+vxe-table-plugin-antd@^1.11.2:
+  version "1.11.2"
+  resolved "http://ns.nkpro.cn/repository/npm-public/vxe-table-plugin-antd/-/vxe-table-plugin-antd-1.11.2.tgz#9e517272a816953d68e58e500a0da9098f12585e"
+  integrity sha1-nlFycqgWlT1o5Y5QCg2pCY8SWF4=
+
 vxe-table@^3.0.0:
   version "3.1.6"
   resolved "http://ns.nkpro.cn/repository/npm-public/vxe-table/-/vxe-table-3.1.6.tgz#5fa0406537028b9832b73ff8744bc38a908ee24b"

@@ -1,8 +1,10 @@
 
+import moment from "moment";
 import XEUtils from 'xe-utils'
 import VXETable from 'vxe-table'
-import moment from "moment";
+import VXETablePluginAntd from 'vxe-table-plugin-antd'
 import 'vxe-table/lib/style.min.css'
+import 'vxe-table-plugin-antd/dist/style.css'
 
 import NkFormat from "../utils/NkFormat";
 
@@ -30,6 +32,7 @@ export default {
 
     Vue.prototype.$XModal = VXETable.modal
 
+    VXETable.use(VXETablePluginAntd)
     Vue.use(VXETable)
 
     VXETable.setup({
@@ -120,6 +123,7 @@ export default {
             props,
             on:{
               input:(e)=>{
+                console.log(e)
                 const value = Math.round(e.value*Math.pow(10,props.digits||0))/Math.pow(10,props.digits||0);
                 setValue(row,column.property,props.percent?(value/100):value)
                 if(renderOpts.events&&renderOpts.events.change){
@@ -147,7 +151,7 @@ export default {
         const {row,column} = renderParams;
         let value = getValue(row,column.property);
         let props = Object.assign({
-          value:value!==undefined?moment(value * 1000).format('YYYY-MM-DD'):undefined,
+          value:value!==undefined?moment(value).format('YYYY-MM-DD'):undefined,
           transfer:true
         },renderOpts.props);
         return [
@@ -155,9 +159,37 @@ export default {
             props,
             on:{
               input:(e)=>{
-                setValue(row,column.property,e.value?moment(e.value,'YYYY-MM-DD').valueOf()/1000:e.value);
+                setValue(row,column.property,e.value?moment(e.value,'YYYY-MM-DD').toISOString():e.value);
                 if(renderOpts.events&&renderOpts.events.change){
-                  renderOpts.events.change(renderParams);
+                  renderOpts.events.change(renderParams,e);
+                }
+              }
+            },
+            blur:(e)=>{
+              renderOpts.events&&renderOpts.events.blur&&renderOpts.events.blur(renderParams,e)
+            }
+          })
+        ]
+      }
+    })
+    VXETable.renderer.add('nkDateTime', {
+      // 可编辑激活模板
+      renderEdit (h, renderOpts,renderParams) {
+
+        const {row,column} = renderParams;
+        let value = getValue(row,column.property);
+        let props = Object.assign({
+          value:value!==undefined?moment(value).format('YYYY-MM-DD HH:mm:ss'):undefined,
+          transfer:true
+        },renderOpts.props);
+        return [
+          h('vxe-input',{
+            props,
+            on:{
+              input:(e)=>{
+                setValue(row,column.property,e.value?moment(e.value,'YYYY-MM-DD HH:mm:ss').toISOString():e.value);
+                if(renderOpts.events&&renderOpts.events.change){
+                  renderOpts.events.change(renderParams,e);
                 }
               }
             },
