@@ -403,8 +403,10 @@ export default {
                 });
         },
         nkCalc(card,options){
-
-            this.loading=true;
+            // 如果计算耗时超过100ms，则弹出
+            const timeout = setTimeout(()=>{
+                this.loading=true;
+            },100);
             this.$http.postJSON(`/api/doc/calculate`,{doc:this.doc,cardKey:card.cardKey,options})
                 .then(response=>{
                     this.doc = response.data;
@@ -416,6 +418,7 @@ export default {
                 })
                 .finally(()=>{
                     this.loading=false;
+                    clearTimeout(timeout)
                 })
         },
         nkChanged(e,component){

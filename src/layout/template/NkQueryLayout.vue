@@ -79,6 +79,7 @@
                 :columns="dataTableColumns"
                 :data="page.list"
                 :loading="loading"
+                @cell-click="vxeCellClick"
                 @current-change="vxeCurrentChanged"
                 @sort-change="vxeSortChanged"
                 :sort-config="{trigger: 'cell', remote: true, defaultSort: {field: 'age', order: 'desc'}, orders: ['desc', 'asc', null]}"
@@ -128,7 +129,7 @@ export default {
         },
         selectable:{
             type: Boolean,
-            default: true
+            default: false
         },
         initRows:{
             type: Number,
@@ -330,6 +331,9 @@ export default {
         },
         vxeCurrentChanged(e){
             this.$emit("select",e);
+        },
+        vxeCellClick(e){
+            this.$emit("click",e);
         },
         // 排序跳转
         vxeSortChanged({column,property,order}){

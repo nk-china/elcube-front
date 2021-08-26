@@ -105,6 +105,9 @@ export default {
         }
         return cellValue
       },
+      docLink({cellValue,row} , docIdKey, linkName){
+        return `<a href='#/apps/docs/detail/${row[docIdKey||'docId']}'>${cellValue||linkName||'查看'}</a>`;
+      },
       // 转换 moment 类型为字符串
       toMomentString ({ cellValue }, format) {
         return cellValue ? cellValue.format(format) : ''

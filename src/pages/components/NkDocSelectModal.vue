@@ -22,6 +22,7 @@
             size="mini"
             border=inner
             highlight-hover-row
+            highlight-current-row
             header-cell-class-name="headerCellClassName"
             :data="page.list">
             <vxe-table-column   title="#"        type="seq"               width="8%" ></vxe-table-column>
@@ -34,7 +35,7 @@
                               :align="column.align"
                               :formatter="column.formatter">
             </vxe-table-column>
-            <vxe-table-column   width="12%" >
+            <vxe-table-column  title="ACTION" width="12%" >
                 <template v-slot="{ row }">
                     <a @click="selected(row)">选择</a>
                 </template>

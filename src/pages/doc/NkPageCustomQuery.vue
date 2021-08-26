@@ -8,10 +8,10 @@
         :dataTableColumns="columns"
         :save-as-source="custom.menuId"
         :lazy="true"
+        :selectable="false"
         @change="search"
-        @select="selected"
+        @click="selected"
     >
-
         <a-button  slot="action"
                    type="primary"
                    v-if="creatableFilter && creatableFilter.length===1"
@@ -27,7 +27,7 @@
             </a-dropdown>
         </a-button-group>
 
-        <nk-page-preview :params="previewParams" :visable.sync="preViewVisable" @close="previewClose"></nk-page-preview>
+        <nk-page-preview :params="previewParams" v-model="previewVisible" @close="previewClose"></nk-page-preview>
     </nk-query-layout>
 </template>
 
@@ -47,7 +47,7 @@ export default {
             creatable:undefined,
             custom:{},
             previewParams: {},
-            preViewVisable: false,
+            previewVisible: false,
             $debug:false
         }
     },
@@ -126,12 +126,14 @@ export default {
                         this.$refs.layout.setData(res.data)
                 });
         },
-        selected({row}){
-            this.preViewVisable = true;
-            this.previewParams  = {
-                mode: "detail",
-                classify:row.classify,
-                docId:row.docId
+        selected({row,$event}){
+            if($event.target.tagName!=='A'){
+                this.previewVisible = true;
+                this.previewParams  = {
+                    mode: "detail",
+                    classify:row.classify,
+                    docId:row.docId
+                }
             }
         },
         previewClose(){

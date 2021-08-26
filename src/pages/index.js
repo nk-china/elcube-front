@@ -3,7 +3,9 @@ import NkScriptLabel from "./doc/NkDefScriptLabel";
 import NkCard from "./components/NkCard";
 import NkDefCard from "./components/NkDefCard";
 import NkDocSelectModal from "./components/NkDocSelectModal";
-import NkDocSelectDef from "./components/NkDocSelectDef";
+import NkDocSelectEditor from "./components/NkDocSelectEditor";
+import NkSpELEditor from "./components/NkSpELEditor";
+import NkSpELTemplateEditor from "./components/NkSpELTemplateEditor";
 /**
  * 页面
  */
@@ -51,8 +53,10 @@ module.install = function (Vue) {
   Vue.component('nk-script-label',NkScriptLabel);
   Vue.component('nk-card',NkCard);
   Vue.component('nk-def-card',NkDefCard);
-  Vue.component('nk-doc-select-def',NkDocSelectDef);
+  Vue.component('nk-doc-select-editor',NkDocSelectEditor);
   Vue.component('nk-doc-select-modal',NkDocSelectModal);
+  Vue.component('nk-sp-el-editor',NkSpELEditor);
+  Vue.component('nk-sp-el-template-editor',NkSpELTemplateEditor);
 
   /**
    * 页面组件，预览页面需要嵌套的部分

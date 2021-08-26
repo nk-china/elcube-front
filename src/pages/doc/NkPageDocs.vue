@@ -8,7 +8,7 @@
         :dataTableColumns="columns"
         save-as-source="$docs"
         @change="search"
-        @select="selected"
+        @click="selected"
     >
         <a-button-group slot="action">
         </a-button-group>
@@ -27,7 +27,7 @@
             </a-dropdown>
         </a-button-group>
 
-        <nk-page-preview :params="previewParams" :visible.sync="preViewVisable" @close="previewClose"></nk-page-preview>
+        <nk-page-preview :params="previewParams" v-model="previewVisible"></nk-page-preview>
 
     </nk-query-layout>
 </template>
@@ -50,21 +50,11 @@ export default {
                 { type: 'seq',            title: '#',         width: '36'},
                 { field: 'classify',      title: '分类',       width: '8%',  sortable:true,formatter:['nkFromList',classifies] },
                 { field: 'docTypeDesc',   title: '单据类型',    width: '15%', sortable:true },
-                { field: 'docName',       title: '名称',       width: '20%', sortable:true,
-                    params:{ orderField: 'docName.original' }},
-                { field: 'partnerName',   title: '交易伙伴',      width: '20%', sortable:true,
-                    params:{ orderField: 'partnerName.original' }},
-                { field: 'docStateDesc',  title: '状态',      width: '10%', sortable:true},
-                { field: 'updatedTime',   title: '更新时间',   width: '10%', sortable:true,formatter:'nkDatetimeFriendly' },
-                {                         title: '操作',      width: '10%',
-                    slots: { default: ({row},h) => {
-                            return [h(
-                                'nk-doc-link',
-                                {props:{doc: row}},
-                                "详情",
-                            )]
-                        }}
-                },
+                { field: 'docName',       title: '名称',       width: '20%', sortable:true, params:{ orderField: 'docName.original' }},
+                { field: 'partnerName',   title: '交易伙伴',    width: '20%', sortable:true, params:{ orderField: 'partnerName.original' }},
+                { field: 'docStateDesc',  title: '状态',       width: '10%', sortable:true},
+                { field: 'updatedTime',   title: '更新时间',    width: '10%', sortable:true,formatter:'nkDatetimeFriendly' },
+                { type: 'html',           title: 'ACTION',    width: '7%', formatter:['docLink']},
             ],
             searchItemsDefault:[
                 {
@@ -126,7 +116,7 @@ export default {
                 }
             ],
             previewParams: {},
-            preViewVisable: false
+            previewVisible: false
         }
     },
     created() {
@@ -148,16 +138,15 @@ export default {
         toCreate(docType){
             this.$router.push("/apps/docs/create/"+docType)
         },
-        selected({row}){
-            this.preViewVisable = true;
-            this.previewParams  = {
-                mode: "detail",
-                classify:row.classify,
-                docId:row.docId
+        selected({row, $event}){
+            if($event.target.tagName!=='A') {
+                this.previewVisible = true;
+                this.previewParams = {
+                    mode: "detail",
+                    classify: row.classify,
+                    docId: row.docId
+                }
             }
-        },
-        previewClose(){
-            this.$refs.layout.grid().clearCurrentRow();
         }
     },
     mounted() {

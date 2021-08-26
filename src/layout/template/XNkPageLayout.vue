@@ -132,6 +132,7 @@ export default {
         .content{
             padding: 24px;
             width: 100%;
+            overflow-x: auto;
         }
 
         // 右边栏

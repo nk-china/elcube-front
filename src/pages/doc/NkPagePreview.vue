@@ -1,6 +1,6 @@
 <template>
     <transition name="slide-fade">
-        <div class="preview" v-if="visible">
+        <div class="preview" v-if="value">
             <div class="background" @click="hide"></div>
             <div class="foreground">
                 <nk-page-doc-detail :params="params" :preview="true">
@@ -17,14 +17,16 @@ export default {
     },
     props:{
         params:Object,
-        visible:{
+        value:{
             type:Boolean,
             default:false
         }
     },
+    mounted() {
+    },
     methods:{
         hide(){
-            this.$emit("update:visible",false);
+            this.$emit("input",false);
             this.$emit("close");
         }
     }
