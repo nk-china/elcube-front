@@ -80,36 +80,34 @@ export default {
         checkError(){
 
             if(this.$parent.$props.edit && this.$slots.edit){
+                
+                let v = this.validateFor;
 
-                let validateForList = this.validateFor instanceof Array ? this.validateFor : [this.validateFor];
+                if(this.required || v){
 
-                for(let index in validateForList) {
-                    if(validateForList.hasOwnProperty(index)){
-                        let v = validateForList[index];
-                        if ((this.required || this.len || typeof this.max === 'number' || typeof this.min === 'number')
-                            && (v === undefined || v === null || v === '')) {
-                            return this.message;
-                        }
+                    if ((this.required || this.len || typeof this.max === 'number' || typeof this.min === 'number')
+                        && (v === undefined || v === null || v === '' || v.length===0 )) {
+                        return this.message;
+                    }
 
-                        if (this.len && typeof this.max === 'number' && v && v.length > this.max) {
-                            return this.lenMessage || this.message;
-                        }
-                        if (this.len && typeof this.min === 'number' && v && v.length < this.min) {
-                            return this.lenMessage || this.message;
-                        }
-                        if (!this.len && typeof this.max === 'number' && v && v > this.max) {
-                            return this.lenMessage || this.message;
-                        }
-                        if (!this.len && typeof this.min === 'number' && v && v < this.min) {
-                            return this.lenMessage || this.message;
-                        }
+                    if ( this.len && typeof this.max === 'number' && v && v.length > this.max) {
+                        return this.lenMessage || this.message;
+                    }
+                    if ( this.len && typeof this.min === 'number' && v && v.length < this.min) {
+                        return this.lenMessage || this.message;
+                    }
+                    if (!this.len && typeof this.max === 'number' && v && v > this.max) {
+                        return this.lenMessage || this.message;
+                    }
+                    if (!this.len && typeof this.min === 'number' && v && v < this.min) {
+                        return this.lenMessage || this.message;
+                    }
 
-                        if (this.pattern && !new RegExp(this.pattern).test(v)) {
-                            return this.patternMessage || this.message;
-                        }
-                        if (this.validator && this.validator(v)) {
-                            return this.validatorMessage || this.message;
-                        }
+                    if (this.pattern && !new RegExp(this.pattern).test(v)) {
+                        return this.patternMessage || this.message;
+                    }
+                    if (this.validator && this.validator(v)) {
+                        return this.validatorMessage || this.message;
                     }
                 }
 

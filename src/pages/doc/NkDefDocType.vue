@@ -75,28 +75,6 @@
                 </a-list>
             </a-layout-sider>
             <a-layout-content style="padding-left: 20px;padding-bottom: 100px;">
-                <a-card v-if="selected.beanName" title="卡片信息" :key="'base-'+selected.cardKey">
-                    <nk-form :col="2">
-                        <nk-form-item title="KEY">
-                            {{selected.cardKey}}
-                        </nk-form-item>
-                        <nk-form-item title="逻辑对象">
-                            <nk-script-label :value="selected.beanName"></nk-script-label>
-                        </nk-form-item>
-                        <nk-form-item title="计算次数">
-                            {{selected.calcTimes}}
-                        </nk-form-item>
-                        <nk-form-item title="计算顺序">
-                            {{selected.calcOrder}}
-                        </nk-form-item>
-                        <nk-form-item title="编辑条件">
-                            {{selected.editableSpEL}}
-                        </nk-form-item>
-                        <nk-form-item title="显示条件">
-                            {{selected.visibleSpEL}}
-                        </nk-form-item>
-                    </nk-form>
-                </a-card>
                 <component
                            v-for="(item,index) in selected.defComponentNames"
                            :key="index"
@@ -123,6 +101,28 @@
                         />
                     </div>
                 </a-card>
+                <a-card v-if="selected.beanName" title="信息" :key="'base-'+selected.cardKey">
+                    <nk-form :col="2">
+                        <nk-form-item title="KEY">
+                            {{selected.cardKey}}
+                        </nk-form-item>
+                        <nk-form-item title="逻辑对象">
+                            <nk-script-label :value="selected.beanName"></nk-script-label>
+                        </nk-form-item>
+                        <nk-form-item title="计算次数">
+                            {{selected.calcTimes}}
+                        </nk-form-item>
+                        <nk-form-item title="计算顺序">
+                            {{selected.calcOrder}}
+                        </nk-form-item>
+                        <nk-form-item title="编辑条件">
+                            {{selected.editableSpEL}}
+                        </nk-form-item>
+                        <nk-form-item title="显示条件">
+                            {{selected.visibleSpEL}}
+                        </nk-form-item>
+                    </nk-form>
+                </a-card>
             </a-layout-content>
         </a-layout>
     </x-nk-page-layout>
@@ -134,16 +134,17 @@ import NkDefDocTypeBase from "./NkDefDocTypeBase";
 import NkDefDocTypeStatus from "./NkDefDocTypeStatus";
 import NkDefDocTypeBizFlow from "./NkDefDocTypeBizFlow";
 import NkDefDocTypeCycle from "./NkDefDocTypeCycle";
+import NkDefDocTypeIndex from "./NkDefDocTypeIndex";
 import NkDefDocTypeBPM from "./NkDefDocTypeBPM";
 import NkDefDocTypeCards from "./NkDefDocTypeCards";
 import NkUtil from "../../utils/NkUtil";
 import {mapState} from "vuex";
 
 const defaultCards = [
-    {key:"doc",     name:"基本信息",    defComponentNames: [NkDefDocTypeBase,NkDefDocTypeStatus,NkDefDocTypeBizFlow]},
-    {key:"cycle",   name:"生命周期",    defComponentNames: [NkDefDocTypeCycle]   },
-    {key:"bpm",     name:"审批流",      defComponentNames: [NkDefDocTypeBPM]   },
-    {key:"cards",   name:"功能卡片",    defComponentNames: [NkDefDocTypeCards]   },
+    {key:"doc",     name:"基本信息",    defComponentNames: [NkDefDocTypeBase,    NkDefDocTypeStatus,]},
+    {key:"cycle",   name:"业务逻辑",    defComponentNames: [NkDefDocTypeBizFlow, NkDefDocTypeCycle, NkDefDocTypeIndex,]},
+    {key:"bpm",     name:"审批流程",    defComponentNames: [NkDefDocTypeBPM,                        ]},
+    {key:"cards",   name:"功能卡片",    defComponentNames: [NkDefDocTypeCards,                      ]},
 ];
 
 const markdownOption = {

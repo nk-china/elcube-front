@@ -8,6 +8,10 @@ import 'vxe-table-plugin-antd/dist/style.css'
 
 import NkFormat from "../utils/NkFormat";
 
+function isBlank(value){
+  return value === undefined || value === null || (typeof value === 'string' && value.replace(/\s/g, '') === '');
+
+}
 
 function getValue(obj,property){
   property.split(".").forEach(i=>{
@@ -154,7 +158,7 @@ export default {
         const {row,column} = renderParams;
         let value = getValue(row,column.property);
         let props = Object.assign({
-          value:value!==undefined?moment(value).format('YYYY-MM-DD'):undefined,
+          value:!isBlank(value)?moment(value*1000).format('YYYY-MM-DD'):undefined,
           transfer:true
         },renderOpts.props);
         return [
@@ -162,7 +166,7 @@ export default {
             props,
             on:{
               input:(e)=>{
-                setValue(row,column.property,e.value?moment(e.value,'YYYY-MM-DD').toISOString():e.value);
+                setValue(row,column.property,!isBlank(e.value)?moment(e.value,'YYYY-MM-DD').unix():undefined);
                 if(renderOpts.events&&renderOpts.events.change){
                   renderOpts.events.change(renderParams,e);
                 }
@@ -182,7 +186,7 @@ export default {
         const {row,column} = renderParams;
         let value = getValue(row,column.property);
         let props = Object.assign({
-          value:value!==undefined?moment(value).format('YYYY-MM-DD HH:mm:ss'):undefined,
+          value:!isBlank(value)?moment(value*1000).format('YYYY-MM-DD HH:mm:ss'):undefined,
           transfer:true
         },renderOpts.props);
         return [
@@ -190,7 +194,7 @@ export default {
             props,
             on:{
               input:(e)=>{
-                setValue(row,column.property,e.value?moment(e.value,'YYYY-MM-DD HH:mm:ss').toISOString():e.value);
+                setValue(row,column.property,!isBlank(e.value)?moment(e.value,'YYYY-MM-DD HH:mm:ss').unix():undefined);
                 if(renderOpts.events&&renderOpts.events.change){
                   renderOpts.events.change(renderParams,e);
                 }

@@ -36,6 +36,10 @@
                     <a-select-option v-for="item in docOptions.docProcessors" :key="item.key">{{item.name}}</a-select-option>
                 </a-select>
             </nk-form-item>
+            <nk-form-item term="业务主键规则">
+                {{docDef.businessKeySpEL}}
+                <nk-sp-el-editor slot="edit" v-model="docDef.businessKeySpEL" style="width: 280px;"></nk-sp-el-editor>
+            </nk-form-item>
             <nk-form-item term="开发">Bean</nk-form-item>
             <nk-form-item term="修订">Bean</nk-form-item>
             <nk-form-item term="更新时间">{{docDef.updatedTime | nkDatetimeFriendly}}</nk-form-item>

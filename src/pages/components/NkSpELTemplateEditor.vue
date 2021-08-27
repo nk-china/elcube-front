@@ -1,7 +1,7 @@
 <template>
     <div>
         <a-input @click="open" v-model="value" size="small" readOnly></a-input>
-        <a-modal v-model="visible" title="SpEL模版编辑器" width="60%" centered>
+        <component :is="component" v-model="visible" title="SpEL模版编辑器" width="60%" centered>
             <div slot="footer">
                 <a-button type="primary" @click="submit">确定</a-button>
             </div>
@@ -12,7 +12,7 @@
                 </a-button>
             </a-input-search>
             <span v-if="error" style="color: #ff4d4f">{{error}}</span>
-        </a-modal>
+        </component>
     </div>
 </template>
 
@@ -20,14 +20,25 @@
 export default {
     name: "NkSpELEditor",
     props:{
-        value : String
+        value : String,
+        modalComponent:{
+            type:String,
+            default: 'a-modal'
+        },
+    },
+    created() {
+        this.component = this.modalComponent;
+        if(this.$parent.$options._componentTag==="vxe-table-body"){
+            this.component = 'vxe-modal';
+        }
     },
     data(){
         return {
             visible : false,
             docId: undefined,
             el: undefined,
-            error: undefined
+            error: undefined,
+            component: undefined,
         }
     },
     methods:{

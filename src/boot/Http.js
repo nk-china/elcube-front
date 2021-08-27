@@ -7,7 +7,6 @@ import UI from "../store/StateUI";
 import StateDebug from "../store/StateDebug";
 import TextUtils from "../utils/TextUtils";
 
-
 export default (Vue) => {
 
   // 密码加密
@@ -49,10 +48,14 @@ export default (Vue) => {
     if(now-errorTime > 2000 || errorMsg !== error.response.data.msg){
       errorTime = now;
       errorMsg = error.response.data.msg;
+
+      if(error.response.data.causeStackTrace)
+        console.error(error.response.data.causeStackTrace.join('\n'))
+
       Vue.prototype.$error({
         centered: true,
         title: '系统错误',
-        content: error.response.data.msg||error.response.data,
+        content: "<a>"+errorMsg+"</a>",
       });
       return Promise.reject(error);
     }

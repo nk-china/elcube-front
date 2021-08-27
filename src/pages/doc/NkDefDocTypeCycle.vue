@@ -17,7 +17,7 @@
             header-cell-class-name="headerCellClassName"
             :edit-config="{trigger: 'dblclick', mode: 'row', showIcon: editMode, activeMethod: ()=>{return editMode}}"
             :data="docDef.lifeCycles"
-            @edit-actived="editActived">
+            @edit-actived="editActive">
             <vxe-table-column   title="事件"         field="docCycle"        width="20%"  :edit-render="{
                     name: '$select',
                     options: eventOptions,
@@ -65,7 +65,7 @@ export default {
     },
     data(){
         return {
-            editActive:undefined,
+            editActiveOption:undefined,
             valueOptions:[],
             eventOptions:[
                 {key:'beforeCreate',        name:'[创建]beforeCreate',        ref:'docCreateInterceptors'},
@@ -89,11 +89,11 @@ export default {
     methods:{
         eventChanged({row}){
             row.refObjectType = undefined;
-            this.editActived({row});
+            this.editActive({row});
         },
-        editActived({ row }){
-            this.editActive = this.eventOptions.find(i=>i.key===row.docCycle);
-            this.valueOptions = this.editActive && this.docOptions[this.editActive.ref];
+        editActive({ row }){
+            this.editActiveOption = this.eventOptions.find(i=>i.key===row.docCycle);
+            this.valueOptions = this.editActiveOption && this.docOptions[this.editActiveOption.ref];
         },
         add(){
             const row = {docCycle:'',refObjectType:''};
