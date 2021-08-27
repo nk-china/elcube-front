@@ -12,6 +12,11 @@
                         <a-icon type="play-circle" />
                     </a-button>
                 </a-tooltip>
+                <a-tooltip title="停止">
+                    <a-button @click="doStop"                      :disabled="!def.debug" >
+                        <a-icon type="border" />
+                    </a-button>
+                </a-tooltip>
                 <a-tooltip title="激活">
                     <a-button type="danger"  @click="doActive"    :disabled="isCreate || def.state!=='InActive'" >
                         <a-icon type="exclamation-circle" />
@@ -312,9 +317,25 @@ export default {
         },
         doRun(){
             this.loading = true;
-            this.$http.postJSON(`/api/def/doc/type/debug`,this.def)
-                .then(()=>{
-                    this.$message.info("配置已运行")
+            this.$http.postJSON(`/api/def/doc/type/debug?run=true`,this.def)
+                .then((res)=>{
+                    if(this.isCreate){
+                        this.$emit("replace",`/apps/def/doc/detail/${this.def.docType}/${res.data.version}`)
+                    }else {
+                        this.def = res.data;
+                        this.$message.info("配置已运行")
+                    }
+                })
+                .finally(()=>{
+                    this.loading = false;
+                })
+        },
+        doStop(){
+            this.loading = true;
+            this.$http.postJSON(`/api/def/doc/type/debug?run=false`,this.def)
+                .then((res)=>{
+                    this.def = res.data;
+                    this.$message.info("配置已停止运行")
                 })
                 .finally(()=>{
                     this.loading = false;
@@ -363,7 +384,7 @@ export default {
                 this.loading = true;
                 this.$http.postJSON(`/api/def/doc/type/update`,this.def)
                     .then((res)=>{
-                        if(!this.def.version){
+                        if(this.isCreate){
                             this.$emit("replace",`/apps/def/doc/detail/${this.def.docType}/${res.data.version}`)
                         }else{
                             this.def = res.data;

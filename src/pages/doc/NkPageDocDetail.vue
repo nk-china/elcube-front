@@ -22,7 +22,7 @@
             </div>
         </div>
         <div slot="top" v-else-if="this.doc.def && this.doc.def.debug" class="alert">
-            <a-alert message="单据配置正在调试" type="warning" show-icon />
+            <a-alert message="请注意： 当前配置为调试模式，单据的保存操作不会持久化" type="warning" show-icon />
         </div>
 
         <div slot="content" style="min-height: 100px;">
@@ -183,7 +183,7 @@
 <script>
 import qs from 'qs'
 import XNkPageLayout from "../../layout/template/XNkPageLayout";
-import {mapActions, mapGetters} from 'vuex';
+import {mapActions, mapGetters, mapState} from 'vuex';
 import NkCardBpmExecuter from "../task/NkCardBpmExecuter";
 
 export default {
@@ -216,6 +216,9 @@ export default {
         this.initData();
     },
     computed:{
+        ...mapState('Debug',[
+            'debugId'
+        ]),
         ...mapGetters('User',[
             'hasAuthority'
         ]),
@@ -340,6 +343,9 @@ export default {
                         if(res.response.status===403){
                             this.$emit("close")
                         }
+                        if(res.response.data.msg==="单据不存在"){
+                            this.$emit("close")
+                        }
                     });
             }else if(this.contextParams.mode==='snapshot'){
                 this.$http.get("/api/doc/detail/snapshot/"+this.contextParams.docId)
@@ -384,6 +390,12 @@ export default {
             this.doc.docState = this.docState;
             this.$http.postJSON(`/api/doc/update`, this.doc)
                 .then((response) => {
+                    if(this.debugId){
+                        this.$notification.warning({
+                            message: '警告',
+                            description:"调试模式下，单据未持久化"
+                        })
+                    }
                     if (this.$route.params.mode === 'create') {
                         setTimeout(() => {
                             this.$emit('replace', `/apps/docs/detail/${this.doc.docId}`);

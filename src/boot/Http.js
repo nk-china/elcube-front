@@ -86,7 +86,11 @@ export default (Vue) => {
 
   // 用户操作错误或警告提示
   const onCaution = error => {
-    Vue.prototype.$message.error(error.response.data.msg)
+    Vue.prototype.$notification.error({
+      message: '错误',
+      description:error.response.data.msg
+    })
+    //Vue.prototype.$message.error(error.response.data.msg)
     return Promise.reject(error)
   }
   let onResponseError = error => {

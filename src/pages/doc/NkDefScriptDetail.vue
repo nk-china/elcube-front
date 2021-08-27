@@ -12,6 +12,11 @@
                         <a-icon type="play-circle" />
                     </a-button>
                 </a-tooltip>
+                <a-tooltip title="停止">
+                    <a-button @click="doStop"                      :disabled="!script.debug" >
+                        <a-icon type="border" />
+                    </a-button>
+                </a-tooltip>
                 <a-tooltip title="激活">
                     <a-button type="danger"  @click="doActive"    :disabled="disabledOnlineEditing || isCreate || script.state!=='InActive'" >
                         <a-icon type="exclamation-circle" />
@@ -35,7 +40,7 @@
                 <a-dropdown>
                     <a-menu slot="overlay" @click="handleMenuClick">
                         <a-menu-item key="doBreach" :disabled="disabledOnlineEditing || isCreate || script.scriptType === 'Unknown'">
-                            <a-icon type="branches" /> 复制
+                            <a-icon type="branches" /> 新版本
                         </a-menu-item>
                         <a-menu-item key="doDelete" :disabled="disabledOnlineEditing || isCreate || script.state!=='InActive'">
                             <a-icon type="delete" /> 删除
@@ -325,7 +330,7 @@ export default {
         doRun(){
             this.valid().then(()=>{
                 this.loading = true;
-                this.$http.postJSON(`/api/def/script/debug`,this.script)
+                this.$http.postJSON(`/api/def/script/debug?run=true`,this.script)
                     .then((res)=>{
                         this.script = res.data;
                         this.regVueTemplate();
@@ -335,6 +340,18 @@ export default {
                         this.loading = false;
                     })
             });
+        },
+        doStop(){
+            this.loading = true;
+            this.$http.postJSON(`/api/def/script/debug?run=false`,this.script)
+                .then((res)=>{
+                    this.script = res.data;
+                    this.regVueTemplate();
+                    this.$message.info("配置已停止运行")
+                })
+                .finally(()=>{
+                    this.loading = false;
+                })
         },
         doDelete(){
             this.loading = true;

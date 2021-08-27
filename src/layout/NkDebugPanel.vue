@@ -2,9 +2,26 @@
     <div>
         开发面板：
         <a-button-group>
-            <a-button v-if="debugId" type="default" @click="suspendDebugBy">
-                <a-icon type="border" :style="{color: '#aa2222','background-color':'#aa2222',height:'14px'}" />暂停
-            </a-button>
+<!--            <a-button type="default" @click="suspendDebugBy">-->
+<!--                <a-icon type="border" :style="{color: '#aa2222','background-color':'#aa2222',height:'14px'}" />暂停-->
+<!--            </a-button>-->
+            <a-dropdown-button v-if="debugId" @click="suspendDebugBy" @visibleChange="loadDebugResources" :trigger="['click']">
+                <a-icon type="border" :style="{color: '#aa2222','background-color':'#aa2222',height:'14px'}" />Exit
+                <a-menu slot="overlay" @click="debugResourcesClick">
+                    <a-menu-item v-if="debugResources && debugResources.length === 0">[ Empty ]</a-menu-item>
+                    <template v-if="debugResources">
+                        <a-menu-item v-for="i in debugResources" :key="i.docType||i.scriptName">
+                            <template v-if="i.docType">
+                                @{{i.docType}}
+                            </template>
+                            <template v-else>
+                                #{{i.scriptName}}
+                            </template>
+                        </a-menu-item>
+                    </template>
+                </a-menu>
+                <span slot="icon"><a-icon type="gold" /> Res</span>
+            </a-dropdown-button>
             <a-button v-else type="default" @click="showModel">
                 <a-icon type="play-square" />
             </a-button>
@@ -50,7 +67,8 @@ export default {
        return {
            debugContextListVisible: false,
            debugContextList:undefined,
-           debugContextDesc:undefined
+           debugContextDesc:undefined,
+           debugResources:undefined
        }
     },
     computed:{
@@ -90,6 +108,27 @@ export default {
         suspendDebugBy(){
             this.suspendDebug();
             location.reload();
+        },
+        loadDebugResources(state){
+            if(state)
+                this.$http.post(`/api/debug/resources`)
+                    .then(res=>{
+                        this.debugResources = res.data;
+                    });
+            else this.debugResources = undefined;
+        },
+        debugResourcesClick(e){
+            const item = this.debugResources.find(i=>(i.docType||i.scriptName)===e.key);
+            if(item){
+                let path = undefined
+                if(item.docType){
+                    path = `/apps/def/doc/detail/${item.docType}/${item.version}`
+                }else{
+                    path = `/apps/def/script/detail/${item.scriptName}/${item.version}`
+                }
+                if(this.$route.fullPath!==path)
+                    this.$router.push(path)
+            }
         },
         stopDebugBy(item){
             this.$http.post(`/api/debug/stop/${item.id}`)
