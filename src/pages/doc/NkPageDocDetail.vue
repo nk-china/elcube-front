@@ -391,10 +391,7 @@ export default {
             this.$http.postJSON(`/api/doc/update`, this.doc)
                 .then((response) => {
                     if(this.debugId){
-                        this.$notification.warning({
-                            message: '警告',
-                            description:"调试模式下，单据未持久化"
-                        })
+                        this.$message.info("Tips: 调试模式下，单据未持久化")
                     }
                     if (this.$route.params.mode === 'create') {
                         setTimeout(() => {

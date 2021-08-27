@@ -23,7 +23,7 @@
                         <a-icon type="file" />{{docDef.docType}} | {{docDef.docName}}
                     </a-menu-item>
                 </a-menu>
-                <a-button type="primary"> <a-icon type="file-add" /> <a-icon type="down" /> </a-button>
+                <a-button type="primary"> <a-icon type="file-add" /> <a-icon style="margin-left: 10px;" type="down" /> </a-button>
             </a-dropdown>
         </a-button-group>
 
