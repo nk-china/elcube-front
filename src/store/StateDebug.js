@@ -1,7 +1,8 @@
 const state = {
     namespaced: true,
     state: {
-        debugId: localStorage.getItem("$NK-DebugId")
+        debugId: localStorage.getItem("$NK-DebugId"),
+        docIdSpEL: undefined,
     },
     mutations: {
         startDebug(state,debugId){
@@ -11,6 +12,9 @@ const state = {
         suspendDebug(state){
             state.debugId = undefined;
             localStorage.removeItem("$NK-DebugId");
+        },
+        setDocIdSpEL(state,docId){
+            state.docIdSpEL = docId
         }
     }
 };

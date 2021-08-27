@@ -47,7 +47,7 @@ export default (Vue) => {
     let now = new Date().getTime();
     if(now-errorTime > 2000 || errorMsg !== error.response.data.msg){
       errorTime = now;
-      errorMsg = error.response.data.msg;
+      errorMsg = error.response.data.msg || error.response.data;
 
       if(error.response.data.causeStackTrace)
         console.error(error.response.data.causeStackTrace.join('\n'))
@@ -55,7 +55,7 @@ export default (Vue) => {
       Vue.prototype.$error({
         centered: true,
         title: '系统错误',
-        content: "<a>"+errorMsg+"</a>",
+        content: errorMsg,
       });
       return Promise.reject(error);
     }
