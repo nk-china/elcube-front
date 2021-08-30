@@ -39,6 +39,10 @@ import NkDefBpmDeployments from "./task/NkDefBpmDeployments";// 待删除
 import NkPageProcessInstances from "./task/NkPageProcessInstances";
 import NkPageProcessDetail from "./task/NkPageProcessDetail";
 
+/**
+ * 运维页面
+ */
+import NkDevOpsES from "./devops/NkDevOpsES";
 import NkDefDeploy from "./devops/NkDefDeploy";
 /**
  * Vue 模块对象
@@ -231,8 +235,8 @@ module.routes = [
     ]
   },
   {
-    name: "工作流",
-    path: 'bpm',
+    name: "运维",
+    path: 'devops',
     children: [
       {
         name: "流程实例",
@@ -248,6 +252,14 @@ module.routes = [
             component: NkPageProcessDetail
           },
         ]
+      },
+      {
+        name: "索引管理",
+        path: 'es',
+        component: NkDevOpsES,
+        meta:{
+          title: "索引管理",
+        }
       },
     ]
   }
