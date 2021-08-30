@@ -34,7 +34,7 @@
                 const interval = setInterval(()=>{
                     this.$http.post('/api/ops/index/docs/reindex/'+taskId)
                         .then(res=>{
-                            if(res.data.finished===true){
+                            if(!res.data || res.data.finished===true){
                                 clearInterval(interval);
                             }
                             this.message = `${res.data.message} ${res.data.totalS}/${res.data.total}`;
