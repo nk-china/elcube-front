@@ -24,7 +24,7 @@
         },
         methods: {
             reindex(){
-                this.$http.post('/api/ops/es/docs/reindex','dropFirst=true&docType=')
+                this.$http.post('/api/ops/index/docs/reindex','dropFirst=true&docType=')
                     .then(res=>{
                         this.reindexInfo(res.data);
                     })
@@ -32,7 +32,7 @@
             reindexInfo(taskId){
                 this.message = '请稍候...'
                 const interval = setInterval(()=>{
-                    this.$http.post('/api/ops/es/docs/reindex/'+taskId)
+                    this.$http.post('/api/ops/index/docs/reindex/'+taskId)
                         .then(res=>{
                             if(res.data.success||res.data.error){
                                 clearInterval(interval);
@@ -42,7 +42,7 @@
                         .catch(()=>{
                             clearInterval(interval);
                         })
-                },1000);
+                },200);
             }
         }
     }
