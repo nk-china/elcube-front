@@ -1,5 +1,5 @@
 <template>
-    <nk-card card-key="nk-card-doc-type-state" class="nk-page-layout-card" title="索引">
+    <nk-card card-key="nk-card-doc-type-state" class="nk-page-layout-card" title="索引字段">
         <nk-help-link slot="extra" url="http://cwiki.nkpro.cn/pages/viewpage.action?pageId=23789596" />
         <vxe-toolbar v-if="editMode">
             <template v-slot:buttons>
@@ -13,6 +13,8 @@
             border=inner
             resizable
             highlight-hover-row
+            show-header-overflow="tooltip"
+            show-overflow="tooltip"
             header-cell-class-name="headerCellClassName"
             :edit-config="{trigger: 'click', mode: 'row', showIcon: editMode, activeMethod: ()=>{return editMode}}"
             :data="docDef.indexRules"

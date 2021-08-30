@@ -14,6 +14,8 @@
             border=inner
             resizable
             highlight-hover-row
+            show-header-overflow="tooltip"
+            show-overflow="tooltip"
             header-cell-class-name="headerCellClassName"
             :edit-config="{trigger: 'click', mode: 'row', showIcon: editMode, activeMethod: ()=>{return editMode}}"
             :data="docDef.cards">

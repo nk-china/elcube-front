@@ -85,6 +85,7 @@ export default {
 
                 if(this.required || v){
 
+
                     if ((this.required || this.len || typeof this.max === 'number' || typeof this.min === 'number')
                         && (v === undefined || v === null || v === '' || v.length===0 )) {
                         return this.message;

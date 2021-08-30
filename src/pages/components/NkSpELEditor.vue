@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-input @click="open" v-model="value" size="small" readOnly></a-input>
+        <component :is="inputComponent" @click="open" v-model="value" size="small" readOnly></component>
         <component :is="component" v-model="visible" title="SpEL表达式编辑器" width="50%" centered :mask-closable="false" :esc-closable="true">
 
             <a-textarea v-model="el" :rows="4" placeholder="SpEL表达式"></a-textarea>
@@ -53,6 +53,7 @@ export default {
         this.component = this.modalComponent;
         if(this.$parent.$options._componentTag==="vxe-table-body"){
             this.component = 'vxe-modal';
+            this.inputComponent = 'vxe-input';
         }
     },
     data(){
@@ -62,6 +63,7 @@ export default {
             error: undefined,
             result: undefined,
             component: undefined,
+            inputComponent: 'a-input'
         }
     },
     computed:{
