@@ -3,7 +3,10 @@
 
         <nk-card class="card" title="索引管理">
 
-            <a-button @click="reindex">重建索引</a-button>
+            <a-row type="flex" justify="center" :align="'middle'">
+                <a-col :span="4"><a-button @click="reindex">重建索引</a-button></a-col>
+                <a-col :span="20">{{message}}</a-col>
+            </a-row>
 
         </nk-card>
     </nk-page-layout>
@@ -14,6 +17,7 @@
     export default {
         data() {
             return {
+                message:undefined
             }
         },
         created() {
@@ -21,6 +25,24 @@
         methods: {
             reindex(){
                 this.$http.post('/api/ops/es/docs/reindex','dropFirst=true&docType=')
+                    .then(res=>{
+                        this.reindexInfo(res.data);
+                    })
+            },
+            reindexInfo(taskId){
+                this.message = '请稍候...'
+                const interval = setInterval(()=>{
+                    this.$http.post('/api/ops/es/docs/reindex/'+taskId)
+                        .then(res=>{
+                            if(res.data.success||res.data.error){
+                                clearInterval(interval);
+                            }
+                            this.message = res.data.success||res.data.error||res.data.message;
+                        })
+                        .catch(()=>{
+                            clearInterval(interval);
+                        })
+                },1000);
             }
         }
     }
