@@ -187,12 +187,7 @@ const markdownOption = {
 
 export default {
     components:{
-        XNkPageLayout,
-        NkDefDocTypeBase,
-        NkDefDocTypeStatus,
-        NkDefDocTypeCycle,
-        NkDefDocTypeBPM,
-        NkDefDocTypeCards
+        XNkPageLayout
     },
     filters:{
         formatVersion : (v)=>{
