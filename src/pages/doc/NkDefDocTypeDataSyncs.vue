@@ -19,15 +19,13 @@
             :edit-config="{trigger: 'click', mode: 'row', showIcon: editMode, activeMethod: ()=>{return editMode}}"
             :data="docDef.dataSyncs"
             @edit-actived="editActive">
-            <vxe-table-column   title="目标"             field="targetSvr" width="15%" :edit-render="{
+            <vxe-table-column   title="服务"             field="targetSvr" width="15%" :edit-render="{
                 name: '$select',
-                options: [
-                    {value:'NkDatabaseAdapter', label:'NkDatabaseAdapter'},
-                    {value:'NkRestApiAdapter',  label:'NkRestApiAdapter'},
-                ]
+                options: docOptions.docDataSyncs,
+                optionProps: {value: 'key', label: 'name'}
             }"/>
-            <vxe-table-column   title="参数"             field="targetArgs" width="14%" :edit-render="{name: 'input', attrs: {type: 'text'}}"/>
-            <vxe-table-column   title="条件"              field="conditionSpEL" width="10%" :edit-render="{}">
+            <vxe-table-column   title="目标"             field="targetArgs" width="14%" :edit-render="{name: 'input', attrs: {type: 'text'}}"/>
+            <vxe-table-column   title="条件"             field="conditionSpEL" width="10%" :edit-render="{}">
                 <template v-slot:edit="{row}">
                     <nk-sp-el-editor v-model="row.conditionSpEL"></nk-sp-el-editor>
                 </template>
@@ -39,7 +37,7 @@
             </vxe-table-column>
             <vxe-table-column   title="主键规则模版"        field="keySpEL" width="18%" :edit-render="{}">
                 <template v-slot:edit="{row}">
-                    <nk-sp-el-template-editor v-model="row.keySpEL"></nk-sp-el-template-editor>
+                    <nk-sp-el-editor v-model="row.keySpEL"></nk-sp-el-editor>
                 </template>
             </vxe-table-column>
             <vxe-table-column   title="字段映射模版"      field="mappingSpEL" width="18%" :edit-render="{}">

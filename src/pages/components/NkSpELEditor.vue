@@ -1,9 +1,9 @@
 <template>
     <div>
-        <component :is="inputComponent" @click="open" v-model="value" size="small" readOnly></component>
+        <component :is="inputComponent" @click="open" v-model="value" size="small" read-only readonly class="readonly"></component>
         <component :is="component" v-model="visible" title="SpEL表达式编辑器" width="50%" centered :mask-closable="false" :esc-closable="true">
 
-            <a-textarea v-model="el" :rows="4" placeholder="SpEL表达式"></a-textarea>
+            <a-textarea v-model="el" :rows="10" placeholder="SpEL表达式 或 JSON格式模版"></a-textarea>
 
             <a-input-search placeholder="输入单据ID(可选)" v-model="docId" @search="test()" style="margin-top: 12px;">
                 <a-button slot="enterButton">测试</a-button>
@@ -85,12 +85,18 @@ export default {
         ]),
         open(){
             this.visible = true;
-            this.el = this.value;
             this.result = undefined;
+            try{
+                this.el = this.parse(this.value,2);
+                this.error = undefined;
+            }catch (e){
+                this.el = this.value;
+                this.error = undefined;
+            }
         },
         submit(){
             try{
-                this.$emit("input", this.el);
+                this.$emit("input", this.validate(this.el));
                 this.visible = false;
                 this.error = undefined;
             }catch (e){
@@ -108,6 +114,27 @@ export default {
                     this.result = res.data.result;
                 }
             })
+        },
+        parse(value,space){
+            const v = value && value.replace(/\s/g,'');
+            if(!v)
+                return v;
+            return JSON.stringify(JSON.parse(value),null,space)
+        },
+        validate(value){
+            value = value && value.trim();
+            try{
+                return JSON.stringify(JSON.parse(value));
+            }catch (e){
+                if(typeof value==='string'){
+                    try{
+                        JSON.stringify(JSON.parse(`"${value}"`));
+                        return value;
+                    }catch (e){
+                        throw e;
+                    }
+                }
+            }
         }
     }
 }
@@ -116,14 +143,6 @@ export default {
 <style scoped lang="scss">
     .result{
         margin-top: 12px;
-
-        pre{
-            max-height: 300px;
-            overflow: auto;
-            background-color: #fafafa;
-            border: solid 1px #eee;
-            padding: 12px;
-        }
     }
     .error{
         color: #ff4d4f;
@@ -133,5 +152,11 @@ export default {
     }
     .overflow{
         height: 300px;overflow: auto
+    }
+    ::v-deep.readonly{
+        cursor: pointer;
+        input{
+            cursor: pointer;
+        }
     }
 </style>
