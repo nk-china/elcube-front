@@ -36,7 +36,7 @@
                     ),
                     h(
                         'router-link',
-                        {props:{to: '/apps/bpm/process/instances/detail/'+row.id}},
+                        {props:{to: '/apps/devops/process/instances/detail/'+row.id}},
                         "详情"
                     )]
               }}

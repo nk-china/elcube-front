@@ -22,7 +22,7 @@
                   slot="extra"
                   type="link"
                   size="small"
-                  @click="$router.push(`/apps/bpm/process/instances/detail/${task.processInstanceId}`)">流程实例</a-button>
+                  @click="$router.push(`/apps/devops/process/instances/detail/${task.processInstanceId}`)">流程实例</a-button>
         <a-button  v-if="!bpmnVisible"
                    slot="extra"
                    type="link"
