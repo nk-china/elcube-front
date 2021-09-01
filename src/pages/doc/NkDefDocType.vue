@@ -133,6 +133,9 @@
                 </a-card>
             </a-layout-content>
         </a-layout>
+        <a-modal v-model="visibleCreateRandom" centered title="请输入生成的单据数量" @ok="doRandom" width="320px" :confirm-loading="createRandomLoading">
+            <a-input-number v-model="createRandomCount" placeholder="请输入生成的单据数量" style="width:100%"></a-input-number>
+        </a-modal>
     </x-nk-page-layout>
 </template>
 
@@ -256,7 +259,10 @@ export default {
             },{
                 key:"nkCardFlow",
                 name:"交易历史",
-            }]
+            }],
+            visibleCreateRandom:false,
+            createRandomLoading:false,
+            createRandomCount:10,
         }
     },
     computed:{
@@ -431,9 +437,11 @@ export default {
             })
         },
         doRandom(){
-            this.$http.post(`/api/def/doc/random/${this.def.docType}/1000000`)
-                .then(res=>{
-                    console.log(res);
+            this.createRandomLoading = true;
+            this.$http.post(`/api/def/doc/random/${this.def.docType}/${this.createRandomCount}`)
+                .then(()=>{
+                    this.visibleCreateRandom = false;
+                    this.createRandomLoading = false;
                 });
         },
         handleMenuClick({key}){
@@ -441,7 +449,7 @@ export default {
                 case "doDelete":this.doDelete();break;
                 case "doBreach":this.doBreach();break;
                 case "doCopy":this.$emit('replace',`/apps/def/doc/create?fromType=${this.def.docType}&fromVersion=${this.def.version}`);break;
-                case "doRandom":this.doRandom();break;
+                case "doRandom":this.visibleCreateRandom = true;break;
                 case "showHistory":break;
             }
         }
