@@ -271,8 +271,10 @@ export default {
                 }
                 this.params['_highlight'][e.field]=e.highlight;
                 this.searchMoreDefUpdate();
-                if(e.trigger)
+                if(e.trigger){
+                    this.params.from = 0;
                     this.emitChange()
+                }
             }
         },
         /**
