@@ -77,14 +77,20 @@ export default {
                     component:'nk-search-options-date-range',
                     placeholder:'请选择'
                 },
+                // {
+                //     name:'更新时间',
+                //     field:'updatedTime',
+                //     component:'nk-search-options-number-range',
+                //     placeholderFrom:'从',
+                //     placeholderTo:'到',
+                //     from:Number.MIN_SAFE_INTEGER,
+                //     to:Number.MAX_SAFE_INTEGER
+                // },
                 {
-                    name:'更新时间',
-                    field:'updatedTime',
-                    component:'nk-search-options-number-range',
-                    placeholderFrom:'从',
-                    placeholderTo:'到',
-                    from:Number.MIN_SAFE_INTEGER,
-                    to:Number.MAX_SAFE_INTEGER
+                    name:'交易伙伴',
+                    field:'partnerName',
+                    component:'nk-search-options-text',
+                    placeholder:'请输入关键字'
                 },
                 {
                     name:'关键字',
