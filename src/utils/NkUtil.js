@@ -35,7 +35,6 @@ export default {
             condition = {"bool": {must}},
             np = {};
         let value;
-        console.log(params)
         for(let field in params){
             switch (field) {
                 case "_source":
