@@ -431,7 +431,7 @@ export default {
             })
         },
         doRandom(){
-            this.$http.post(`/api/def/doc/random/${this.def.docType}/10`)
+            this.$http.post(`/api/def/doc/random/${this.def.docType}/1000000`)
                 .then(res=>{
                     console.log(res);
                 });
