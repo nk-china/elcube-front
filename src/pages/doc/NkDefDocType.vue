@@ -38,10 +38,13 @@
                             <a-icon type="branches" /> 新版本
                         </a-menu-item>
                         <a-menu-item key="doCopy" :disabled="isCreate">
-                            <a-icon type="copy" /> 复制
+                            <a-icon type="copy" /> 复制为新类型
                         </a-menu-item>
                         <a-menu-item key="doDelete" :disabled="isCreate || def.state==='Active'">
                             <a-icon type="delete" /> 删除
+                        </a-menu-item>
+                        <a-menu-item key="doRandom" :disabled="!(def.debug || def.state==='Active')">
+                            <a-icon type="robot" /> 生成随机数据
                         </a-menu-item>
                     </a-menu>
                     <a-button><a-icon type="ellipsis" /></a-button>
@@ -427,11 +430,18 @@ export default {
                 resolve();
             })
         },
+        doRandom(){
+            this.$http.post(`/api/def/doc/random/${this.def.docType}/10`)
+                .then(res=>{
+                    console.log(res);
+                });
+        },
         handleMenuClick({key}){
             switch (key){
                 case "doDelete":this.doDelete();break;
                 case "doBreach":this.doBreach();break;
                 case "doCopy":this.$emit('replace',`/apps/def/doc/create?fromType=${this.def.docType}&fromVersion=${this.def.version}`);break;
+                case "doRandom":this.doRandom();break;
                 case "showHistory":break;
             }
         }
