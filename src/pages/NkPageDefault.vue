@@ -1,5 +1,5 @@
 <template>
-    <nk-page-layout title="交易金融管理系统" class="layout">
+    <nk-page-layout title="TS5统一开发平台" class="layout">
 
     </nk-page-layout>
 </template>

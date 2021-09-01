@@ -82,7 +82,7 @@ export default function(VueRouter,moduleRoutes,loginPage,defaultPage) {
       let title = (to.meta&&to.meta.title)||to.name;
       if (title) {
         const titles = document.getElementsByTagName("title");
-        document.title = title + '-' + ((titles && titles[0] && titles[0].getAttribute("title"))||'交易金融管理系统');
+        document.title = title + '-' + ((titles && titles[0] && titles[0].getAttribute("title"))||'TS5统一开发平台');
       }
     }
 
