@@ -30,7 +30,7 @@
                 <nk-script-label :key="docDef.refObjectType" :value="docDef.refObjectType"></nk-script-label>
                 <a-select size="small" v-model="docDef.refObjectType"
                           placeholder="请选择单据处理程序"
-                          style="width: 60%" slot="edit"
+                          style="width: 300px" slot="edit"
                           @change="refObjectTypeChange"
                 >
                     <a-select-option v-for="item in docOptions.docProcessors" :key="item.key">{{item.name}}</a-select-option>

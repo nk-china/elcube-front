@@ -42,7 +42,8 @@ import NkPageProcessDetail from "./task/NkPageProcessDetail";
 /**
  * 运维页面
  */
-import NkDevOpsES from "./devops/NkDevOpsES";
+import NkDevOpsDataSync from "./devops/NkDevOpsDataSync";
+import NkDevOpsCache from "./devops/NkDevOpsCache";
 import NkDefDeploy from "./devops/NkDefDeploy";
 /**
  * Vue 模块对象
@@ -254,11 +255,19 @@ module.routes = [
         ]
       },
       {
-        name: "索引管理",
-        path: 'es',
-        component: NkDevOpsES,
+        name: "数据同步",
+        path: 'sync',
+        component: NkDevOpsDataSync,
         meta:{
-          title: "索引管理",
+          title: "数据同步",
+        }
+      },
+      {
+        name: "数据缓存",
+        path: 'cache',
+        component: NkDevOpsCache,
+        meta:{
+          title: "数据缓存",
         }
       },
     ]

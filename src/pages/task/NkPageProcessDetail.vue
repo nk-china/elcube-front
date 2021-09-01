@@ -59,7 +59,7 @@
                 <vxe-table-column title="Candidate" field="candidate" width="20%"></vxe-table-column>
                 <vxe-table-column title="StartTime" field="startTime" width="15%" :formatter="['nkDatetimeISO']"></vxe-table-column>
                 <vxe-table-column title="EndTime" field="endTime" width="15%" :formatter="['nkDatetimeISO']"></vxe-table-column>
-                <vxe-table-column title="Action | Comment">
+                <vxe-table-column title="Action | Comment" show-overflow="false">
                     <template v-slot="{row}">
                         <template v-if="row.deleteReason && row.deleteReason!=='completed'">
                             'TERMINATED | ' {{row.deleteReason}}
@@ -72,6 +72,9 @@
                                 {{ transition.name }}
                             </a-button>
                         </a-button-group>
+                        <a-button v-if="!row.endTime" size="small" type="default" style="margin-left: 5px;" disabled>
+                            Assign
+                        </a-button>
                     </template>
                 </vxe-table-column>
             </vxe-table>
