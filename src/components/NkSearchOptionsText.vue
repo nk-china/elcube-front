@@ -22,12 +22,12 @@
       },
       keydown(e){
         if(e.key==='Enter'){
-          this.$emit("change",Object.assign({value:this.value,trigger:true}, this.config));
+          this.$emit("change",Object.assign({value:this.value,trigger:true,highlight:!!this.value}, this.config));
           e.target.blur();
         }
       },
       change(){
-        this.$emit("change",Object.assign({value:this.value}, this.config));
+        this.$emit("change",Object.assign({value:this.value,highlight:!!this.value}, this.config));
       },
       close(){
         this.$emit("close",this.config);

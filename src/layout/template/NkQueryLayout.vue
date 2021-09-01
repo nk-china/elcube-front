@@ -108,6 +108,12 @@ export default {
     props:{
         title:String,
         subTitle:String,
+        keywordField:{
+            type: Array,
+            default(){
+                return []
+            }
+        },
         searchItemsDefault:Array,
         searchItemsMoreDef:{
             type : Array,
@@ -180,6 +186,7 @@ export default {
                 }
             })
             this.params._source=fields;
+            this.params._keywordField = this.keywordField.join(',');
 
 
             this.searchMoreDefUpdate();
@@ -259,6 +266,10 @@ export default {
         formItemChanged(e){
             if(e.field){
                 this.params[e.field]=e.value;
+                if(!this.params['_highlight']){
+                    this.params['_highlight']={};
+                }
+                this.params['_highlight'][e.field]=e.highlight;
                 this.searchMoreDefUpdate();
                 if(e.trigger)
                     this.emitChange()
@@ -419,5 +430,8 @@ export default {
 }
 .nk-button+.nk-button{
     margin-left: 10px;
+}
+::v-deep .highlight{
+    color: rgb(241, 75, 69);
 }
 </style>

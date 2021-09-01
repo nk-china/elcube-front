@@ -6,6 +6,7 @@
         :search-items-default="searchItemsDefault"
         :search-items-more-def="searchItemsMoreDef"
         :dataTableColumns="columns"
+        :keyword-field="['docName','partnerName']"
         save-as-source="$docs"
         @change="search"
         @click="selected"
@@ -47,14 +48,14 @@ export default {
         return {
             creatableDocTypes:[],
             columns:[
-                { type: 'seq',            title: '#',         width: '36'},
+                { type:  'seq',            title: '#',         width: '36'},
                 { field: 'classify',      title: '分类',       width: '8%',  sortable:true,formatter:['nkFromList',classifies] },
                 { field: 'docTypeDesc',   title: '单据类型',    width: '15%', sortable:true },
-                { field: 'docName',       title: '名称',       width: '20%', sortable:true, params:{ orderField: 'docName.original' }},
-                { field: 'partnerName',   title: '交易伙伴',    width: '20%', sortable:true, params:{ orderField: 'partnerName.original' }},
+                { type:  'html', field: 'docName',       title: '名称',       width: '20%', sortable:true, params:{ orderField: 'docName.original' }},
+                { type:  'html', field: 'partnerName',   title: '交易伙伴',    width: '20%', sortable:true, params:{ orderField: 'partnerName.original' }},
                 { field: 'docStateDesc',  title: '状态',       width: '10%', sortable:true},
                 { field: 'updatedTime',   title: '更新时间',    width: '10%', sortable:true,formatter:'nkDatetimeFriendly' },
-                { type: 'html',           title: 'ACTION',    width: '7%', formatter:['docLink']},
+                { type:  'html',           title: 'ACTION',    width: '7%', formatter:['docLink']},
             ],
             searchItemsDefault:[
                 {
@@ -90,7 +91,7 @@ export default {
                     name:'交易伙伴',
                     field:'partnerName',
                     component:'nk-search-options-text',
-                    placeholder:'请输入关键字'
+                    placeholder:'请输入交易伙伴名称'
                 },
                 {
                     name:'关键字',

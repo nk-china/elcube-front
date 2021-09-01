@@ -35,6 +35,7 @@ export default {
             condition = {"bool": {must}},
             np = {};
         let value;
+        console.log(params)
         for(let field in params){
             switch (field) {
                 case "_source":
@@ -49,8 +50,20 @@ export default {
                 case "keyword":
                 case "order":
                 case "orderField":
+                case "_keywordField":
                     np[field]=params[field];
                     break;
+                case "_highlight":{
+                    let highlightFields = [];
+                    let highlight = params[field];
+                    for(let k in highlight){
+                        if(highlight[k]){
+                            highlightFields.push(k);
+                        }
+                    }
+                    np[field]=highlightFields.join(',');
+                    break;
+                }
                 default:
                     value = params[field];
                     if(value instanceof Array){
