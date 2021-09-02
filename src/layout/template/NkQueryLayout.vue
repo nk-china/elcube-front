@@ -74,6 +74,8 @@
                 resizable
                 highlight-hover-row
                 :highlight-current-row="selectable"
+                show-header-overflow="tooltip"
+                show-overflow="tooltip"
                 size="mini"
                 border=inner
                 :columns="dataTableColumns"
