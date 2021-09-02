@@ -7,6 +7,7 @@
         :search-items-more-def="searchItemsMoreDef"
         :dataTableColumns="columns"
         :save-as-source="custom.menuId"
+        :keyword-field="keywordField"
         :lazy="true"
         :selectable="false"
         @change="search"
@@ -41,6 +42,7 @@ export default {
     data(){
         return {
             index:"doc",
+            keywordField:["docName",'partnerName'],
             columns:[],
             searchItemsDefault:[],
             searchItemsMoreDef:[],
