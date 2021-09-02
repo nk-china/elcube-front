@@ -179,7 +179,7 @@ export default {
         init(){
             this.page.rows = this.initRows;
             this.params.rows = this.initRows;
-            
+
             // 设置索引的返回字段
             const fields = this.dataIncludeFields;
             if(fields.indexOf("docId")===-1){fields.push("docId")}
@@ -361,9 +361,19 @@ export default {
         },
         // 页码跳转
         vxePageChanged(e){
-            this.params.from = (e.currentPage-1) * e.pageSize;
-            this.params.rows = e.pageSize;
-            this.emitChange()
+            const from = (e.currentPage-1) * e.pageSize;
+            const rows = e.pageSize;
+
+            if(from + rows > 10000){
+                this.$message.error("查询记录数不能超过10000条");
+                this.$emit("error","查询记录数不能超过10000条");
+                this.page.page = this.params.from / this.params.rows + 1;
+            }else{
+                this.params.from = from;
+                this.params.rows = e.pageSize;
+
+                this.emitChange()
+            }
         },
         // 保存搜索
         saveAsGet(){
