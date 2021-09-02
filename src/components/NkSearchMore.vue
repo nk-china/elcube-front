@@ -12,6 +12,7 @@
                 placeholder="更多条件..."
                 @select="select"
                 @change="change"
+                size="small"
         >
             <a-select-option v-for="(item,index) in options" :key="index">
                 {{item.name}}

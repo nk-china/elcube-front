@@ -400,9 +400,14 @@ export default {
             display: none;
         }
     }
-    .nk-layout-content .nk-layout-tabs .ant-tabs-bar{
-        margin: 16px 24px 0;
-        user-select: none;
+    .nk-layout-content .nk-layout-tabs{
+        .ant-tabs-bar{
+            margin: 16px 24px 0;
+            user-select: none;
+            span{
+                font-size: 14px;
+            }
+        }
     }
 }
 .nk-layout-full{

@@ -10,6 +10,13 @@ module.exports = {
   },
   "runtimeCompiler":false,
   "productionSourceMap":false,
+  "css":{
+    "loaderOptions":{
+      "less":{
+        "javascriptEnabled":true
+      }
+    }
+  },
   "devServer": {
     "port": "7200",
     "proxy": {
@@ -70,7 +77,14 @@ module.exports = {
     config.plugins.push(
         new CopyWebpackPlugin({
           patterns:[
-            { from: __dirname.replace(/[\\]/g,'/')+'/src/**',      to: __dirname+'/dist/' }
+            // {
+            //   from: __dirname.replace(/[\\]/g,'/')+'/src/**',
+            //   to: __dirname+'/dist/'
+            // },
+            {
+              from: __dirname.replace(/[\\]/g,'/')+'/src/**/*.less',
+              to: __dirname+'/dist/'
+            },
           ]
         }),
         new CompressionWebpackPlugin({

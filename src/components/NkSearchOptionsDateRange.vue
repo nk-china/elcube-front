@@ -1,6 +1,6 @@
 <template>
     <nk-search-item :label="config.name" :closeable="closeable" @close="close">
-        <a-range-picker v-model="value" @change="change" />
+        <a-range-picker v-model="value" @change="change" size="small" style="width:246px;" />
     </nk-search-item>
 </template>
 

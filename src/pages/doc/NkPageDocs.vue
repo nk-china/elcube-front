@@ -69,7 +69,7 @@ export default {
                     name:'单据类型',
                     field:'docTypeDesc',
                     component:'nk-search-options-multiple',
-                    min:300,
+                    min:240,
                     agg:true
                 },
                 {
@@ -78,15 +78,6 @@ export default {
                     component:'nk-search-options-date-range',
                     placeholder:'请选择'
                 },
-                // {
-                //     name:'更新时间',
-                //     field:'updatedTime',
-                //     component:'nk-search-options-number-range',
-                //     placeholderFrom:'从',
-                //     placeholderTo:'到',
-                //     from:Number.MIN_SAFE_INTEGER,
-                //     to:Number.MAX_SAFE_INTEGER
-                // },
                 {
                     name:'交易伙伴',
                     field:'partnerName',

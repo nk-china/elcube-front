@@ -37,14 +37,19 @@
 
         display: flex;
         align-items: center;
-        height: 34px;
-        margin: 0 10px 12px 0;
+        height: 32px;
+        margin: 0 10px 6px 0;
 
         > span {
             display: inline-block;
             white-space:nowrap;
             padding: 5px;
+            font-size: 12px;
+            font-weight: 500;
+        }
 
+        input,.ant-select-selection__placeholder{
+            font-size: 12px;
         }
 
         .close{

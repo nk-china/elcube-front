@@ -46,6 +46,7 @@
                             @select="$refs.select.blur()"
                             @change="searchMoreChanged"
                             v-model="searchItemsMoreFields"
+                            size="small"
                         >
                             <a-select-option v-for="(item) in availableSearchItemsMoreDef" :key="item.field">
                                 {{item.name}}
@@ -53,15 +54,15 @@
                         </a-select>
                     </div>
                     <nk-search-item :min="10">
-                        <a-button-group class="nk-button">
-                            <a-button type="primary" html-type="submit">
+                        <a-button-group class="nk-button" size="small">
+                            <a-button type="primary" html-type="submit" style="width: 46px;">
                                 <a-icon type="search" />
                             </a-button>
-                            <a-button type="default" @click="reset({})">
+                            <a-button type="default" @click="reset({})" style="width: 46px;">
                                 <a-icon type="rollback" />
                             </a-button>
                         </a-button-group>
-                        <a-button v-if="saveAsSource" class="nk-button" type="default" @click="saveAs.visible=true">
+                        <a-button v-if="saveAsSource" class="nk-button" type="default" @click="saveAs.visible=true" size="small" style="width: 56px;">
                             <a-icon type="save" />...
                         </a-button>
                     </nk-search-item>
@@ -429,7 +430,9 @@ export default {
 }
 
 ::v-deep.nk-search-box-more{
-    width:120px;
+    width:100px;
+    margin-top: 5px;
+    font-size: 12px;
     .ant-select-selection--multiple,
     .ant-select-selection--multiple:focus,
     .ant-select-selection--multiple:active{

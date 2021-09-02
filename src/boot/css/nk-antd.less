@@ -1,0 +1,59 @@
+@import '/node_modules/ant-design-vue/dist/antd.less';
+
+@primary-color: #1890ff; // 全局主色
+@link-color: #1890ff; // 链接色
+@success-color: #52c41a; // 成功色
+@warning-color: #faad14; // 警告色
+@error-color: #f5222d; // 错误色
+@font-size-base: 12px; // 主字号
+@heading-color: rgba(0, 0, 0, 0.85); // 标题色
+@text-color: rgba(0, 0, 0, 0.65); // 主文本色
+@text-color-secondary: rgba(0, 0, 0, 0.45); // 次文本色
+@disabled-color: rgba(0, 0, 0, 0.25); // 失效色
+@border-radius-base: 4px; // 组件/浮层圆角
+@border-color-base: #d9d9d9; // 边框色
+@box-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.15); // 浮层阴影
+
+@padding-lg: 20px; // containers
+@padding-md: 14px; // small containers and buttons
+@padding-sm: 10px; // Form controls and items
+@padding-xs: 6px; // small items
+
+
+//.ant-card .ant-card-head .ant-card-head-title{
+//  font-size: 14px;
+//  padding: 12px 0;
+//}
+.ant-card .ant-card-head .ant-card-extra{
+  padding: 0;
+}
+
+.nk-list{
+  background: initial;
+  .ant-list{
+
+    background: white;
+
+    border: 1px solid #e8e8e8;
+
+    .ant-list-header{
+
+      padding: 10px 10px;
+      font-weight: bold;
+
+      .ant-input{
+        height: 40px;
+        border: none;
+      }
+    }
+
+    .ant-list-item{
+      padding: 10px 10px;
+
+      &.selected{
+        background: #1890ff;
+        color: white;
+      }
+    }
+  }
+}

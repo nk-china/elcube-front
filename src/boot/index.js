@@ -7,7 +7,6 @@ import VueI18n from 'vue-i18n'
 import VueRouter from "vue-router";
 
 import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/antd.css';
 import VXETable from "./VXETable";
 
 import mavonEditor from 'mavon-editor';
@@ -25,7 +24,6 @@ import NkCardLost from "../layout/NkCardLost";
 import NkDashboards from "../dashboards";
 import NkDocuments from "../documents";
 import NkPages from "../pages";
-import './nk.scss'
 
 // 导出引用
 import App from "../layout/NkApp";
