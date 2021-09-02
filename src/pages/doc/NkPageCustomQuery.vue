@@ -8,6 +8,7 @@
         :dataTableColumns="columns"
         :save-as-source="custom.menuId"
         :keyword-field="keywordField"
+        :init-rows="defaultRows"
         :lazy="true"
         :selectable="false"
         @change="search"
@@ -42,7 +43,8 @@ export default {
     data(){
         return {
             index:"doc",
-            keywordField:["docName",'partnerName'],
+            keywordField:["docName","partnerName"],
+            defaultRows:10,
             columns:[],
             searchItemsDefault:[],
             searchItemsMoreDef:[],
