@@ -177,7 +177,9 @@ export default {
     },
     methods:{
         init(){
-            this.page.rows = this.params.rows;
+            this.page.rows = this.initRows;
+            this.params.rows = this.initRows;
+            
             // 设置索引的返回字段
             const fields = this.dataIncludeFields;
             if(fields.indexOf("docId")===-1){fields.push("docId")}
