@@ -40,6 +40,7 @@ export default {
     components: {NkPagePreview},
     data(){
         return {
+            index:"doc",
             columns:[],
             searchItemsDefault:[],
             searchItemsMoreDef:[],
@@ -120,7 +121,7 @@ export default {
                 }
             }
 
-            this.$http.postJSON("/api/doc/list",NkUtil.toEsParams(params,this.preCondition,this.$debug))
+            this.$http.postJSON(`/api/doc/list/${this.index}`,NkUtil.toEsParams(params,this.preCondition,this.$debug))
                 .then((res)=>{
                     if(this.$refs.layout)
                         this.$refs.layout.setData(res.data)

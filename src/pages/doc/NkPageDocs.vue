@@ -135,7 +135,7 @@ export default {
     },
     methods:{
         search(params){
-            this.$http.postJSON("/api/doc/list",NkUtil.toEsParams(params,this.preCondition,true))
+            this.$http.postJSON("/api/doc/list/doc",NkUtil.toEsParams(params,this.preCondition,true))
                 .then((res)=>{
                     this.$emit("setTab","单据");
                     if(this.$refs.layout)
