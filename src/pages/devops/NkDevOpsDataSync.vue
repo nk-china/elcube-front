@@ -7,6 +7,10 @@
                 <a-col :span="4"><a-button @click="reindex">立即同步</a-button></a-col>
                 <a-col :span="20">{{message}}</a-col>
             </a-row>
+            <a-row type="flex" justify="center" :align="'middle'" style="margin-top: 12px;">
+                <a-col :span="4"><a-button @click="random" :disabled="messageRandom">创建一亿条测试数据</a-button></a-col>
+                <a-col :span="20">{{messageRandom}}</a-col>
+            </a-row>
 
         </nk-card>
     </nk-page-layout>
@@ -17,7 +21,8 @@
     export default {
         data() {
             return {
-                message:undefined
+                message:undefined,
+                messageRandom:undefined,
             }
         },
         created() {
@@ -43,6 +48,14 @@
                             clearInterval(interval);
                         })
                 },200);
+            },
+            random(){
+                this.messageRandom = "正在执行，请勿重复点击"
+                this.$http.post('/api/debug/random')
+                    .then(res=>{
+                        console.log(res);
+                        this.messageRandom = "已开始执行，请勿重复点击"
+                    })
             }
         }
     }
