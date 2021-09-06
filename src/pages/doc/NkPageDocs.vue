@@ -48,7 +48,7 @@ export default {
         return {
             creatableDocTypes:[],
             columns:[
-                { type:  'seq',            title: '#',         width: '36'},
+                { type:  'seq',            title: '#',         width: '50'},
                 { field: 'classify',      title: '分类',       width: '8%',  sortable:true,formatter:['nkFromList',classifies] },
                 { field: 'docTypeDesc',   title: '单据类型',    width: '15%', sortable:true },
                 { type:  'html', field: 'docName',       title: '名称',       width: '20%', sortable:true, params:{ orderField: 'docName.original' }},
