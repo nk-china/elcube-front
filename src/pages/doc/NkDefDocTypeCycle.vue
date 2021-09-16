@@ -70,21 +70,20 @@ export default {
             editActiveOption:undefined,
             valueOptions:[],
             eventOptions:[
-                {key:'beforeCreate',        name:'[创建]beforeCreate',        ref:'docCreateInterceptors'},
-                {key:'afterCreated',        name:'[创建]afterCreated',        ref:'docCreateInterceptors'},
+                {key:'beforeCreate',        name:'[创建]beforeCreate',        ref:'docCycleInterceptor'},
+                {key:'afterCreated',        name:'[创建]afterCreated',        ref:'docCycleInterceptor'},
+                {key:'afterCopied',         name:'[复制]afterCopied',         ref:'docCycleInterceptor'},
 
-                {key:'beforeCalculate',     name:'[计算]beforeCalculate',     ref:'docExecuteInterceptors'},
-                {key:'afterCalculated',     name:'[计算]afterCalculated',     ref:'docExecuteInterceptors'},
+                {key:'beforeCalculate',     name:'[计算]beforeCalculate',     ref:'docCycleInterceptor'},
+                {key:'afterCalculated',     name:'[计算]afterCalculated',     ref:'docCycleInterceptor'},
 
-                {key:'beforeUpdate',        name:'[更新]beforeUpdate',        ref:'docUpdateInterceptors'},
-                {key:'afterUpdated',        name:'[更新]afterUpdated',        ref:'docUpdateInterceptors'},
-                {key:'afterUpdateCommit',   name:'[更新]afterUpdateCommit',   ref:'docCommittedInterceptors'},
+                {key:'beforeUpdate',        name:'[更新]beforeUpdate',        ref:'docCycleInterceptor'},
+                {key:'afterUpdated',        name:'[更新]afterUpdated',        ref:'docCycleInterceptor'},
+                {key:'afterUpdateCommit',   name:'[更新]afterUpdateCommit',   ref:'docCycleInterceptor'},
 
-                {key:'afterCopied',         name:'[复制]afterCopied',         ref:'docCreateInterceptors'},
-
-                {key:'beforeDelete',        name:'[删除]beforeDelete',        ref:'docExecuteInterceptors'},
-                {key:'afterDeleted',        name:'[删除]afterDeleted',        ref:'docExecuteInterceptors'},
-                {key:'afterDeleteCommit',   name:'[删除]afterDeleteCommit',   ref:'docCommittedInterceptors'},
+                {key:'beforeDelete',        name:'[删除]beforeDelete',        ref:'docCycleInterceptor'},
+                {key:'afterDeleted',        name:'[删除]afterDeleted',        ref:'docCycleInterceptor'},
+                {key:'afterDeleteCommit',   name:'[删除]afterDeleteCommit',   ref:'docCycleInterceptor'},
             ]
         }
     },

@@ -10221,7 +10221,7 @@ vxe-table-plugin-antd@^1.11.2:
   resolved "http://ns.nkpro.cn/repository/npm-public/vxe-table-plugin-antd/-/vxe-table-plugin-antd-1.11.2.tgz#9e517272a816953d68e58e500a0da9098f12585e"
   integrity sha1-nlFycqgWlT1o5Y5QCg2pCY8SWF4=
 
-vxe-table@^3.0.0:
+vxe-table@^3.3.7:
   version "3.3.12"
   resolved "http://ns.nkpro.cn/repository/npm-public/vxe-table/-/vxe-table-3.3.12.tgz#5f624915e5c0834a3e89caa227db9d36d1d7bd1e"
   integrity sha1-X2JJFeXAg0o+icqiJ9udNtHXvR4=
@@ -10540,10 +10540,10 @@ ws@^6.0.0, ws@^6.2.1:
   dependencies:
     async-limiter "~1.0.0"
 
-xe-utils@^3.0.0:
-  version "3.3.1"
-  resolved "http://ns.nkpro.cn/repository/npm-public/xe-utils/-/xe-utils-3.3.1.tgz#77af254b12d5ae2d4d3f32c3df7e3a5ccde1fad8"
-  integrity sha1-d68lSxLVri1NPzLD3346XM3h+tg=
+xe-utils@^3.3.2:
+  version "3.3.2"
+  resolved "http://ns.nkpro.cn/repository/npm-public/xe-utils/-/xe-utils-3.3.2.tgz#b05817b094a6b40d897cd8d5df62ed716ff845f5"
+  integrity sha1-sFgXsJSmtA2JfNjV32LtcW/4RfU=
 
 "xml-name-validator@>= 2.0.1 < 3.0.0":
   version "2.0.1"

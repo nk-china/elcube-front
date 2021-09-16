@@ -18,9 +18,9 @@
             header-cell-class-name="headerCellClassName"
             :edit-config="{trigger: 'click', mode: 'row', showIcon: editMode, activeMethod: ()=>{return editMode}}"
             :data="docDef.flows">
-            <vxe-table-column field="preDocType"    width="10%" :edit-render="{name: '$input',props: {type: 'text',maxlength:4}}" title="前置交易"/>
-            <vxe-table-column field="preDocState"   width="10%" :edit-render="{name: '$input',props: {type: 'text',maxlength:4}}" title="前置交易状态" />
-            <vxe-table-column field="refObjectType" width="24%" :edit-render="{name:'$select',options: docOptions.flowInterceptors,optionProps: {value: 'key', label: 'name'},}" title="扩展程序" >
+            <vxe-table-column field="preDocType"    width="20%" :edit-render="{name: '$input',props: {type: 'text',maxlength:4}}" title="前置交易"/>
+            <vxe-table-column field="preDocState"   width="20%" :edit-render="{name: '$input',props: {type: 'text',maxlength:4}}" title="前置交易状态" />
+            <vxe-table-column field="refObjectType" width="50%" :edit-render="{name:'$select',options: docOptions.flowInterceptors,optionProps: {value: 'key', label: 'name'},}" title="扩展程序" >
                 <template v-slot="{ row }">
                     <nk-script-label :value="row.refObjectType"></nk-script-label>
                 </template>
