@@ -13,7 +13,6 @@
             @blur="blur"
             @select="valueChanged=true"
             @deselect="valueChanged=true"
-            size="small"
             allowClear>
 
             <template v-if="option">

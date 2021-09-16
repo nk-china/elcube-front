@@ -1,6 +1,6 @@
 <template>
-    <div class="nk-layout-tabs ant-tabs ant-tabs-top ant-tabs-card ant-tabs-editable-card ant-tabs-no-animation">
-        <div role="tablist" tabindex="0" class="ant-tabs-bar ant-tabs-top-bar ant-tabs-card-bar">
+    <div class="nk-layout-tabs ant-tabs ant-tabs-small ant-tabs-top ant-tabs-card ant-tabs-editable-card ant-tabs-no-animation">
+        <div role="tablist" tabindex="0" class="ant-tabs-bar ant-tabs-top-bar ant-tabs-card-bar ant-tabs-small-bar">
             <div class="ant-tabs-nav-container" :class="{'ant-tabs-nav-container-scrolling':scrolling}">
                 <span ref="btnPrev" unselectable="unselectable" class="ant-tabs-tab-prev" :class="{
                         'ant-tabs-tab-arrow-show':scrolling,

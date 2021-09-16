@@ -2,14 +2,14 @@
     <nk-search-item :label="config.name" :closeable="closeable" @close="close">
         <a-input-group>
             <a-input-number class="i1" v-model="value.from" :placeholder="config.placeholderFrom||config.placeholder"
-                            @keydown="keydown" @change="change" :min="config.from" :max="config.to" size="small" />
+                            @keydown="keydown" @change="change" :min="config.from" :max="config.to" />
             <a-input-number class="i2"
                     style=" "
                     placeholder="~"
-                    disabled size="small"
+                    disabled
             />
             <a-input-number class="i3" v-model="value.to"   :placeholder="config.placeholderTo||config.placeholder"
-                            @keydown="keydown" @change="change" :min="config.from" :max="config.to" size="small" />
+                            @keydown="keydown" @change="change" :min="config.from" :max="config.to" />
         </a-input-group>
     </nk-search-item>
 </template>

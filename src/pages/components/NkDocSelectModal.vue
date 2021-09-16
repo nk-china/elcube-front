@@ -13,8 +13,10 @@
                            :option="item.option || aggs[item.field]"
                            @change="formItemChanged"
                 ></component>
-                <a-button type="primary" html-type="submit">检索</a-button>
-                <slot name="buttons"></slot>
+                <nk-search-item>
+                    <a-button type="primary" html-type="submit"><a-icon type="search" /></a-button>
+                    <slot name="buttons"></slot>
+                </nk-search-item>
             </nk-search-box>
         </a-form>
         <vxe-table
@@ -59,7 +61,7 @@ export default {
                     title:'选择',
                     width:"60%",
                     preConditions:null,
-                    source:'doc',
+                    index:'doc',
                     searchItems:[
                         {
                             name:'搜索',
@@ -128,7 +130,7 @@ export default {
                 .map(i=>i.field);
 
             const preConditions = typeof this.modal.preConditions==='string'?JSON.parse(this.modal.preConditions):this.modal.preConditions;
-            const url = this.modal.source === 'doc'?"/api/doc/list":"/api/doc/items/list";
+            const url = `/api/doc/list/${this.modal.index||'doc'}`;
             this.$http.postJSON(url,NkUtil.toEsParams(Object.assign({$aggs},this.params),preConditions))
                 .then(response=>{
                     this.page = response.data;

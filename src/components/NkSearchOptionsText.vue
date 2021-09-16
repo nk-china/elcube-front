@@ -1,6 +1,6 @@
 <template>
     <nk-search-item :label="config.name" :closeable="closeable" @close="close">
-        <a-input v-model="value" :placeholder="config.placeholder" @keydown="keydown" @change="change" allow-clear  size="small"/>
+        <a-input v-model="value" :placeholder="config.placeholder" @keydown="keydown" @change="change" allow-clear/>
     </nk-search-item>
 </template>
 

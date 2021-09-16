@@ -4,7 +4,8 @@
 
 import NkEditSlot from "./NkEditSlot";
 import NkForm from "./NkForm";
-import NkPageLayout from "../layout/template/NkPageLayout";
+//import NkPageLayout from "../layout/template/NkPageLayout";
+import NkPageLayout from "../layout/template/XNkPageLayout";
 import NkQueryLayout from "../layout/template/NkQueryLayout";
 import NkScriptEditor from "./NkScriptEditor";
 import NkSearchBox from "./NkSearchBox";

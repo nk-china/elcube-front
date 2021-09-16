@@ -30,7 +30,7 @@
                 <slot name="avatar"     slot="avatar"></slot>
                 <slot name="backIcon"   slot="backIcon"></slot>
                 <slot name="action"     slot="extra"></slot>
-                <a-row v-if="$slots.content||$slots.extra">
+                <a-row>
                     <a-col :span="18">
                         <slot name="content"></slot>
                     </a-col>
@@ -111,7 +111,10 @@ export default {
             margin: 4px 0;
         }
         .ant-page-header-heading{
-            margin: 8px 0 0;
+            margin: 4px 0 0;
+        }
+        .ant-page-header-heading-title{
+            font-size: 16px;
         }
 
         .ant-page-header{

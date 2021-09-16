@@ -36,7 +36,7 @@ export default {
 <style scoped lang="scss">
     .preview{
         position: fixed;
-        z-index: 5;
+        z-index: 11;
         top: 0;
         bottom: 0;
         left: 0;

@@ -48,14 +48,14 @@ export default {
         return {
             creatableDocTypes:[],
             columns:[
-                { type:  'seq',            title: '#',         width: '50'},
-                { field: 'classify',      title: '分类',       width: '8%',  sortable:true,formatter:['nkFromList',classifies] },
-                { field: 'docTypeDesc',   title: '单据类型',    width: '15%', sortable:true },
+                { type:  'seq',                         title: '#',         width: '5%'},
+                { field: 'classify',                    title: '分类',       width: '8%',  sortable:true,formatter:['nkFromList',classifies] },
+                { field: 'docTypeDesc',                 title: '单据类型',    width: '15%', sortable:true },
                 { type:  'html', field: 'docName',       title: '名称',       width: '20%', sortable:true, params:{ orderField: 'docName.original' }},
                 { type:  'html', field: 'partnerName',   title: '交易伙伴',    width: '20%', sortable:true, params:{ orderField: 'partnerName.original' }},
-                { field: 'docStateDesc',  title: '状态',       width: '10%', sortable:true},
-                { field: 'updatedTime',   title: '更新时间',    width: '10%', sortable:true,formatter:'nkDatetimeFriendly' },
-                { type:  'html',           title: 'ACTION',    width: '7%', formatter:['docLink']},
+                { field: 'docStateDesc',                title: '状态',       width: '12%', sortable:true},
+                { field: 'updatedTime',                 title: '更新时间',    width: '13%', sortable:true,formatter:'nkDatetimeFriendly' },
+                { type:  'html',                        title: 'ACTION',    width: '7%', formatter:['docLink']},
             ],
             searchItemsDefault:[
                 {

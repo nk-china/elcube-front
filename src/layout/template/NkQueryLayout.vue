@@ -1,5 +1,5 @@
 <template>
-    <nk-page-layout :title="title" :sub-title="subTitle">
+    <x-nk-page-layout :title="title" :sub-title="subTitle">
 
         <slot name="action" slot="action"></slot>
 
@@ -13,7 +13,7 @@
                 {{item.name}}
             </a-tag>
         </div>
-        <slot name="content" slot="content"></slot>
+        <slot v-if="$slots.content" name="content" slot="content"></slot>
 
         <a-card>
             <a-form :label-col="{ span: 6 }" :wrapper-col="{ span: 17 }" @submit="formSubmit">
@@ -28,6 +28,7 @@
                     ></component>
                     <component v-for="(item) in searchItemsMoreSelected"
                                ref="searchMoreItems"
+                               slot="more"
                                :key="item.field"
                                :is="item.component"
                                :config="item"
@@ -36,7 +37,7 @@
                                @change="formItemChanged"
                                @close="searchMoreItemClosed"
                     ></component>
-                    <div v-if="availableSearchItemsMoreDef && availableSearchItemsMoreDef.length">
+                    <nk-search-item v-if="availableSearchItemsMoreDef && availableSearchItemsMoreDef.length" :min="0">
                         <a-select
                             ref="select"
                             mode="multiple"
@@ -46,15 +47,14 @@
                             @select="$refs.select.blur()"
                             @change="searchMoreChanged"
                             v-model="searchItemsMoreFields"
-                            size="small"
                         >
                             <a-select-option v-for="(item) in availableSearchItemsMoreDef" :key="item.field">
                                 {{item.name}}
                             </a-select-option>
                         </a-select>
-                    </div>
+                    </nk-search-item>
                     <nk-search-item :min="10">
-                        <a-button-group class="nk-button" size="small">
+                        <a-button-group class="nk-button">
                             <a-button type="primary" html-type="submit" style="width: 46px;">
                                 <a-icon type="search" />
                             </a-button>
@@ -62,7 +62,7 @@
                                 <a-icon type="rollback" />
                             </a-button>
                         </a-button-group>
-                        <a-button v-if="saveAsSource" class="nk-button" type="default" @click="saveAs.visible=true" size="small" style="width: 56px;">
+                        <a-button v-if="saveAsSource" class="nk-button" type="default" @click="saveAs.visible=true" style="width: 56px;">
                             <a-icon type="save" />...
                         </a-button>
                     </nk-search-item>
@@ -103,11 +103,15 @@
         <a-modal v-model="saveAs.visible" centered title="请输入备注" @ok="saveAsPost" :confirm-loading="saveAs.confirmLoading">
             <a-input v-model="saveAs.name" placeholder="请输入搜索备注，便于后期使用"></a-input>
         </a-modal>
-    </nk-page-layout>
+    </x-nk-page-layout>
 </template>
 
 <script>
+import XNkPageLayout from "./XNkPageLayout";
 export default {
+    components:{
+        XNkPageLayout
+    },
     props:{
         title:String,
         subTitle:String,
@@ -431,7 +435,6 @@ export default {
 
 ::v-deep.nk-search-box-more{
     width:100px;
-    margin-top: 5px;
     font-size: 12px;
     .ant-select-selection--multiple,
     .ant-select-selection--multiple:focus,

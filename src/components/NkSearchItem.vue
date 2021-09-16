@@ -3,7 +3,7 @@
         'min-width':min+'px',
         'max-width':max+'px'
     }">
-        <span>{{label}}</span>
+        <span v-if="label">{{label}}</span>
         <slot></slot>
         <div v-if="closeable" class="close" @click="close"><a-icon type="close" /></div>
     </div>
@@ -38,7 +38,7 @@
         display: flex;
         align-items: center;
         height: 32px;
-        margin: 0 10px 6px 0;
+        margin: 4px 10px 6px 0;
 
         > span {
             display: inline-block;

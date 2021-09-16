@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="nk-menu">
         <a-menu
             :default-selected-keys="['1']"
             :default-open-keys="[]"
@@ -12,14 +12,14 @@
             <template v-for="(menu) in menus">
 
                 <a-sub-menu v-if="menu.children" :key="menu.url">
-                    <span slot="title" style="font-size: 14px;">
-                        <a-icon :type="menu.icon" style="font-size: 14px;" />
+                    <span slot="title">
+                        <a-icon :type="menu.icon"/>
                         <span>{{menu.title}}</span>
                     </span>
                     <template v-for="(sub) in menu.children">
                         <a-sub-menu v-if="sub.sub" :key="sub.url">
                         <span slot="title">
-                            <span>{{sub.title}}</span>
+                            {{sub.title}}
                         </span>
                             <template v-for="(s) in sub.sub">
                                 <a-menu-item :key="s.url">
@@ -33,8 +33,8 @@
                     </template>
                 </a-sub-menu>
                 <a-divider v-else-if="menu.url==='-'" class="divider" :key="menu.menuId"></a-divider>
-                <a-menu-item v-else :key="menu.url" style="font-size: 14px;">
-                    <a-icon :type="menu.icon" style="font-size: 14px;" />
+                <a-menu-item v-else :key="menu.url">
+                    <a-icon :type="menu.icon"/>
                     <span>{{menu.title}}</span>
                 </a-menu-item>
             </template>
@@ -97,6 +97,15 @@ export default {
     .ant-skeleton-content .ant-skeleton-title,
     .ant-skeleton-content .ant-skeleton-paragraph > li{
         background: rgba(255, 255, 255, 0.2) !important;
+    }
+}
+::v-deep.nk-menu {
+    .ant-menu-item,.ant-menu-submenu,.ant-menu-submenu-title{
+        font-size: 13px;
+
+        i{
+            font-size: 13px;
+        }
     }
 }
 </style>

@@ -23,7 +23,7 @@
                 <span slot="icon"><a-icon type="gold" /> Res</span>
             </a-dropdown-button>
             <a-button v-else type="default" @click="showModel">
-                <a-icon type="play-square" />
+                <a-icon type="play-square" /> Run
             </a-button>
             <a-button type="default" @click="reloadVueResources">
                 <a-icon type="reload" /> Vue

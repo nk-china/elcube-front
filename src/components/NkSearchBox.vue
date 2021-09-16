@@ -1,7 +1,7 @@
 <template>
     <div class="search-box">
         <div>
-            <slot></slot>
+            <slot class="nk-search-box-item"></slot>
         </div>
         <div>
             <slot name="more"></slot>
@@ -9,7 +9,7 @@
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="less">
     .search-box{
         margin-bottom: 10px;
     }
@@ -19,5 +19,11 @@
     .search-box > div{
         display: flex;
         flex-wrap: wrap;
+
+        //> *{
+        //    margin-top: 5px;
+        //}
+    }
+    ::v-deep.nk-search-box-item{
     }
 </style>

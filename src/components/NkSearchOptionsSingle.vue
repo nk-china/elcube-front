@@ -9,8 +9,7 @@
                 :dropdownMenuStyle="{
                     'font-size':'12px'
                 }"
-                @change="change"
-                size="small" >
+                @change="change" >
             <a-select-option v-if="config.defaultOptions === true || config.defaultOptions === undefined" key="">
                 全部
             </a-select-option>

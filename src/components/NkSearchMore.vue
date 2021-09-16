@@ -2,7 +2,7 @@
 <!--已经弃用-->
 
 <template>
-    <nk-search-item v-if="options && options.length" label="" :min="120">
+    <nk-search-item v-if="options && options.length" :min="120">
         <a-select
                 ref="select"
                 mode="multiple"
@@ -23,7 +23,6 @@
 
 <script>
   export default {
-    name: "NkSearchMore",
     props:{
       options:Array
     },

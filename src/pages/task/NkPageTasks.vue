@@ -36,7 +36,7 @@ export default {
     data(){
         return {
             columns:[
-                { type: 'seq',            title: '#',         width: '36'},
+                { type: 'seq',            title: '#',         width: '5%'},
                 { field: 'docTypeDesc',   title: '单据类型',    width: '15%', sortable:true },
                 { field: 'taskName',      title: '任务名称',    width: '20%', sortable:true },
                 { field: 'partnerName',   title: '交易伙伴',    width: '20%', sortable:true,params:{ orderField: 'partnerName.original' }},

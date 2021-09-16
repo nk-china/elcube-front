@@ -1,10 +1,11 @@
 <template>
     <a-spin :spinning="loading" wrapperClassName="layout-spinning">
         <a-layout class="nk-layout-full">
-            <a-layout-sider v-model="collapsed" :trigger="null" collapsible="collapsible" class="nk-layout-sider" width="256">
+            <a-layout-sider v-model="collapsed" :trigger="null" collapsible="collapsible" class="nk-layout-sider" width="256" :collapsed-width="60">
                 <div class="logo nk">
-                    <span class="y">NK</span>
-                    <span class="z">纽扣互联</span>
+                    <a href="http://www.nkpro.cn" target="_blank"><img src="/nk.png" style="width: 48px;"/></a>
+<!--                    <span class="y"></span>-->
+<!--                    <span class="z">纽扣互联</span>-->
                 </div>
                 <nk-nav :active-page="activePage" :collapsed="collapsed"></nk-nav>
             </a-layout-sider>
@@ -24,7 +25,7 @@
                         <nk-debug-panel  style="margin-right: 20px;" />
                         <a-dropdown :trigger="['click']">
                             <div class="ant-dropdown-link" @click="e => e.preventDefault()" >
-                                <a-avatar class="a-avatar">
+                                <a-avatar class="a-avatar"  size="small">
                                     <a-icon slot="icon" type="user" ></a-icon>
                                 </a-avatar>
                                 {{ user.realname || user.username }}
@@ -396,8 +397,12 @@ export default {
 }
 ::v-deep {
     .ant-layout-sider-collapsed{
-        .logo.nk .z{
-            display: none;
+        .logo.nk{
+            display: block;
+            height: 30px !important;
+            img{
+                width: 30px !important;
+            }
         }
     }
     .nk-layout-content .nk-layout-tabs{
@@ -405,7 +410,7 @@ export default {
             margin: 16px 24px 0;
             user-select: none;
             span{
-                font-size: 14px;
+                font-size: 13px;
             }
         }
     }
@@ -419,7 +424,7 @@ export default {
 
     /*菜单展开按钮*/
     .trigger {
-        font-size: 18px;
+        font-size: 16px;
         line-height: 64px;
         padding: 0 24px;
         cursor: pointer;
@@ -436,25 +441,10 @@ export default {
         width: 256px;
 
         .logo {
-            height: 32px;
-            background: rgba(255, 255, 255, 0.2);
+            user-select: none;
+            height: 48px;
             margin: 16px;
-
-            &.nk{
-                user-select: none;
-                color: #dddddd;
-                text-align: center;
-                line-height: 30px;
-
-                .y{
-                    font-size: 24px;font-style: italic;color: #1793ff;
-                    display: none;
-                }
-                .z{
-                    font-size: 14px;font-style: italic;color: rgb(212 122 3);
-                    display: none;
-                }
-            }
+            text-align: center;
         }
     }
     .nk-layout-sider::-webkit-scrollbar{
