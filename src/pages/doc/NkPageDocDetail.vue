@@ -105,7 +105,7 @@
             </a-button>
 
             <!-- 配置 -->
-            <a-button v-if="!preview && hasAuthority(['DEF:*','DEF:*'])"
+            <a-button v-if="hasAuthority(['DEF:*','DEF:*'])"
                       @click="$router.push(`/apps/def/doc/detail/${doc.docType}/${doc.def.version}`)">
                 <a-icon type="deployment-unit" />
             </a-button>

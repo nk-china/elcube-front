@@ -50,9 +50,9 @@ export default {
         }
         .foreground{
             position: absolute;
-            width: 55%;
+            width: 65%;
             min-width: 840px;
-            max-width: 1240px;
+            max-width: 1440px;
             height: 100%;
             right: 0;
             background-color: #f0f2f5;
