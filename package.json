@@ -12,7 +12,8 @@
     "lint": "vue-cli-service lint",
     "dev": "vue-cli-service serve",
     "package": "vue-cli-service build --target lib --name nk --dest dist src/boot/index.js",
-    "release": "yarn publish --registry http://ns.nkpro.cn/repository/npm-local/"
+    "release": "yarn publish --registry http://ns.nkpro.cn/repository/npm-local/",
+    "package-release": "yarn package && yarn release"
   },
   "dependencies": {
     "ant-design-vue": "^1.5.6",
