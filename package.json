@@ -11,7 +11,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "dev": "vue-cli-service serve",
-    "package": "vue-cli-service build --target lib --name nk --dest dist src/boot/package.js",
+    "package": "vue-cli-service build --target lib --name nk --dest dist src/boot/index.js",
     "release": "yarn publish --registry http://ns.nkpro.cn/repository/npm-local/"
   },
   "dependencies": {
