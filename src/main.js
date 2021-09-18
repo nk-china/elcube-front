@@ -1,6 +1,6 @@
 import {App,NkRouter,NkVuexStore,reloadVueResources,i18n} from './boot';
 import NkPageDefault from "./dashboards/NkPageDefault";
-import './boot/css/nk.less';
+import './boot/theme.less';
 
 reloadVueResources()
     .then(({Vue})=>{

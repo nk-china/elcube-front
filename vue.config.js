@@ -11,6 +11,7 @@ module.exports = {
   "runtimeCompiler":false,
   "productionSourceMap":false,
   "css":{
+    //extract: false,
     "loaderOptions":{
       "less":{
         "javascriptEnabled":true
@@ -70,28 +71,31 @@ module.exports = {
   },
   configureWebpack: (config)=>{
 
-    if(process.env.npm_lifecycle_event.startsWith('build-')){
-      config.mode='production';
-    }
-
     config.plugins.push(
-        new CopyWebpackPlugin({
-          patterns:[
-            // {
-            //   from: __dirname.replace(/[\\]/g,'/')+'/src/**',
-            //   to: __dirname+'/dist/'
-            // },
-            {
-              from: __dirname.replace(/[\\]/g,'/')+'/src/**/*.less',
-              to: __dirname+'/dist/'
-            },
-          ]
-        }),
-        new CompressionWebpackPlugin({
-          test: /\.js$|\.html$|\.css/, //匹配文件名
-          threshold: 10240, //对超过10k的数据进行压缩
-          deleteOriginalAssets: false //是否删除原文件
-        })
+      new CopyWebpackPlugin({
+        patterns:[
+          {
+            flatten:true,
+            from: __dirname.replace(/[\\]/g,'/')+'/src/boot/less/*.less',
+            to: __dirname+'/dist/less/'
+          },
+          {
+            flatten:true,
+            from: __dirname.replace(/[\\]/g,'/')+'/src/boot/*.less',
+            to: __dirname+'/dist/'
+          },
+        ]
+      })
     );
+
+    if(process.env.npm_lifecycle_event.startsWith('build')){
+      config.plugins.push(
+          new CompressionWebpackPlugin({
+            test: /\.js$|\.html$|\.css/, //匹配文件名
+            threshold: 10240, //对超过10k的数据进行压缩
+            deleteOriginalAssets: false //是否删除原文件
+          })
+      );
+    }
   }
 }

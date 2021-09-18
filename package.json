@@ -6,13 +6,13 @@
   "files": [
     "dist"
   ],
-  "main": "dist/index.umd.js",
+  "main": "dist/nk.umd.js",
   "scripts": {
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "dev": "vue-cli-service serve",
-    "package": "vue-cli-service build --target lib --name index src/boot/index.js",
-    "release": "yarn run package && yarn publish --registry http://ns.nkpro.cn/repository/npm-local/"
+    "package": "vue-cli-service build --target lib --name nk --dest dist src/boot/package.js",
+    "release": "yarn publish --registry http://ns.nkpro.cn/repository/npm-local/"
   },
   "dependencies": {
     "ant-design-vue": "^1.5.6",
@@ -62,6 +62,7 @@
     "babel-cli": "^6.26.0",
     "babel-eslint": "^10.0.3",
     "compression-webpack-plugin": "^5.0.2",
+    "mini-css-extract-plugin": "^2.3.0",
     "copy-webpack-plugin": "^6.0.4",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
