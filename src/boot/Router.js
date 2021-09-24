@@ -2,7 +2,7 @@ import AuthUtils from "./AuthUtils"
 import NkLogin from "../layout/NkLogin";
 import NkLayout from "../layout/NkLayout";
 import NkNotFound from "../layout/NkNotFound";
-import NkDefault from "../pages/NkPageDefault";
+import NkDefault from "../dashboards/NkPageDefault";
 import NkMe from "../layout/NkMe";
 import NkApi from "../layout/NkApi";
 
