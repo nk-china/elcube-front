@@ -136,6 +136,7 @@ export default {
             padding: 24px;
             width: 100%;
             overflow-x: auto;
+            min-height: 400px;
         }
 
         // 右边栏

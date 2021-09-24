@@ -1,6 +1,8 @@
 <template>
     <nk-page-layout :title="title" class="layout">
 
+        <nk-advanced-search-input style="width:800px;"></nk-advanced-search-input>
+
         <div slot="action" style="margin: 0 10px;">
             <a-button-group>
                 <a-button v-for="item in (data.refs||[])"
@@ -102,9 +104,13 @@
 
 //const defaultLayout = [{"x":0,"y":19,"w":8,"h":5,"i":"0","component":"nk-dashboard-bar1","title":"客户统计","moved":false},{"x":0,"y":24,"w":4,"h":6,"i":"1","component":"nk-dashboard-bar2","title":"坏账","moved":false},{"x":4,"y":0,"w":4,"h":6,"i":"2","component":"nk-dashboard-pie2","title":"订单概要","moved":false},{"x":8,"y":24,"w":4,"h":6,"i":"3","component":"nk-dashboard-scatter1","title":"逾期","moved":false},{"x":0,"y":11,"w":8,"h":8,"i":"4","component":"nk-dashboard-candlestick1","title":"任务","moved":false},{"x":4,"y":6,"w":4,"h":5,"i":"5","component":"nk-dashboard-radar1","moved":false},{"x":8,"y":14,"w":4,"h":10,"i":"6","component":"nk-dashboard-graph1","title":"计划","moved":false},{"x":0,"y":0,"w":4,"h":11,"i":"7","component":"nk-dashboard-gruge1","title":"今日关注","moved":false},{"x":4,"y":24,"w":4,"h":6,"i":"8","component":"nk-dashboard-bar3","title":"待跟进业务","moved":false},{"x":8,"y":5,"w":4,"h":9,"i":"9","component":"nk-dashboard-calendar1","title":"审批中","moved":false},{"x":8,"y":0,"w":4,"h":5,"i":"10","component":"nk-dashboard-simple1","title":"警告","moved":false}];
 import { v4 as uuidv4 } from 'uuid';
+import NkAdvancedSearchInput from "@/pages/components/NkAdvancedSearchInput";
 
 export default {
     name: "NkDashboard",
+    components:{
+      NkAdvancedSearchInput,
+    },
     data(){
         return {
             title: undefined,
