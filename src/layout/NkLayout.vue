@@ -8,7 +8,7 @@
 <!--                    <span class="z">纽扣互联</span>-->
                 </div>
                 <nk-nav :active-page="activePage" :collapsed="collapsed"></nk-nav>
-            </a-layout-sider>
+            </a-layout-sider> 
             <a-layout class="nk-layout-right">
                 <a-layout-header class="nk-layout-header">
                     <div>
