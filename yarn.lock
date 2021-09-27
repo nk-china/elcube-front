@@ -2896,6 +2896,13 @@ camunda-bpmn-moddle@^5.1.2:
   dependencies:
     min-dash "^3.5.2"
 
+camunda-dmn-moddle@^1.0.0, camunda-dmn-moddle@^1.1.0:
+  version "1.1.0"
+  resolved "http://ns.nkpro.cn/repository/npm-public/camunda-dmn-moddle/-/camunda-dmn-moddle-1.1.0.tgz#16c1e72805e634e062850c7b23fe178c897697e0"
+  integrity sha1-FsHnKAXmNOBihQx7I/4XjIl2l+A=
+  dependencies:
+    min-dash "^3.0.0"
+
 caniuse-api@^3.0.0:
   version "3.0.0"
   resolved "http://ns.nkpro.cn/repository/npm-public/caniuse-api/-/caniuse-api-3.0.0.tgz#5e4d90e2274961d46291997df599e3ed008ee4c0"
@@ -3302,6 +3309,16 @@ component-indexof@0.0.3:
   version "0.0.3"
   resolved "http://ns.nkpro.cn/repository/npm-public/component-indexof/-/component-indexof-0.0.3.tgz#11d091312239eb8f32c8f25ae9cb002ffe8d3c24"
   integrity sha1-EdCRMSI5648yyPJa6csAL/6NPCQ=
+
+component-props@1.1.1:
+  version "1.1.1"
+  resolved "http://ns.nkpro.cn/repository/npm-public/component-props/-/component-props-1.1.1.tgz#f9b7df9b9927b6e6d97c9bd272aa867670f34944"
+  integrity sha1-+bffm5kntubZfJvScqqGdnDzSUQ=
+
+component-xor@0.0.4:
+  version "0.0.4"
+  resolved "http://ns.nkpro.cn/repository/npm-public/component-xor/-/component-xor-0.0.4.tgz#c55d83ccc1b94cd5089a4e93fa7891c7263e59aa"
+  integrity sha1-xV2DzMG5TNUImk6T+niRxyY+Wao=
 
 compressible@~2.0.16:
   version "2.0.18"
@@ -3961,7 +3978,7 @@ detect-node@^2.0.4:
   resolved "http://ns.nkpro.cn/repository/npm-public/detect-node/-/detect-node-2.1.0.tgz#c9c70775a49c3d03bc2c06d9a73be550f978f8b1"
   integrity sha1-yccHdaScPQO8LAbZpzvlUPl4+LE=
 
-diagram-js-direct-editing@^1.6.1:
+diagram-js-direct-editing@^1.6.1, diagram-js-direct-editing@^1.6.3:
   version "1.6.3"
   resolved "http://ns.nkpro.cn/repository/npm-public/diagram-js-direct-editing/-/diagram-js-direct-editing-1.6.3.tgz#e7c59d7ac395439728f8da155f93510c58740c48"
   integrity sha1-58WdesOVQ5co+NoVX5NRDFh0DEg=
@@ -3984,10 +4001,30 @@ diagram-js@^6.8.2:
     path-intersection "^2.2.0"
     tiny-svg "^2.2.1"
 
+diagram-js@^7.2.0:
+  version "7.4.1"
+  resolved "http://ns.nkpro.cn/repository/npm-public/diagram-js/-/diagram-js-7.4.1.tgz#a2287d60c1d54f69729b127eef1955c40b9230d3"
+  integrity sha1-oih9YMHVT2lymxJ+7xlVxAuSMNM=
+  dependencies:
+    css.escape "^1.5.1"
+    didi "^5.2.1"
+    hammerjs "^2.0.1"
+    inherits "^2.0.4"
+    min-dash "^3.5.2"
+    min-dom "^3.1.3"
+    object-refs "^0.3.0"
+    path-intersection "^2.2.1"
+    tiny-svg "^2.2.2"
+
 didi@^4.0.0:
   version "4.0.0"
   resolved "http://ns.nkpro.cn/repository/npm-public/didi/-/didi-4.0.0.tgz#2b89d892a67fd3777f7642d3bf06697b69e9b622"
   integrity sha1-K4nYkqZ/03d/dkLTvwZpe2nptiI=
+
+didi@^5.2.1:
+  version "5.2.1"
+  resolved "http://ns.nkpro.cn/repository/npm-public/didi/-/didi-5.2.1.tgz#1a0b1336be8baa0b068a72036eedd9fb94135bff"
+  integrity sha1-GgsTNr6LqgsGinIDbu3Z+5QTW/8=
 
 diff-match-patch@^1.0.0:
   version "1.0.5"
@@ -4016,6 +4053,95 @@ dir-glob@^3.0.1:
   integrity sha1-Vtv3PZkqSpO6FYT0U0Bj/S5BcX8=
   dependencies:
     path-type "^4.0.0"
+
+dmn-js-decision-table@^11.0.2:
+  version "11.0.2"
+  resolved "http://ns.nkpro.cn/repository/npm-public/dmn-js-decision-table/-/dmn-js-decision-table-11.0.2.tgz#ecd879b3807e60fe1312fef684a7ec0515c52788"
+  integrity sha1-7Nh5s4B+YP4TEv72hKfsBRXFJ4g=
+  dependencies:
+    css.escape "^1.5.1"
+    diagram-js "^7.2.0"
+    dmn-js-shared "^11.0.2"
+    escape-html "^1.0.3"
+    inferno "~5.6.2"
+    min-dash "^3.5.2"
+    min-dom "^3.1.3"
+    selection-ranges "^3.0.2"
+    table-js "^7.2.0"
+
+dmn-js-drd@^11.0.2:
+  version "11.0.2"
+  resolved "http://ns.nkpro.cn/repository/npm-public/dmn-js-drd/-/dmn-js-drd-11.0.2.tgz#d0ece6d173eb405acf257cc0c807be4301db6973"
+  integrity sha1-0Ozm0XPrQFrPJXzAyAe+QwHbaXM=
+  dependencies:
+    diagram-js "^7.2.0"
+    diagram-js-direct-editing "^1.6.3"
+    dmn-js-shared "^11.0.2"
+    inherits "^2.0.1"
+    min-dash "^3.5.2"
+    min-dom "^3.1.3"
+    object-refs "^0.3.0"
+    tiny-svg "^2.2.1"
+
+dmn-js-literal-expression@^11.0.2:
+  version "11.0.2"
+  resolved "http://ns.nkpro.cn/repository/npm-public/dmn-js-literal-expression/-/dmn-js-literal-expression-11.0.2.tgz#838b6999c866f96cb74a0f574f7a8bff25c75892"
+  integrity sha1-g4tpmchm+Wy3Sg9XT3qL/yXHWJI=
+  dependencies:
+    diagram-js "^7.2.0"
+    dmn-js-shared "^11.0.2"
+    escape-html "^1.0.3"
+    inferno "~5.6.2"
+    min-dash "^3.5.2"
+    min-dom "^3.1.3"
+    table-js "^7.2.0"
+
+dmn-js-properties-panel@^0.6.2:
+  version "0.6.2"
+  resolved "http://ns.nkpro.cn/repository/npm-public/dmn-js-properties-panel/-/dmn-js-properties-panel-0.6.2.tgz#26f8e0ef4bc434094e48fda47faccf24c440504f"
+  integrity sha1-Jvjg70vENAlOSP2kf6zPJMRAUE8=
+  dependencies:
+    ids "^1.0.0"
+    inherits "^2.0.1"
+    lodash "^4.17.10"
+    min-dom "^3.1.1"
+    scroll-tabs "^1.0.1"
+    selection-update "^0.1.2"
+
+dmn-js-shared@^11.0.2:
+  version "11.0.2"
+  resolved "http://ns.nkpro.cn/repository/npm-public/dmn-js-shared/-/dmn-js-shared-11.0.2.tgz#4671507c365bb8d991f9961085c118f1864ad7b5"
+  integrity sha1-RnFQfDZbuNmR+ZYQhcEY8YZK17U=
+  dependencies:
+    camunda-dmn-moddle "^1.0.0"
+    diagram-js "^7.2.0"
+    dmn-moddle "^10.0.0"
+    ids "^0.2.0"
+    inferno "~5.6.2"
+    min-dash "^3.5.2"
+    min-dom "^3.1.3"
+    selection-ranges "^3.0.2"
+    selection-update "^0.1.2"
+    table-js "^7.2.0"
+
+dmn-js@^11.0.2:
+  version "11.0.2"
+  resolved "http://ns.nkpro.cn/repository/npm-public/dmn-js/-/dmn-js-11.0.2.tgz#25564cf2f5a30ac6684c5dd2395158fb2b0da792"
+  integrity sha1-JVZM8vWjCsZoTF3SOVFY+ysNp5I=
+  dependencies:
+    dmn-js-decision-table "^11.0.2"
+    dmn-js-drd "^11.0.2"
+    dmn-js-literal-expression "^11.0.2"
+    dmn-js-shared "^11.0.2"
+
+dmn-moddle@^10.0.0:
+  version "10.0.0"
+  resolved "http://ns.nkpro.cn/repository/npm-public/dmn-moddle/-/dmn-moddle-10.0.0.tgz#dadabfac6b6efb2d94ae328ba5ed2a840639d632"
+  integrity sha1-2tq/rGtu+y2UrjKLpe0qhAY51jI=
+  dependencies:
+    min-dash "^3.0.0"
+    moddle "^5.0.1"
+    moddle-xml "^9.0.5"
 
 dns-equal@^1.0.0:
   version "1.0.0"
@@ -4062,6 +4188,14 @@ dom-converter@^0.2.0:
   integrity sha1-ZyGp2u4uKTaClVtq/kFncWJ7t2g=
   dependencies:
     utila "~0.4"
+
+dom-iterator@^1.0.0:
+  version "1.0.0"
+  resolved "http://ns.nkpro.cn/repository/npm-public/dom-iterator/-/dom-iterator-1.0.0.tgz#9c09899846ec41c2d257adc4d6015e4759ef05ad"
+  integrity sha1-nAmJmEbsQcLSV63E1gFeR1nvBa0=
+  dependencies:
+    component-props "1.1.1"
+    component-xor "0.0.4"
 
 dom-matches@>=1.0.1:
   version "2.0.0"
@@ -4373,7 +4507,7 @@ escalade@^3.1.1:
   resolved "http://ns.nkpro.cn/repository/npm-public/escalade/-/escalade-3.1.1.tgz#d8cfdc7000965c5a0174b4a82eaa5c0552742e40"
   integrity sha1-2M/ccACWXFoBdLSoLqpcBVJ0LkA=
 
-escape-html@~1.0.3:
+escape-html@^1.0.3, escape-html@~1.0.3:
   version "1.0.3"
   resolved "http://ns.nkpro.cn/repository/npm-public/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
   integrity sha1-Aljq5NPQwJdN4cFpGI7wBR0dGYg=
@@ -5401,6 +5535,11 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
+hat@^0.0.3:
+  version "0.0.3"
+  resolved "http://ns.nkpro.cn/repository/npm-public/hat/-/hat-0.0.3.tgz#bb014a9e64b3788aed8005917413d4ff3d502d8a"
+  integrity sha1-uwFKnmSzeIrtgAWRdBPU/z1QLYo=
+
 he@1.2.x, he@^1.1.0:
   version "1.2.0"
   resolved "http://ns.nkpro.cn/repository/npm-public/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
@@ -5650,6 +5789,13 @@ icss-utils@^4.0.0, icss-utils@^4.1.1:
   dependencies:
     postcss "^7.0.14"
 
+ids@^0.2.0:
+  version "0.2.2"
+  resolved "http://ns.nkpro.cn/repository/npm-public/ids/-/ids-0.2.2.tgz#c23140dd06f5e5e95b1a5e5e98877ea734965540"
+  integrity sha1-wjFA3Qb15elbGl5emId+pzSWVUA=
+  dependencies:
+    hat "^0.0.3"
+
 ids@^1.0.0:
   version "1.0.0"
   resolved "http://ns.nkpro.cn/repository/npm-public/ids/-/ids-1.0.0.tgz#df67f2d37b81d7c2effc87e03d17ebff95a58c05"
@@ -5755,6 +5901,25 @@ infer-owner@^1.0.3, infer-owner@^1.0.4:
   version "1.0.4"
   resolved "http://ns.nkpro.cn/repository/npm-public/infer-owner/-/infer-owner-1.0.4.tgz#c4cefcaa8e51051c2a40ba2ce8a3d27295af9467"
   integrity sha1-xM78qo5RBRwqQLos6KPScpWvlGc=
+
+inferno-shared@5.6.1:
+  version "5.6.1"
+  resolved "http://ns.nkpro.cn/repository/npm-public/inferno-shared/-/inferno-shared-5.6.1.tgz#5c5e471dbff72eb9f1768f97510a32e5fa76b6dd"
+  integrity sha1-XF5HHb/3Lrnxdo+XUQoy5fp2tt0=
+
+inferno-vnode-flags@5.6.1:
+  version "5.6.1"
+  resolved "http://ns.nkpro.cn/repository/npm-public/inferno-vnode-flags/-/inferno-vnode-flags-5.6.1.tgz#43974687cc54f22c24ecee116376f6c1bd697499"
+  integrity sha1-Q5dGh8xU8iwk7O4RY3b2wb1pdJk=
+
+inferno@~5.6.2:
+  version "5.6.2"
+  resolved "http://ns.nkpro.cn/repository/npm-public/inferno/-/inferno-5.6.2.tgz#a256a9de063287fb18d09525a85467cbd6c5b47a"
+  integrity sha1-olap3gYyh/sY0JUlqFRny9bFtHo=
+  dependencies:
+    inferno-shared "5.6.1"
+    inferno-vnode-flags "5.6.1"
+    opencollective-postinstall "^2.0.3"
 
 inflight@^1.0.4:
   version "1.0.6"
@@ -6629,7 +6794,7 @@ lodash.uniq@^4.5.0:
   resolved "http://ns.nkpro.cn/repository/npm-public/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash@^4.1.0, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5:
+lodash@^4.1.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5:
   version "4.17.21"
   resolved "http://ns.nkpro.cn/repository/npm-public/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha1-Z5WRxWTDv/quhFTPCz3zcMPWkRw=
@@ -6900,7 +7065,7 @@ min-dash@^3.0.0, min-dash@^3.1.0, min-dash@^3.5.0, min-dash@^3.5.2, min-dash@^3.
   resolved "http://ns.nkpro.cn/repository/npm-public/min-dash/-/min-dash-3.8.0.tgz#4725fd2ac7c94d898f4c935a72c63d0bf1e4db83"
   integrity sha1-RyX9KsfJTYmPTJNacsY9C/Hk24M=
 
-min-dom@^3.1.0, min-dom@^3.1.2, min-dom@^3.1.3:
+min-dom@^3.1.0, min-dom@^3.1.1, min-dom@^3.1.2, min-dom@^3.1.3:
   version "3.1.3"
   resolved "http://ns.nkpro.cn/repository/npm-public/min-dom/-/min-dom-3.1.3.tgz#6d3f4092439c80d13df52ac98d6a7d5fe92bfdbd"
   integrity sha1-bT9AkkOcgNE99SrJjWp9X+kr/b0=
@@ -7035,7 +7200,7 @@ moddle-xml@^9.0.5:
     moddle "^5.0.2"
     saxen "^8.1.2"
 
-moddle@^5.0.2:
+moddle@^5.0.1, moddle@^5.0.2:
   version "5.0.2"
   resolved "http://ns.nkpro.cn/repository/npm-public/moddle/-/moddle-5.0.2.tgz#9768320698be636711a29101c82fd361e3d90253"
   integrity sha1-l2gyBpi+Y2cRopEByC/TYePZAlM=
@@ -7469,6 +7634,11 @@ open@^6.3.0:
   dependencies:
     is-wsl "^1.1.0"
 
+opencollective-postinstall@^2.0.3:
+  version "2.0.3"
+  resolved "http://ns.nkpro.cn/repository/npm-public/opencollective-postinstall/-/opencollective-postinstall-2.0.3.tgz#7a0fff978f6dbfa4d006238fbac98ed4198c3259"
+  integrity sha1-eg//l49tv6TQBiOPusmO1BmMMlk=
+
 opener@^1.5.1:
   version "1.5.2"
   resolved "http://ns.nkpro.cn/repository/npm-public/opener/-/opener-1.5.2.tgz#5d37e1f35077b9dcac4301372271afdeb2a13598"
@@ -7729,7 +7899,7 @@ path-exists@^4.0.0:
   resolved "http://ns.nkpro.cn/repository/npm-public/path-exists/-/path-exists-4.0.0.tgz#513bdbe2d3b95d7762e8c1137efa195c6c61b5b3"
   integrity sha1-UTvb4tO5XXdi6METfvoZXGxhtbM=
 
-path-intersection@^2.2.0:
+path-intersection@^2.2.0, path-intersection@^2.2.1:
   version "2.2.1"
   resolved "http://ns.nkpro.cn/repository/npm-public/path-intersection/-/path-intersection-2.2.1.tgz#8476b75fefb7ac402f810d304e0eb0c080c11fe7"
   integrity sha1-hHa3X++3rEAvgQ0wTg6wwIDBH+c=
@@ -8892,6 +9062,13 @@ select@^1.1.2:
   resolved "http://ns.nkpro.cn/repository/npm-public/select/-/select-1.1.2.tgz#0e7350acdec80b1108528786ec1d4418d11b396d"
   integrity sha1-DnNQrN7ICxEIUoeG7B1EGNEbOW0=
 
+selection-ranges@^3.0.2, selection-ranges@^3.0.3:
+  version "3.0.3"
+  resolved "http://ns.nkpro.cn/repository/npm-public/selection-ranges/-/selection-ranges-3.0.3.tgz#7f346169d606b76e28e0fa721a115eb6efe97be1"
+  integrity sha1-fzRhadYGt24o4PpyGhFetu/pe+E=
+  dependencies:
+    dom-iterator "^1.0.0"
+
 selection-update@^0.1.2:
   version "0.1.2"
   resolved "http://ns.nkpro.cn/repository/npm-public/selection-update/-/selection-update-0.1.2.tgz#803a044dcc6edab5a3ae648f5f0357e89ad66b96"
@@ -9557,6 +9734,17 @@ svgo@^1.0.0:
   version "3.2.4"
   resolved "http://ns.nkpro.cn/repository/npm-public/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha1-QwY30ki6d+B4iDlR+5qg7tfGP6I=
+
+table-js@^7.2.0:
+  version "7.2.0"
+  resolved "http://ns.nkpro.cn/repository/npm-public/table-js/-/table-js-7.2.0.tgz#3e41a73de4c02dddb548f3ffbec363c724c4d3bf"
+  integrity sha1-PkGnPeTALd21SPP/vsNjxyTE078=
+  dependencies:
+    didi "^5.2.1"
+    ids "^1.0.0"
+    min-dash "^3.5.2"
+    min-dom "^3.1.3"
+    selection-ranges "^3.0.3"
 
 table@^5.2.3:
   version "5.4.6"

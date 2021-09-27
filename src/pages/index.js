@@ -36,6 +36,10 @@ import NkDefBpmProcessDefinitionDetail from "./task/NkDefBpmProcessDefinitionDet
 import NkDefBpmDesigner from "./task/NkDefBpmDesigner";
 import NkDefBpmDeployments from "./task/NkDefBpmDeployments";// 待删除
 
+import NkDefDmnDefinitions from "./task/NkDefDmnDefinitions";
+import NkDefDmnDefinitionDetail from "./task/NkDefDmnDefinitionDetail";
+import NkDefDmnDesigner from "./task/NkDefDmnDesigner";
+
 import NkPageProcessInstances from "./task/NkPageProcessInstances";
 import NkPageProcessDetail from "./task/NkPageProcessDetail";
 
@@ -209,12 +213,12 @@ module.routes = [
         }
       },
       {
-        name: "工作流部署记录",
+        name: "流程部署记录",
         path: 'bpm/process/deployments',
         component: NkDefBpmDeployments
       },
       {
-        name: "工作流定义",
+        name: "流程定义",
         path: 'bpm/process/definitions',
         component: NkDefBpmProcessDefinitions,
         children: [
@@ -224,11 +228,31 @@ module.routes = [
             component: NkDefBpmProcessDefinitionDetail
           },
           {
-            name: "工作流设计器",
+            name: "流程设计器",
             path: 'designer',
             component: NkDefBpmDesigner,
             meta:{
               title: "工作流设计器",
+            }
+          },
+        ]
+      },
+      {
+        name: "决策定义",
+        path: 'dmn/definitions',
+        component: NkDefDmnDefinitions,
+        children: [
+          {
+            name: "决策定义详情",
+            path: 'detail/:id',
+            component: NkDefDmnDefinitionDetail
+          },
+          {
+            name: "决策设计器",
+            path: 'designer',
+            component: NkDefDmnDesigner,
+            meta:{
+              title: "决策设计器",
             }
           },
         ]
