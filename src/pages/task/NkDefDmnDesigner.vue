@@ -38,14 +38,14 @@
 <script>
 //引入样式，否则显示不出内容
 import 'dmn-js/dist/assets/diagram-js.css';
-import 'dmn-js/dist/assets/dmn-js-decision-table.css';
-import 'dmn-js/dist/assets/dmn-js-decision-table-controls.css';
 import 'dmn-js/dist/assets/dmn-js-drd.css';
 import 'dmn-js/dist/assets/dmn-js-shared.css';
+import 'dmn-js/dist/assets/dmn-js-decision-table.css';
+import 'dmn-js/dist/assets/dmn-js-decision-table-controls.css';
 import 'dmn-js/dist/assets/dmn-js-literal-expression.css';
 import 'dmn-js/dist/assets/dmn-font/css/dmn.css';
-import 'dmn-js/dist/assets/dmn-font/css/dmn-codes.css';
-import 'dmn-js/dist/assets/dmn-font/css/dmn-embedded.css';
+// import 'dmn-js/dist/assets/dmn-font/css/dmn-codes.css';
+// import 'dmn-js/dist/assets/dmn-font/css/dmn-embedded.css';
 import 'dmn-js-properties-panel/dist/assets/dmn-js-properties-panel.css';
 
 import BpmnModeler                from 'dmn-js/lib/Modeler';
@@ -72,6 +72,7 @@ export default {
             loadingDeploy :true,
             fullscreen:'',
             viewer: null,
+            active: undefined,
             bpmInfo: {},
             bpmOriginalKey: undefined,
 
@@ -234,6 +235,15 @@ export default {
                             this.loadingDeploy = false;
                         });
                 });
+        },
+        $nkHide(){
+          this.getBpmn().then(()=>{
+            this.active = this.viewer.getActiveView();
+            this.viewer._switchView(undefined);
+          });
+        },
+        $nkShow(){
+          this.viewer._switchView(this.active);
         }
     },
     destroyed() {

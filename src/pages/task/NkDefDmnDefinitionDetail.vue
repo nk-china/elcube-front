@@ -18,7 +18,7 @@
                     <a-button @click="$refs.bpmn.zoom(-1)">-</a-button>
                 </a-button-group>
             </div>
-            <nk-bpmn-view ref="bpmn" :bpmn="definition.bpmnXml" />
+          <nk-bpmn-view ref="bpmn" :bpmn="definition.bpmnXml" v-if="bpmnVisible" />
         </a-card>
     </nk-page-layout>
 </template>
@@ -31,6 +31,7 @@ export default {
     },
     data(){
         return {
+            bpmnVisible:true,
             loading: true,
             loadingCanvas: true,
             definition: {},
@@ -59,6 +60,12 @@ export default {
                     from:this.definition.id
                 }
             })
+        },
+        $nkHide(){
+            this.bpmnVisible = false;
+        },
+        $nkShow(){
+          this.bpmnVisible = true;
         }
     },
     destroyed() {

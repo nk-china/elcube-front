@@ -5,6 +5,7 @@
 </template>
 
 <script>
+
 import BpmnViewer from "dmn-js/lib/NavigatedViewer";
 
 export default {

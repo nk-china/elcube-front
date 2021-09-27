@@ -270,6 +270,12 @@ export default {
                     this.pages.push(page);
                 }
             }
+            let prev = this.$refs.pages.find(i=>i.$vnode.key===this.activePage);
+            if(prev && prev['$nkHide']){
+                this.$nextTick(()=>{
+                    prev['$nkHide']();
+                })
+            }
             this.activePage = route.fullPath;
             let page = this.$refs.pages.find(i=>i.$vnode.key===this.activePage);
             if(page && page['$nkShow']){
