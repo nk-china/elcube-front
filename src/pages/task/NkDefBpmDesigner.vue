@@ -130,7 +130,7 @@ export default {
                         this.bpmInfo.fromId = this.bpmInfo.id;
                         this.bpmInfo.id = undefined;
                         this.bpmOriginalKey = response.data.key;
-                        this.open(this.bpmInfo.bpmnXml);
+                        this.open(this.bpmInfo.xml);
                     }).finally(()=>{
                     this.loadingDeploy=false;
                 });
@@ -154,9 +154,8 @@ export default {
         createNew() {
             this.open(initialDiagram);
         },
-        open(bpmnXml) {
-            this.bpmnXml = bpmnXml;
-            this.viewer.importXML(this.bpmnXml)
+        open(xml) {
+            this.viewer.importXML(xml)
                 .then(() => {
                     this.viewer.get('canvas').zoom('fit-viewport',{});
                     const eventBus = this.viewer.get('eventBus');
@@ -187,7 +186,7 @@ export default {
                             key:            process.getAttribute("id"),
                             name:           process.getAttribute("name"),
                             resourceName:   `${process.getAttribute("id")}.bpmn`,
-                            bpmnXml:        xml,
+                            xml:            xml,
                             isExecutable:   eval(process.getAttribute("isExecutable"))
                         });
 
@@ -206,9 +205,9 @@ export default {
         },
         download() {
             this.getBpmn()
-                .then(({bpmnXml,resourceName})=>{
+                .then(({xml,resourceName})=>{
                     let a = document.createElement('a');
-                    a.href = 'data:application/bpmn20-xml;charset=UTF-8,' + encodeURIComponent(bpmnXml);
+                    a.href = 'data:application/bpmn20-xml;charset=UTF-8,' + encodeURIComponent(xml);
                     a.download = resourceName;
                     document.body.appendChild(a);
                     a.click();

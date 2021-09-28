@@ -25,13 +25,15 @@
                 <a-button :loading="loadingDeploy" type="primary"><a-icon v-if="!loadingDeploy" type="save" />部署</a-button>
             </a-popconfirm>
         </a-button-group>
-        <transition  name="bounce">
+        <div>
             <div class="canvas-layout" :class="fullscreen">
                 <div class="canvas" ref="js-canvas"></div>
                 <div class="panel"  ref="js-properties-panel"></div>
                 <a-button class="exit" @click="doFullscreen"><a-icon type="fullscreen-exit" />退出全屏</a-button>
             </div>
-        </transition>
+
+            <nk-def-dmn-test-card :edit="test" ref="test" style="margin-top: 24px;position: initial;" :modeler="viewer" :xml="getBpmn"></nk-def-dmn-test-card>
+        </div>
     </nk-page-layout>
 </template>
 
@@ -51,8 +53,8 @@ import 'dmn-js-properties-panel/dist/assets/dmn-js-properties-panel.css';
 import BpmnModeler                from 'dmn-js/lib/Modeler';
 import propertiesPanelModule      from 'dmn-js-properties-panel/lib';
 import drdAdapterModule           from 'dmn-js-properties-panel/lib/adapter/drd';
-import propertiesProviderModule   from 'dmn-js-properties-panel/lib/provider/dmn';
-import extensionModdle            from 'camunda-dmn-moddle/resources/camunda.json';
+import propertiesProviderModule   from 'dmn-js-properties-panel/lib/provider/camunda';
+import camundaModdleDescriptor    from 'camunda-dmn-moddle/resources/camunda.json';
 
 const initialDiagram =
     '<?xml version="1.0" encoding="UTF-8"?>' +
@@ -64,8 +66,12 @@ const initialDiagram =
     ' id="newDmn" name="新建决策" ' +
     '></definitions>';
 
+import NkDefDmnTestCard from "./NkDefDmnTestCard";
 
 export default {
+    components:{
+        NkDefDmnTestCard
+    },
     data() {
         return {
             loadingUpload :false,
@@ -79,7 +85,9 @@ export default {
             deployConfirm:{
                 visible: false,
                 text:"确认部署吗?",
-            }
+            },
+
+            test:false
         }
     },
     created(){
@@ -88,22 +96,25 @@ export default {
     mounted() {
         this.$nextTick().then(() => {
             this.viewer = new BpmnModeler({
-                container: this.$refs['js-canvas'],
                 drd:{
-                  propertiesPanel: {
-                    parent: this.$refs['js-properties-panel']
-                  },
-                  additionalModules: [
-                    propertiesPanelModule,
-                    propertiesProviderModule,
-                    drdAdapterModule
-                  ],
-                  keyboard: {
-                    bindTo: window
-                  },
-                  moddleExtensions: {
-                    camunda: extensionModdle
-                  },
+                    propertiesPanel: {
+                        parent: this.$refs['js-properties-panel']
+                    },
+                    additionalModules: [
+                        propertiesPanelModule,
+                        propertiesProviderModule,
+                        drdAdapterModule
+                    ],
+                    keyboard: {
+                        bindTo: window
+                    },
+                    moddleExtensions: {
+                        camunda : camundaModdleDescriptor
+                    },
+                },
+                container: this.$refs['js-canvas'],
+                moddleExtensions: {
+                    camunda : camundaModdleDescriptor
                 },
             });
             this.init()
@@ -126,7 +137,7 @@ export default {
                         this.bpmInfo.fromId = this.bpmInfo.id;
                         this.bpmInfo.id = undefined;
                         this.bpmOriginalKey = response.data.key;
-                        this.open(this.bpmInfo.bpmnXml);
+                        this.open(this.bpmInfo.xml);
                     }).finally(()=>{
                     this.loadingDeploy=false;
                 });
@@ -150,19 +161,34 @@ export default {
         createNew() {
             this.open(initialDiagram);
         },
-        open(bpmnXml) {
-            this.bpmnXml = bpmnXml;
-            this.viewer.importXML(this.bpmnXml)
+        open(xml) {
+            this.viewer.importXML(xml)
                 .then(() => {
-                  this.viewer._container.getElementsByTagName("a")[0].style.transform='scale(0.6)';
-                  const canvas = this.viewer._viewers.drd.get("canvas");
-                  canvas.zoom('fit-viewport',{});
-                  canvas.zoom(canvas.zoom()*0.7);
+                    this.viewer._container.getElementsByTagName("a")[0].style.transform='scale(0.6)';
+                    const canvas = this.viewer._viewers.drd.get("canvas");
+                    canvas.zoom('fit-viewport',{});
+                    canvas.zoom(canvas.zoom()*0.7);
+
+                    const eventBus = this.viewer._viewers.drd.get('eventBus');
+                    const events = [
+                        'selection.changed'
+                    ];
+                    events.forEach(event => {
+                        eventBus.on(event, (e) => {
+                            if(e.newSelection.length===1 && e.newSelection[0].type==='dmn:Decision') {
+                                this.test=true;
+                                this.$refs.test.decisionChange(e.newSelection[0].id);
+                            }else{
+                                this.test=false;
+                            }
+                        })
+                    })
+
                 }).catch(err => {
-                    console.error(err);
-                }).finally(()=>{
-                    this.loadingDeploy=false;
-                });
+                console.error(err);
+            }).finally(()=>{
+                this.loadingDeploy=false;
+            });
         },
         getBpmn(){
             return new Promise((resolve, reject) => {
@@ -176,7 +202,7 @@ export default {
                             key:            process.getAttribute("id"),
                             name:           process.getAttribute("name"),
                             resourceName:   `${process.getAttribute("id")}.dmn`,
-                            bpmnXml:        xml
+                            xml:            xml
                         });
 
                         if(!this.bpmInfo.name){
@@ -189,9 +215,9 @@ export default {
         },
         download() {
             this.getBpmn()
-                .then(({bpmnXml,resourceName})=>{
+                .then(({xml,resourceName})=>{
                     let a = document.createElement('a');
-                    a.href = 'data:application/bpmn20-xml;charset=UTF-8,' + encodeURIComponent(bpmnXml);
+                    a.href = 'data:application/bpmn20-xml;charset=UTF-8,' + encodeURIComponent(xml);
                     a.download = resourceName;
                     document.body.appendChild(a);
                     a.click();
@@ -225,8 +251,7 @@ export default {
                 .then(bpmn=>{
                     this.loadingDeploy = true;
                     this.$http.postJSON("/api/def/dmn/deploy",bpmn)
-                        .then(response=>{
-                            console.log(response)
+                        .then(()=>{
                             this.$message.success("部署成功");
                         })
                         .catch(()=>{})
@@ -237,13 +262,13 @@ export default {
                 });
         },
         $nkHide(){
-          this.getBpmn().then(()=>{
-            this.active = this.viewer.getActiveView();
-            this.viewer._switchView(undefined);
-          });
+            this.getBpmn().then(()=>{
+                this.active = this.viewer.getActiveView();
+                this.viewer._switchView(undefined);
+            });
         },
         $nkShow(){
-          this.viewer._switchView(this.active);
+            this.viewer._switchView(this.active);
         }
     },
     destroyed() {
@@ -291,6 +316,10 @@ export default {
     width: 100%;
     height: 100%;
     border-right: solid 1px #ccc;
+
+    ::v-deep.dmn-decision-table-container{
+        overflow: inherit;
+    }
 }
 .canvas-layout .panel{
     flex-shrink: 0;

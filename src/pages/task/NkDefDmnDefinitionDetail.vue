@@ -8,26 +8,31 @@
 
 
         <a-button-group slot="action">
-            <a-button type="primary" @click="create">编辑</a-button>
+          <a-button type="primary" @click="create">编辑</a-button>
         </a-button-group>
 
-        <a-card title="决策图" v-if="definition.bpmnXml">
+        <nk-card title="决策图" v-if="definition.xml">
             <div slot="extra">
                 <a-button-group size="small">
                     <a-button @click="$refs.bpmn.zoom( 1)">+</a-button>
                     <a-button @click="$refs.bpmn.zoom(-1)">-</a-button>
                 </a-button-group>
             </div>
-          <nk-bpmn-view ref="bpmn" :bpmn="definition.bpmnXml" v-if="bpmnVisible" />
-        </a-card>
+            <nk-bpmn-view ref="bpmn" :bpmn="definition.xml" v-if="bpmnVisible" @init="viewInit" />
+        </nk-card>
+
+        <nk-def-dmn-test-card v-if="definition.key" ref="test" :modeler="modeler" :xml="getXml"/>
     </nk-page-layout>
 </template>
 
 <script>
 import NkBpmnView from "./NkDmnView";
+import NkDefDmnTestCard from "./NkDefDmnTestCard";
+
 export default {
     components:{
-        NkBpmnView
+        NkBpmnView,
+        NkDefDmnTestCard
     },
     data(){
         return {
@@ -35,8 +40,9 @@ export default {
             loading: true,
             loadingCanvas: true,
             definition: {},
-            diagram: undefined,
-            viewer: undefined,
+
+            modeler:undefined,
+
         }
     },
     created() {
@@ -66,6 +72,15 @@ export default {
         },
         $nkShow(){
           this.bpmnVisible = true;
+        },
+        viewInit(modeler){
+            this.modeler = modeler;
+            this.$nextTick(()=>{
+                this.$refs.test.decisionChange(this.definition.key);
+            })
+        },
+        getXml(){
+            return Promise.resolve({xml: this.definition.xml})
         }
     },
     destroyed() {

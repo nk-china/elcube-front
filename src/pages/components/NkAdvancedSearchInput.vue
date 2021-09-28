@@ -83,7 +83,7 @@ export default {
         symbol:'=',
         dataType:'date'
       }],
-      options:["姓名","地址","电话","资产","等级","姓名1","地址1","电话1","资产1","等级1"],
+      options:["or","姓名","地址","电话","资产","等级","姓名1","地址1","电话1","资产1","等级1"],
       optionSelectedIndex: 0
     }
   },

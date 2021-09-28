@@ -11,14 +11,14 @@
             <a-button type="primary" @click="create">编辑</a-button>
         </a-button-group>
 
-        <a-card title="流程图" v-if="processDefinition.bpmnXml">
+        <a-card title="流程图" v-if="processDefinition.xml">
             <div slot="extra">
                 <a-button-group size="small">
                     <a-button @click="$refs.bpmn.zoom( 1)">+</a-button>
                     <a-button @click="$refs.bpmn.zoom(-1)">-</a-button>
                 </a-button-group>
             </div>
-            <nk-bpmn-view ref="bpmn" :bpmn="processDefinition.bpmnXml" />
+            <nk-bpmn-view ref="bpmn" :bpmn="processDefinition.xml" />
         </a-card>
     </nk-page-layout>
 </template>
