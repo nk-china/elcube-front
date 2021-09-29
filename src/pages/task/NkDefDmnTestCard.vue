@@ -8,7 +8,7 @@
                         {{selectedDecision}}
                         <a-select slot="edit" v-model="selectedDecision" @change="decisionChange">
                             <a-select-option v-for="item in decisions" :key="item.id">
-                                {{item.name}}
+                                {{item.name || '&lt;Unnamed&gt;'}}
                             </a-select-option>
                         </a-select>
                     </nk-form-item>
@@ -63,11 +63,11 @@ export default {
     },
     methods:{
         decisionChange(e){
-                this.selectedDecision = e;
-                const desc = dmnParser(this.modeler,e);
-                this.decisions = desc.decisions;
-                this.inputs = desc.inputs;
-                this.outputs = desc.outputs;
+            this.selectedDecision = e;
+            const desc = dmnParser(this.modeler,e);
+            this.decisions = desc.decisions;
+            this.inputs = desc.inputs;
+            this.outputs = desc.outputs;
         },
         run(){
 

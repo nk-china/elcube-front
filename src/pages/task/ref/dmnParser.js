@@ -48,31 +48,33 @@ function parseDecision(elements, id, inputs, outputs){
 
     const decision = id ? elements.find(e=>e.id===id) : elements.find(e=>e.$type==='dmn:Decision');
 
-    decision.informationRequirement.forEach(ir=>{
-        if(ir.requiredInput){
-            const inputId = ir.requiredInput.href.substr(1);
-            const input = elements.find(e=>e.id===inputId);
-            inputs.push({
-                key:  input.id,
-                name: input.name
-            });
+    if(decision.decisionLogic){
+        if(decision.decisionLogic.$type==='dmn:DecisionTable'){
+            decision.decisionLogic.output.forEach(i=>{
+                outputs.push(Object.assign({decisionId:decision.id},i));
+            })
+        }else{
+            outputs.push(Object.assign({decisionId:decision.id},decision.variable));
         }
-    })
-
-    if(decision.decisionLogic.$type==='dmn:DecisionTable'){
-        decision.decisionLogic.output.forEach(i=>{
-            outputs.push(Object.assign({decisionId:decision.id},i));
-        })
-    }else{
-        outputs.push(Object.assign({decisionId:decision.id},decision.variable));
     }
-
-    decision.informationRequirement.forEach(ir=>{
-        if(ir.requiredDecision){
-            const inputId = ir.requiredDecision.href.substr(1);
-            parseDecision(elements,inputId,inputs,outputs);
-        }
-    })
+    if (decision.informationRequirement){
+        decision.informationRequirement.forEach(ir=>{
+            if(ir.requiredInput){
+                const inputId = ir.requiredInput.href.substr(1);
+                const input = elements.find(e=>e.id===inputId);
+                inputs.push({
+                    key:  input.id,
+                    name: input.name
+                });
+            }
+        })
+        decision.informationRequirement.forEach(ir=>{
+            if(ir.requiredDecision){
+                const inputId = ir.requiredDecision.href.substr(1);
+                parseDecision(elements,inputId,inputs,outputs);
+            }
+        })
+    }
 }
 
 

@@ -32,7 +32,7 @@
                 <a-button class="exit" @click="doFullscreen"><a-icon type="fullscreen-exit" />退出全屏</a-button>
             </div>
 
-            <nk-def-dmn-test-card :edit="test" ref="test" style="margin-top: 24px;position: initial;" :modeler="viewer" :xml="getBpmn"></nk-def-dmn-test-card>
+            <nk-def-dmn-test-card :edit="true" ref="test" style="margin-top: 24px;position: initial;" :modeler="viewer" :xml="getBpmn"></nk-def-dmn-test-card>
         </div>
     </nk-page-layout>
 </template>
@@ -87,7 +87,7 @@ export default {
                 text:"确认部署吗?",
             },
 
-            test:false
+            selectedShape:undefined
         }
     },
     created(){
@@ -170,19 +170,13 @@ export default {
                     canvas.zoom(canvas.zoom()*0.7);
 
                     const eventBus = this.viewer._viewers.drd.get('eventBus');
-                    const events = [
-                        'selection.changed'
-                    ];
-                    events.forEach(event => {
-                        eventBus.on(event, (e) => {
-                            if(e.newSelection.length===1 && e.newSelection[0].type==='dmn:Decision') {
-                                this.test=true;
-                                this.$refs.test.decisionChange(e.newSelection[0].id);
-                            }else{
-                                this.test=false;
-                            }
-                        })
-                    })
+                    eventBus.on('selection.changed', (e) => {
+                        if(e.newSelection.length===1 && e.newSelection[0].type==='dmn:Decision') {
+                            this.selectedShape=e.newSelection[0].id;
+                        }
+                        if(this.selectedShape)
+                            this.$refs.test.decisionChange(this.selectedShape);
+                    });
 
                 }).catch(err => {
                 console.error(err);
