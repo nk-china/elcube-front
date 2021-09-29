@@ -168,8 +168,11 @@ export default {
                     const canvas = this.viewer._viewers.drd.get("canvas");
                     canvas.zoom('fit-viewport',{});
                     canvas.zoom(canvas.zoom()*0.7);
+                    this.$refs.test.decisionChange(undefined);
 
                     const eventBus = this.viewer._viewers.drd.get('eventBus');
+                    window.a = eventBus;
+                    window.b = this.viewer;
                     eventBus.on('selection.changed', (e) => {
                         if(e.newSelection.length===1 && e.newSelection[0].type==='dmn:Decision') {
                             this.selectedShape=e.newSelection[0].id;
@@ -284,6 +287,9 @@ export default {
     height: calc(100vh - 380px);
     border: solid 1px #ccc;
     background-color: #ffffff;
+
+    position: relative;
+    z-index: 1;
 
     .exit{
         display: none;

@@ -1,5 +1,5 @@
 <template>
-    <nk-card title="测试">
+    <nk-card title="模拟器">
         <div style="display: flex">
             <div style="width: 50%">
                 <div style="font-weight: 600;margin-bottom: 15px;text-align: right;width: 94px;font-size: 1.1em;">Inputs</div>
@@ -12,21 +12,28 @@
                             </a-select-option>
                         </a-select>
                     </nk-form-item>
-                    <nk-form-item :title="item.name || '<Undefined>'" v-for="(item,index) in inputs" :key="index">
-                        {{variables[item.key]}}
-                        <a-input slot="edit" :placeholder="item.name" v-model="variables[item.key]"></a-input>
-                    </nk-form-item>
+
+                    <template v-for="(item) in inputs">
+                        <nk-form-divider :key="item.decisionId" :term="item.decisionName" />
+                        <nk-form-item    :key="item.decisionId+'-'+i.key" :title="i.name || '&lt;Unnamed&gt;'" v-for="(i) in item.items">
+                            {{inputVariables[i.key]}}
+                            <a-input slot="edit" :placeholder="i.key" v-model="inputVariables[i.key]"></a-input>
+                        </nk-form-item>
+                    </template>
                 </nk-form>
             </div>
             <div style="width: 50%">
                 <div style="font-weight: 600;margin-bottom: 15px;text-align: right;width: 94px;font-size: 1.1em;">Outputs</div>
                 <nk-form :col="1">
-                    <nk-form-item :title="item.name || '<Undefined>'" v-for="(item,index) in outputs" :key="index">
-                        <div style="height:28px;line-height:28px;background-color:#fefefe ; padding:0 5px;border:1px solid #d9d9d9;border-radius: 5px;">
-                            <span v-if="outputVariables[item.name]">{{outputVariables[item.name]}}</span>
-                            <span style="color: #aaa;" v-else>{{item.decisionId +':'+ item.name + '&lt;'+item.typeRef+'&gt;'}}</span>
-                        </div>
-                    </nk-form-item>
+                    <template v-for="(item) in outputs">
+                        <nk-form-divider :key="item.decisionId" :term="item.decisionName" />
+                        <nk-form-item    :key="item.decisionId+'-'+index" :title="item.label || '&lt;Unnamed&gt;'" v-for="(item,index) in item.items">
+                            <div style="height:28px;line-height:28px;background-color:#f3f3f3 ; padding:0 5px;border:1px solid #d9d9d9;border-radius: 5px;">
+                                <span v-if="outputVariables[item.decisionId+'-'+item.name]">{{outputVariables[item.decisionId+'-'+item.name]}}</span>
+                                <span style="color: #aaa;" v-else>{{item.decisionId+'&lt;'+item.typeRef+'&gt;'}}</span>
+                            </div>
+                        </nk-form-item>
+                    </template>
                 </nk-form>
             </div>
         </div>
@@ -54,7 +61,7 @@ export default {
             decisions:[],
             inputs: [],
             outputs: [],
-            variables: {},
+            inputVariables: {},
             outputVariables: {},
             selectedDecision: undefined,
         }
@@ -63,24 +70,47 @@ export default {
     },
     methods:{
         decisionChange(e){
-            this.selectedDecision = e;
             const desc = dmnParser(this.modeler,e);
+            this.selectedDecision = desc.id;
             this.decisions = desc.decisions;
             this.inputs = desc.inputs;
             this.outputs = desc.outputs;
+            this.inputVariables = {};
+            this.outputVariables = {};
         },
         run(){
-
             this.xml().then(({xml})=>{
                 this.$http.postJSON("/api/def/dmn/run",{
                     decisionKey: this.selectedDecision,
                     xml,
-                    variables: this.variables
+                    variables: this.inputVariables
                 }).then((res)=>{
+
                     let outputVariables = {};
-                    res.data.forEach(i=>{
-                        outputVariables = Object.assign(outputVariables,i);
-                    })
+                    for(let decisionKey in res.data){
+                        if(res.data.hasOwnProperty(decisionKey)){
+                            const list = res.data[decisionKey];
+                            list.forEach(item=>{
+                                for(let key in item){
+                                    if(item.hasOwnProperty(key)) {
+                                        const k = decisionKey + '-' + key;
+                                        if(!outputVariables[k]){
+                                            outputVariables[k] = [item[key]];
+                                        }else{
+                                            outputVariables[k].push(item[key]);
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    }
+
+                    for(let k in outputVariables){
+                        if(outputVariables.hasOwnProperty(k)){
+                            outputVariables[k] = outputVariables[k].join(',');
+                        }
+                    }
+
                     this.outputVariables = outputVariables
                     this.loading = false;
                 });
