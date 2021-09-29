@@ -32,7 +32,14 @@
                 <a-button class="exit" @click="doFullscreen"><a-icon type="fullscreen-exit" />退出全屏</a-button>
             </div>
 
-            <nk-def-dmn-test-card :edit="true" ref="test" style="margin-top: 24px;position: initial;" :modeler="viewer" :xml="getBpmn"></nk-def-dmn-test-card>
+            <nk-def-dmn-test-card :edit="true"
+                                  ref="test"
+                                  style="margin-top: 24px;position: initial;"
+                                  :modeler="viewer"
+                                  :xml="getBpmn"
+                                  @decision-change="decisionChange"
+                                  @run="dmnRun"
+            ></nk-def-dmn-test-card>
         </div>
     </nk-page-layout>
 </template>
@@ -57,16 +64,45 @@ import propertiesProviderModule   from 'dmn-js-properties-panel/lib/provider/cam
 import camundaModdleDescriptor    from 'camunda-dmn-moddle/resources/camunda.json';
 
 const initialDiagram =
-    '<?xml version="1.0" encoding="UTF-8"?>' +
+    '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" ' +
-    ' xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" ' +
-    ' xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" ' +
-    ' xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" ' +
-    ' namespace="http://camunda.org/schema/1.0/dmn" ' +
-    ' id="newDmn" name="新建决策" ' +
-    '></definitions>';
+    '             xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" ' +
+    '             xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" ' +
+    '             xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" ' +
+    '             id="UnnamedDMN" ' +
+    '             name="未命名决策图" ' +
+    '             namespace="http://camunda.org/schema/1.0/dmn">\n' +
+    '  <inputData id="InputData_Unnamed" name="输入字段" />\n' +
+    '  <decision id="Decision_Unnamed" name="决策表">\n' +
+    '    <informationRequirement id="InformationRequirement_1">\n' +
+    '      <requiredInput href="#InputData_Unnamed" />\n' +
+    '    </informationRequirement>\n' +
+    '    <decisionTable id="DecisionTable_1">\n' +
+    '      <input id="InputClause_1">\n' +
+    '        <inputExpression id="LiteralExpression_1" typeRef="string" />\n' +
+    '      </input>\n' +
+    '      <output id="OutputClause_1" typeRef="string" />\n' +
+    '    </decisionTable>\n' +
+    '  </decision>\n' +
+    '  <dmndi:DMNDI>\n' +
+    '    <dmndi:DMNDiagram id="DMNDiagram_1">\n' +
+    '      <dmndi:DMNShape id="DMNShape_2" dmnElementRef="InputData_Unnamed">\n' +
+    '        <dc:Bounds height="45" width="125" x="-82" y="58" />\n' +
+    '      </dmndi:DMNShape>\n' +
+    '      <dmndi:DMNEdge id="DMNEdge_1" dmnElementRef="InformationRequirement_1">\n' +
+    '        <di:waypoint x="-19" y="58" />\n' +
+    '        <di:waypoint x="-19" y="-50" />\n' +
+    '        <di:waypoint x="-19" y="-70" />\n' +
+    '      </dmndi:DMNEdge>\n' +
+    '      <dmndi:DMNShape id="DMNShape_1" dmnElementRef="Decision_Unnamed">\n' +
+    '        <dc:Bounds height="80" width="180" x="-109" y="-150" />\n' +
+    '      </dmndi:DMNShape>\n' +
+    '    </dmndi:DMNDiagram>\n' +
+    '  </dmndi:DMNDI>\n' +
+    '</definitions>\n';
 
 import NkDefDmnTestCard from "./NkDefDmnTestCard";
+import dmnFired from "./ref/dmnFired";
 
 export default {
     components:{
@@ -87,7 +123,8 @@ export default {
                 text:"确认部署吗?",
             },
 
-            selectedShape:undefined
+            selectedShape:undefined,
+            matchedRules:undefined
         }
     },
     created(){
@@ -124,8 +161,9 @@ export default {
         doFullscreen(){
             this.fullscreen = this.fullscreen?'':'fullscreen';
             this.$nextTick(()=>{
-                this.viewer.get('zoomScroll').reset();
-                this.viewer.get('canvas').zoom('fit-viewport',{});
+                // 视图切换会导致图形看不到，所以注释掉
+                // this.viewer._viewers.drd.get('zoomScroll').reset();
+                // this.viewer._viewers.drd.get('canvas').zoom('fit-viewport',{});
             })
         },
         init(){
@@ -159,9 +197,14 @@ export default {
             return false;
         },
         createNew() {
-            this.open(initialDiagram);
+            if(this.$route.query.from){
+                this.$router.push("")
+            }else{
+                this.open(initialDiagram);
+            }
         },
         open(xml) {
+            this.selectedShape=undefined;
             this.viewer.importXML(xml)
                 .then(() => {
                     this.viewer._container.getElementsByTagName("a")[0].style.transform='scale(0.6)';
@@ -170,9 +213,11 @@ export default {
                     canvas.zoom(canvas.zoom()*0.7);
                     this.$refs.test.decisionChange(undefined);
 
+                    this.viewer._viewsChanged = ()=>{
+                        dmnFired(this.viewer,this.matchedRules)
+                    }
+
                     const eventBus = this.viewer._viewers.drd.get('eventBus');
-                    window.a = eventBus;
-                    window.b = this.viewer;
                     eventBus.on('selection.changed', (e) => {
                         if(e.newSelection.length===1 && e.newSelection[0].type==='dmn:Decision') {
                             this.selectedShape=e.newSelection[0].id;
@@ -182,10 +227,10 @@ export default {
                     });
 
                 }).catch(err => {
-                console.error(err);
-            }).finally(()=>{
-                this.loadingDeploy=false;
-            });
+                    console.error(err);
+                }).finally(()=>{
+                    this.loadingDeploy=false;
+                });
         },
         getBpmn(){
             return new Promise((resolve, reject) => {
@@ -258,6 +303,13 @@ export default {
                         });
                 });
         },
+        dmnRun({outputMatchedRules}){
+            this.matchedRules = outputMatchedRules;
+            dmnFired(this.viewer,this.matchedRules)
+        },
+        decisionChange(){
+            //this.viewer._switchView(this.viewer._views.find(v=>v.id===e))
+        },
         $nkHide(){
             this.getBpmn().then(()=>{
                 this.active = this.viewer.getActiveView();
@@ -319,6 +371,10 @@ export default {
 
     ::v-deep.dmn-decision-table-container{
         overflow: inherit;
+    }
+
+    ::v-deep.fired td{
+        background-color: #4d90ff !important;
     }
 }
 .canvas-layout .panel{

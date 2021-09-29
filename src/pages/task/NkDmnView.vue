@@ -7,6 +7,7 @@
 <script>
 
 import BpmnViewer from "dmn-js/lib/NavigatedViewer";
+import dmnFired from "./ref/dmnFired";
 
 export default {
     props:{
@@ -18,7 +19,8 @@ export default {
         return {
             loading: true,
             viewer: undefined,
-            bpmnXml : undefined
+            bpmnXml : undefined,
+            matchedRules: undefined,
         }
     },
     created() {
@@ -47,34 +49,22 @@ export default {
                     this.viewer._container.getElementsByTagName("a")[0].style.transform='scale(0.6)';
                     this.$emit("init", this.viewer);
 
-                    // window.a = this.viewer;
-                    // console.log(this.viewer)
-                    //
-                    // const eventBus = this.viewer._viewers.drd.get('eventBus');
-                    // const events = [
-                    //     'selection.changed'
-                    // ];
-                    // events.forEach(event => {
-                    //     eventBus.on(event, (e) => {
-                    //
-                    //         if(e.newSelection.length===1){
-                    //             const selectedId = e.newSelection[0].id;
-                    //             const selectedElement = this.viewer._definitions.drgElement.find((e)=>e.id === selectedId);
-                    //
-                    //             console.log(selectedElement)
-                    //             console.log(selectedElement.decisionLogic.$type)
-                    //             console.log(selectedElement.decisionLogic.input)
-                    //             console.log(selectedElement.decisionLogic.output)
-                    //             console.log(selectedElement.decisionLogic.rule)
-                    //         }
-                    //
-                    //     })
-                    // })
+                    this.viewer._viewsChanged = ()=>{
+                        dmnFired(this.viewer,this.matchedRules)
+                    }
+
                 }).catch((e) => {console.log(e)});
         },
         zoom(flag) {
             this.viewer._viewers.drd.get('zoomScroll').stepZoom(flag)
         },
+        fired(matchedRules){
+            this.matchedRules = matchedRules;
+            dmnFired(this.viewer,this.matchedRules)
+        },
+        changeView(e){
+            this.viewer._switchView(this.viewer._views.find(v=>v.id===e))
+        }
     },
     destroyed() {
         this.viewer&&this.viewer.destroy&&this.viewer.destroy();
@@ -82,6 +72,10 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+.canvas{
+    ::v-deep.fired td{
+        background-color: #4d90ff !important;
+    }
+}
 </style>

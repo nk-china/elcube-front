@@ -21,7 +21,9 @@
             <nk-bpmn-view ref="bpmn" :bpmn="definition.xml" v-if="bpmnVisible" @init="viewInit" />
         </nk-card>
 
-        <nk-def-dmn-test-card v-if="definition.key" ref="test" :modeler="modeler" :xml="getXml"/>
+        <nk-def-dmn-test-card v-if="definition.key" ref="test" :modeler="modeler" :xml="getXml"
+                              @decision-change="decisionChange"
+                              @run="dmnRun"/>
     </nk-page-layout>
 </template>
 
@@ -81,6 +83,12 @@ export default {
         },
         getXml(){
             return Promise.resolve({xml: this.definition.xml})
+        },
+        dmnRun({outputMatchedRules}){
+            this.$refs.bpmn.fired(outputMatchedRules);
+        },
+        decisionChange(e){
+            this.$refs.bpmn.changeView(e)
         }
     },
     destroyed() {

@@ -48,53 +48,58 @@ function parseDecision(elements, id, inputs, outputs){
 
     const decision = id ? elements.find(e=>e.id===id) : elements.find(e=>e.$type==='dmn:Decision');
 
-    if(decision.decisionLogic){
-        let outputsItem = [];
-        if(decision.decisionLogic.$type==='dmn:DecisionTable'){
-            decision.decisionLogic.output.forEach(i=>{
-                outputsItem.push(Object.assign({decisionId:decision.id},i));
-            })
-        }else{
-            outputsItem.push(Object.assign({decisionId:decision.id},decision.variable));
-        }
-        outputs.push({
-            decisionId:decision.id,
-            decisionName:decision.name,
-            items: outputsItem
-        });
-    }
-    if (decision.informationRequirement){
-
-        let inputsItem = [];
-
-        decision.informationRequirement.forEach(ir=>{
-            if(ir.requiredInput){
-                const inputId = ir.requiredInput.href.substr(1);
-                const input = elements.find(e=>e.id===inputId);
-                inputsItem.push({
-                    key:  input.id,
-                    name: input.name
-                });
+    if(decision){
+        if(decision.decisionLogic){
+            let outputsItem = [];
+            if(decision.decisionLogic.$type==='dmn:DecisionTable'){
+                decision.decisionLogic.output.forEach(i=>{
+                    outputsItem.push(Object.assign({decisionId:decision.id},i));
+                })
+            }else{
+                outputsItem.push(Object.assign({decisionId:decision.id},decision.variable));
             }
-        })
-
-        if(inputsItem.length){
-            inputs.push({
+            outputs.push({
                 decisionId:decision.id,
                 decisionName:decision.name,
-                items: inputsItem
+                items: outputsItem
+            });
+        }
+        if (decision.informationRequirement){
+
+            let inputsItem = [];
+
+            decision.informationRequirement.forEach(ir=>{
+                if(ir.requiredInput){
+                    const inputId = ir.requiredInput.href.substr(1);
+                    const input = elements.find(e=>e.id===inputId);
+
+                    if(!inputsItem.find(i=>i.key===input.id)){
+                        inputsItem.push({
+                            key:  input.id,
+                            name: input.name
+                        });
+                    }
+                }
+            })
+
+            if(inputsItem.length){
+                inputs.push({
+                    decisionId:decision.id,
+                    decisionName:decision.name,
+                    items: inputsItem
+                })
+            }
+
+            decision.informationRequirement.forEach(ir=>{
+                if(ir.requiredDecision){
+                    const inputId = ir.requiredDecision.href.substr(1);
+                    parseDecision(elements,inputId,inputs,outputs);
+                }
             })
         }
 
-        decision.informationRequirement.forEach(ir=>{
-            if(ir.requiredDecision){
-                const inputId = ir.requiredDecision.href.substr(1);
-                parseDecision(elements,inputId,inputs,outputs);
-            }
-        })
+        return decision;
     }
-
-    return decision;
 }
 
 
@@ -106,7 +111,7 @@ function parse(modeler,decision){
     decision = parseDecision(modeler._definitions.drgElement,decision,inputs, outputs);
 
     return {
-        id:decision.id,
+        id:decision && decision.id,
         modeler: modeler,
         decisions: modeler._definitions.drgElement.filter(e=>e.$type==='dmn:Decision'),
         inputs,

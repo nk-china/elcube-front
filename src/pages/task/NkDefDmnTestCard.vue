@@ -77,6 +77,7 @@ export default {
             this.outputs = desc.outputs;
             this.inputVariables = {};
             this.outputVariables = {};
+            this.$emit("decision-change",this.selectedDecision);
         },
         run(){
             this.xml().then(({xml})=>{
@@ -86,11 +87,12 @@ export default {
                     variables: this.inputVariables
                 }).then((res)=>{
 
+                    let outputMatchedRules = {};
                     let outputVariables = {};
                     for(let decisionKey in res.data){
                         if(res.data.hasOwnProperty(decisionKey)){
-                            const list = res.data[decisionKey];
-                            list.forEach(item=>{
+                            const decisionExecuted = res.data[decisionKey];
+                            decisionExecuted.result.forEach(item=>{
                                 for(let key in item){
                                     if(item.hasOwnProperty(key)) {
                                         const k = decisionKey + '-' + key;
@@ -102,6 +104,7 @@ export default {
                                     }
                                 }
                             })
+                            outputMatchedRules[decisionKey] = decisionExecuted.matchedRules;
                         }
                     }
 
@@ -113,6 +116,8 @@ export default {
 
                     this.outputVariables = outputVariables
                     this.loading = false;
+
+                    this.$emit("run",{outputMatchedRules})
                 });
             });
 
