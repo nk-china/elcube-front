@@ -6,7 +6,19 @@ function parseDecision(elements, id, inputs, outputs){
 
     if(decision.decisionLogic.$type==='dmn:DecisionTable'){
         decision.decisionLogic.input.forEach(e=>{
-            inputs.push({key:e.inputExpression.text,name:e.label});
+
+            let findIt = false;
+            decision.informationRequirement
+                .filter(ir=>ir.requiredDecision)
+                .find(ir=>{
+                    const inputId = ir.requiredDecision.href.substr(1);
+                    const decision_req = elements.find(e=>e.id===inputId);
+                    const decision_out = decision_req.decisionLogic.output.find(o=>o.name===e.inputExpression.text);
+                    findIt = decision_out !== undefined;
+                })
+
+            if(!findIt)
+                inputs.push({key:e.inputExpression.text,name:e.label});
         })
         decision.decisionLogic.output.forEach(i=>{
             outputs.push(Object.assign({decisionId:decision.id},i));
