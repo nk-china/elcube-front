@@ -19,7 +19,7 @@
             :edit-config="{trigger: 'click', mode: 'row', showIcon: editMode, activeMethod: ()=>{return editMode}}"
             :data="docDef.dataSyncs"
             @edit-actived="editActive">
-            <vxe-table-column   title="服务"             field="targetSvr" width="13%" :edit-render="{
+            <vxe-table-column   title="服务"             field="targetSvr" width="15%" :edit-render="{
                 name: '$select',
                 options: docOptions.docDataSyncAdapters,
                 optionProps: {value: 'key', label: 'name'}
@@ -28,7 +28,7 @@
             <vxe-table-column   title="重建"             field="reExecute" width="8%" :formatter="({cellValue})=>cellValue?'是':''" :edit-render="{
                 name: '$switch',
                 props: {'open-value':1,'close-value':0},
-            }" v-if="docDef.docClassify==='TRANSACTION'||docDef.docClassify==='PROJECT'"/>
+            }"/>
             <vxe-table-column   title="条件"             field="conditionSpEL" width="10%" :edit-render="{}">
                 <template v-slot:edit="{row}">
                     <nk-sp-el-editor v-model="row.conditionSpEL"></nk-sp-el-editor>

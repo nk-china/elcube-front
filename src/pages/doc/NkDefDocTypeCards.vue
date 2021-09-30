@@ -25,9 +25,9 @@
                         optionProps: {value: 'key', label: 'name'},
                         events: {change: componentChange},
                 }" />
-            <vxe-table-column   title="KEY"         field="cardKey"  width="12%"
+            <vxe-table-column   title="KEY"         field="cardKey"  width="13%"
                                 :edit-render="{name:'input'}"/>
-            <vxe-table-column   title="描述"         field="cardName"     width="12%"
+            <vxe-table-column   title="描述"         field="cardName"     width="13%"
                                 :edit-render="{name:'input'}"/>
             <vxe-table-column   title="计算顺序"      field="calcOrder"         width="10%"
                                 :edit-render="{name:'$input',props:{type:'integer',min:0}}"/>

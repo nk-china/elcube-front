@@ -20,9 +20,9 @@
     data(){
       return {
         columns:[
-          { field: 'processDefinitionKey',      title: 'key',           width: '10%' },
-          { field: 'processDefinitionName',     title: 'Name',          width: '15%' },
-          { field: 'processDefinitionVersion',  title: 'Version',       width: '8%'  },
+          { field: 'processDefinitionKey',      title: 'key',           width: '15%' },
+          { field: 'processDefinitionName',     title: 'Name',          width: '20%' },
+          { field: 'processDefinitionVersion',  title: 'Version',       width: '10%'  },
           { field: 'startTime',                 title: 'StartTime',     width: '15%' ,sortable:true, formatter:['nkDatetimeISO'] },
           { field: 'endTime',                   title: 'EndTime',       width: '15%' ,sortable:true, formatter:['nkDatetimeISO'] },
           { field: 'state',                     title: 'State',         width: '15%' ,sortable:true },

@@ -20,11 +20,11 @@
     data(){
       return {
         columns:[
-          { field: 'id',                title: 'id',            width: '30%'},
-          { field: 'key',               title: 'key',           width: '10%', sortable:true, },
-          { field: 'name',              title: 'name',          width: '20%', sortable:true, },
-          { field: 'version',           title: 'version',       width: '8%' , sortable:true, },
-          {                             title: 'ACTION',        width: '8%' ,
+          { field: 'id',                title: 'id',            width: '35%'},
+          { field: 'key',               title: 'key',           width: '15%', sortable:true, },
+          { field: 'name',              title: 'name',          width: '25%', sortable:true, },
+          { field: 'version',           title: 'version',       width: '15%' , sortable:true, },
+          {                             title: 'ACTION',        width: '10%' ,
             slots: { default: ({row},h) => {
                 return [h(
                   'router-link',
