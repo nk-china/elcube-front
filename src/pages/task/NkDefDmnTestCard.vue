@@ -70,14 +70,18 @@ export default {
     },
     methods:{
         decisionChange(e){
-            const desc = dmnParser(this.modeler,e);
-            this.selectedDecision = desc.id;
-            this.decisions = desc.decisions;
-            this.inputs = desc.inputs;
-            this.outputs = desc.outputs;
-            this.inputVariables = {};
-            this.outputVariables = {};
-            this.$emit("decision-change",this.selectedDecision);
+            try{
+                const desc = dmnParser(this.modeler,e);
+                this.selectedDecision = desc.id;
+                this.decisions = desc.decisions;
+                this.inputs = desc.inputs;
+                this.outputs = desc.outputs;
+                this.inputVariables = {};
+                this.outputVariables = {};
+                this.$emit("decision-change",this.selectedDecision);
+            }catch (e){
+                this.$message.error(e)
+            }
         },
         run(){
             this.xml().then(({xml})=>{

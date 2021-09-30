@@ -44,9 +44,14 @@
 //         }
 //     })
 // }
-function parseDecision(elements, id, inputs, outputs){
+function parseDecision(elements, id, inputs, outputs, cache){
 
     const decision = id ? elements.find(e=>e.id===id) : elements.find(e=>e.$type==='dmn:Decision');
+
+    if(cache.indexOf(decision)>-1){
+        throw "循环引用";
+    }
+    cache.push(decision);
 
     if(decision){
         if(decision.decisionLogic){
@@ -93,7 +98,7 @@ function parseDecision(elements, id, inputs, outputs){
             decision.informationRequirement.forEach(ir=>{
                 if(ir.requiredDecision){
                     const inputId = ir.requiredDecision.href.substr(1);
-                    parseDecision(elements,inputId,inputs,outputs);
+                    parseDecision(elements,inputId,inputs,outputs, cache);
                 }
             })
         }
@@ -107,8 +112,9 @@ function parse(modeler,decision){
 
     let inputs  = [];
     let outputs = [];
+    let cache   = [];
 
-    decision = parseDecision(modeler._definitions.drgElement,decision,inputs, outputs);
+    decision = parseDecision(modeler._definitions.drgElement,decision,inputs, outputs, cache);
 
     return {
         id:decision && decision.id,
