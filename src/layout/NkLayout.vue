@@ -2,10 +2,8 @@
     <a-spin :spinning="loading" wrapperClassName="layout-spinning">
         <a-layout class="nk-layout-full">
             <a-layout-sider v-model="collapsed" :trigger="null" collapsible="collapsible" class="nk-layout-sider" width="256" :collapsed-width="60">
-                <div class="logo nk">
+                <div class="logo no-logo">
                     <a href="http://www.nkpro.cn" target="_blank"><img src="/nk.logo.png" style="width: 48px;"/></a>
-<!--                    <span class="y"></span>-->
-<!--                    <span class="z">纽扣互联</span>-->
                 </div>
                 <nk-nav :active-page="activePage" :collapsed="collapsed"></nk-nav>
             </a-layout-sider>
@@ -448,9 +446,24 @@ export default {
 
         .logo {
             user-select: none;
-            height: 48px;
             margin: 16px;
             text-align: center;
+            height: 48px;
+
+            &.no-logo{
+
+                height: 32px;
+                background: rgba(255, 255, 255, 0.2);
+                margin: 16px;
+                user-select: none;
+                color: #dddddd;
+                text-align: center;
+                line-height: 30px;
+
+                *{
+                    display: none;
+                }
+            }
         }
     }
     .nk-layout-sider::-webkit-scrollbar{
