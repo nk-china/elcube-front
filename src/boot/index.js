@@ -37,6 +37,7 @@ import moment from "moment";
 import numeral from "numeral";
 import * as ant from 'ant-design-vue';
 import eval5 from "eval5";
+import * as g2plot from '@antv/g2plot';
 
 Vue.config.productionTip = false;
 Vue.prototype.$http = new Http(Vue);
@@ -120,6 +121,7 @@ function componentLoader(componentName, template, modules) {
             numeral,
             eval5,
             'nk-ts5-platform': modules,
+            '@antv/g2plot': g2plot,
             ...modules
           },
           getFile() {

@@ -21,9 +21,9 @@ import NkVxeSelect from "./NkVxeSelect";
 import NkDocLink from "./NkDocLink";
 import NkCardHelpLink from "./NkCardHelpLink";
 import NkRequiredMark from "./NkRequiredMark";
-import NkDashboardCard from "./NkDashboardCard";
 import NkDocException from "./NkDocException";
 import NkEmpty from "./NkEmpty";
+import NkMeter from "./NkMeter";
 import VueHighlight from "./vue-highlight";
 import 'highlight.js/styles/github.css';
 
@@ -57,7 +57,8 @@ function install(Vue){
 
   Vue.component("nk-help-link",NkCardHelpLink);
 
-  Vue.component("NkDashboardCard",NkDashboardCard);
+  Vue.component("NkDashboardCard",NkMeter);
+  Vue.component("nk-meter",NkMeter);
 
   Vue.component("NkDocException",NkDocException);
 

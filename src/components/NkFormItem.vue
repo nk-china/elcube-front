@@ -1,6 +1,6 @@
 <template>
     <div class="nk-form-item" :style="style">
-        <div class="term" :class="termClass">
+        <div class="term" :class="termClass" :style="{'min-width':width+'px'}">
             <nk-required-mark v-if="editMode && required" />
             {{term || title}}
             <slot name="term"></slot>
@@ -20,6 +20,10 @@ export default {
         term: {
             type: String,
             required: false
+        },
+        width: {
+            type: Number,
+            default: 120
         },
         title: {
             type: String,
@@ -136,7 +140,6 @@ export default {
         color: rgba(0,0,0,.85);
         white-space: nowrap;
         display: table-cell;
-        min-width: 120px;
         text-align: right;
         flex-shrink: 0;
         font-size: 12px;

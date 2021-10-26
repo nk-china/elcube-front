@@ -1,8 +1,6 @@
 <template>
     <nk-page-layout :title="title" class="layout">
 
-        <nk-advanced-search-input style="width:800px;"></nk-advanced-search-input>
-
         <div slot="action" style="margin: 0 10px;">
             <a-button-group>
                 <a-button v-for="item in (data.refs||[])"
@@ -29,8 +27,8 @@
                 :layout.sync="layoutFilter"
                 :col-num="12"
                 :row-height="30"
-                :is-draggable="true"
-                :is-resizable="true"
+                :is-draggable="editable"
+                :is-resizable="editable"
                 :is-mirrored="false"
                 :vertical-compact="true"
                 :margin="[10, 10]"
@@ -49,9 +47,10 @@
                            dragAllowFrom=".ant-card-head-title"
                            @resized="itemResized(index,$event)">
                     <component v-if="item.component"
-                               :is="item.component"
+                               :is="item.componentLost?'nk-dashboard-lost':item.component"
                                :title="item.title"
                                :config="item.config||{}"
+                               :editable="editable"
                                ref="items"
                                @remove="removeCard(item)"
                                @update="cardConfigUpdated(item,$event)"
@@ -105,6 +104,7 @@
 //const defaultLayout = [{"x":0,"y":19,"w":8,"h":5,"i":"0","component":"nk-dashboard-bar1","title":"客户统计","moved":false},{"x":0,"y":24,"w":4,"h":6,"i":"1","component":"nk-dashboard-bar2","title":"坏账","moved":false},{"x":4,"y":0,"w":4,"h":6,"i":"2","component":"nk-dashboard-pie2","title":"订单概要","moved":false},{"x":8,"y":24,"w":4,"h":6,"i":"3","component":"nk-dashboard-scatter1","title":"逾期","moved":false},{"x":0,"y":11,"w":8,"h":8,"i":"4","component":"nk-dashboard-candlestick1","title":"任务","moved":false},{"x":4,"y":6,"w":4,"h":5,"i":"5","component":"nk-dashboard-radar1","moved":false},{"x":8,"y":14,"w":4,"h":10,"i":"6","component":"nk-dashboard-graph1","title":"计划","moved":false},{"x":0,"y":0,"w":4,"h":11,"i":"7","component":"nk-dashboard-gruge1","title":"今日关注","moved":false},{"x":4,"y":24,"w":4,"h":6,"i":"8","component":"nk-dashboard-bar3","title":"待跟进业务","moved":false},{"x":8,"y":5,"w":4,"h":9,"i":"9","component":"nk-dashboard-calendar1","title":"审批中","moved":false},{"x":8,"y":0,"w":4,"h":5,"i":"10","component":"nk-dashboard-simple1","title":"警告","moved":false}];
 import { v4 as uuidv4 } from 'uuid';
 import NkAdvancedSearchInput from "@/pages/components/NkAdvancedSearchInput";
+import {mapGetters} from "vuex";
 
 export default {
     name: "NkDashboard",
@@ -113,6 +113,7 @@ export default {
     },
     data(){
         return {
+            editable: true,
             title: undefined,
             loading: true,
             layout: [],
@@ -130,19 +131,19 @@ export default {
         }
     },
     created(){
-        //this.load('');
+        this.load('');
         this.loading = false;
 
         const titles = document.getElementsByTagName("title");
         this.title = (titles && titles[0] && titles[0].getAttribute("title"))||'TS5统一开发平台';
     },
     computed:{
+        ...mapGetters('User',[
+            'user'
+        ]),
         layoutFilter(){
             return this.layout.map(item=>{
-                if(!this.$options.components[item.component]){
-                    item.componentLost = item.component;
-                    item.component = 'nk-dashboard-lost';
-                }
+                item.componentLost = !this.$options.components[item.component];
                 return item;
             })
         }
@@ -177,6 +178,7 @@ export default {
                         this.layout=[];
                         this.addCard(8,5,"nk-dashboard-hello","欢迎使用");
                     }
+                    this.editable = this.data.activeDashboard.accountId === this.user.id;
                     this.loading = false;
                 });
         },
@@ -223,7 +225,7 @@ export default {
             this.layout.splice(this.layout.indexOf(item),1);
         },
         cardConfigUpdated(item,config){
-            item.config = config;
+            this.$set(item,'config',config);
             this.save();
         },
         dashboardMove(i,direction){
@@ -275,7 +277,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-    ::v-deep.layout .nk-page-layout-content{
-        padding: 15px;
+    ::v-deep.nk-page-layout .nk-page-layout-content > .content{
+        padding: 15px !important;
     }
 </style>
