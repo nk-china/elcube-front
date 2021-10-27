@@ -29,6 +29,23 @@ export default (defaultValue)=>{
       if(!this.card.config){
         this.$set(this.card,'config',defaultValue);
       }
+    },
+    methods:{
+      nk$callDef(options){
+        return new Promise((resolve,reject)=>{
+          this.$http.postJSON(
+              `/api/def/doc/call`,
+              {fromCard:this.cardKey,def:this.def,options}
+          )
+          .then(response=>{
+            resolve(response.data);
+          })
+          .catch(reject)
+          .finally((e)=>{
+            reject(e);
+          })
+        })
+      },
     }
   };
 }
