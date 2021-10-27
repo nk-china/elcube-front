@@ -71,7 +71,7 @@
             </a-layout-sider>
             <a-layout-content style="padding-left: 20px;">
                 <a-card v-if="selected.key==='info'" title="组件信息" :key="'base-'+selected.cardKey">
-                    <a-button v-if="editMode" slot="extra" @click="addComponentDef" size="small">添加配置视图</a-button>
+                    <a-button v-if="editMode && script.scriptType!=='Card'" slot="extra" @click="addComponentDef" size="small">添加配置视图</a-button>
                     <nk-form :col="1" :edit="editMode">
                         <nk-form-item title="类别">
                             {{script.scriptType}}
@@ -229,6 +229,9 @@ export default {
             ];
 
             if(this.script.scriptType==='Card'){
+                menus.push({key:"vue-main",name:"数据视图"});
+            }
+            if(this.script.scriptType==='Meter'){
                 menus.push({key:"vue-main",name:"数据视图"});
             }
 
