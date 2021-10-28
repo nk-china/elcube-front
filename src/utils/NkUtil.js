@@ -32,7 +32,6 @@ export default {
     toEsParams(params,preCondition,$debug){
 
         let must = [],
-            condition = {"bool": {must}},
             np = {};
         let value;
         for(let field in params){
@@ -89,7 +88,7 @@ export default {
                     break;
             }
         }
-        np.condition = JSON.stringify(condition);
+        np.condition = must && must.length ? JSON.stringify({"bool": {must}}) : null;
         if(preCondition)
             np.preCondition = JSON.stringify(preCondition);
 

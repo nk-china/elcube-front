@@ -45,9 +45,12 @@ export default (Vue) => {
   // 系统错误
   const onSystemError = error => {
     let now = new Date().getTime();
-    if(now-errorTime > 2000 || errorMsg !== error.response.data.msg){
+
+    const msg = error.response.data.msg || error.response.data;
+
+    if(now-errorTime > 2000 || errorMsg !== msg){
       errorTime = now;
-      errorMsg = error.response.data.msg || error.response.data;
+      errorMsg = msg;
 
       if(error.response.data.causeStackTrace)
         console.error(error.response.data.causeStackTrace.join('\n'))
