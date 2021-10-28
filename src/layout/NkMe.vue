@@ -29,7 +29,9 @@
                 border=inner
                 resizable
                 highlight-hover-row
+                class="me-perms-table"
                 header-cell-class-name="headerCellClassName"
+                :row-class-name="rowClassName"
                 :data="user.authorities">
                 <vxe-table-column   title="权限" field="authority"                width="15%"/>
                 <!--                                <vxe-table-column   title="资源" field="permResource"             width="15%"/>-->
@@ -44,13 +46,13 @@
                         </a>
                     </template>
                 </vxe-table-column>
-                <vxe-table-column   title="扩展属性" field="subResource"           width="30%"/>
-                <vxe-table-column   title="Level" field="level"           width="10%">
+                <vxe-table-column   title="扩展属性" field="subResource"           width="50%"/>
+                <vxe-table-column   title="Level" field="level"                   width="10%">
                     <template v-slot="{ row }">
                         {{row.level.toString(16)}}
                     </template>
                 </vxe-table-column>
-                <vxe-table-column   title="授权来源" width="15%">
+                <vxe-table-column   title="授权来源">
                     <template v-slot="{ row }">
                         {{row.fromGroupDesc}}-{{row.fromPermissionDesc}}
                     </template>
@@ -117,11 +119,19 @@ export default {
                     this.$set(row,'limits',res.data.map(x=>x.limitDesc).join(','));
                     // row.limits = res.data.map(x=>x.limitDesc).join(',');
                 })
+        },
+        rowClassName({ row }){
+            if(row.disabled){
+                return "disabled"
+            }
         }
     }
 }
 </script>
 
 <style scoped>
-
+    ::v-deep.me-perms-table tr.disabled {
+        background-color: #eee;
+        text-decoration:line-through;
+    }
 </style>

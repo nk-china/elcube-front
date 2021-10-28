@@ -86,7 +86,7 @@ export default {
             item: {},
             limits:[],
             filter: '',
-            limitlevel:0x0,
+            limitLevel:0x0,
             spinning:true
         }
     },
@@ -108,10 +108,10 @@ export default {
                 resourceLevel = 0b111;
             }else if(this.item.permResource==='@*'){
                 resourceLevel = 0b110;
-            }else if(this.item.permResource && this.item.permResource.startsWith('@') && this.item.permResource.indexOf('|')>-1){
-                resourceLevel = 0b101;
             }else if(this.item.permResource && this.item.permResource.startsWith('@')){
-                resourceLevel = 0b100;
+                resourceLevel = 0b101;
+            // }else if(this.item.permResource && this.item.permResource.startsWith('@')){
+            //     resourceLevel = 0b100;
             }else{
                 resourceLevel = 0b011;
             }
@@ -121,7 +121,7 @@ export default {
                 operateLevel = 0b0;
             }
             // 限制 20位
-            let limitLevel = this.limitlevel;
+            let limitLevel = this.limitLevel;
 
             // 扩展 4位
             let subLevel = 0x0;
@@ -194,7 +194,7 @@ export default {
                     level+=parseInt(`0x${value}`)
                 });
 
-            this.limitlevel = level;
+            this.limitLevel = level;
         }
     }
 }

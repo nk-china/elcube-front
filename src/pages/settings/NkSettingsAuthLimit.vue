@@ -22,7 +22,7 @@
                             <a-input slot="edit" v-model="item.limitDesc"></a-input>
                         </nk-form-item>
                         <nk-form-item term="规则" :validateFor="item.content">
-                            <a-textarea slot="edit" v-model="item.content" rows="10"></a-textarea>
+                            <nk-sp-el-template-editor slot="edit" v-model="item.content"></nk-sp-el-template-editor>
                         </nk-form-item>
                         <nk-form-item term="Level">
                             <nk-help-link slot="term" page="settings-auth-perm-level" />
@@ -39,20 +39,6 @@
                         </a-popconfirm>
                     </a-button-group>
                 </a-card>
-                <div style="margin: 20px 40px">
-                    规则示例：<a target="_blank" href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/combining-queries-together.html">
-                    点击查看更多 ElasticSearch 的条件规则
-                </a>
-    <pre>
-{
-    "terms" : {
-        "docState" : [
-            "NEW"
-        ]
-    }
-}</pre>
-
-                </div>
             </a-layout-content>
         </a-layout>
     </nk-page-layout>

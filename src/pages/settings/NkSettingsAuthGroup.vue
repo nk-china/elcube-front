@@ -94,12 +94,12 @@
                                     </template>
                                 </vxe-table-column>
                                 <vxe-table-column   title="扩展属性" field="subResource"           width="30%"/>
-                                <vxe-table-column   title="Level" field="level"           width="10%">
+                                <vxe-table-column   title="Level" field="level"                   width="10%">
                                     <template v-slot="{ row }">
                                         {{row.level.toString(16)}}
                                     </template>
                                 </vxe-table-column>
-                                <vxe-table-column   title="权限定义源" field="fromPermissionDesc"   width="15%"/>
+                                <vxe-table-column   title="权限定义源" field="fromPermissionDesc"/>
                             </vxe-table>
                         </nk-form-item>
                     </nk-form>
