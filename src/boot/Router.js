@@ -1,10 +1,10 @@
 import AuthUtils from "./AuthUtils"
-import NkLogin from "../layout/NkLogin";
-import NkLayout from "../layout/NkLayout";
-import NkNotFound from "../layout/NkNotFound";
-import NkDefault from "../dashboards/NkPageDefault";
-import NkMe from "../layout/NkMe";
-import NkApi from "../layout/NkApi";
+// import NkLogin from "../layout/NkLogin";
+//import NkLayout from "../layout/NkLayout";
+// import NkNotFound from "../layout/NkNotFound";
+// import NkDefault from "../dashboards/NkPageDefault";
+// import NkMe from "../layout/NkMe";
+// import NkApi from "../layout/NkApi";
 
 export default function(VueRouter,moduleRoutes,loginPage,defaultPage) {
 
@@ -15,7 +15,7 @@ export default function(VueRouter,moduleRoutes,loginPage,defaultPage) {
       },
       {
         path: '/',
-        component: loginPage || NkLogin,
+        component: loginPage || ((resolve) => require(['../layout/NkLogin'],resolve)),
         meta: {
           title: '登陆',
           ignoreAuth : true
@@ -24,13 +24,13 @@ export default function(VueRouter,moduleRoutes,loginPage,defaultPage) {
       {
         name: '首页',
         path: '/apps',
-        component: NkLayout,
+        component: (resolve) => require(['../layout/NkLayout'],resolve),
         redirect: '/apps/default',
         children:[
           {
             name: '欢迎页',
             path: '/apps/default',
-            component: defaultPage || NkDefault,
+            component: defaultPage || ((resolve) => require(['../dashboards/NkPageDefault'],resolve)),
             closable :false,
             meta: {
               title: '欢迎页'
@@ -39,7 +39,7 @@ export default function(VueRouter,moduleRoutes,loginPage,defaultPage) {
           {
             name: '个人中心',
             path: '/apps/me',
-            component: NkMe,
+            component: (resolve) => require(['../layout/NkMe'],resolve),
             meta: {
               title: '个人中心'
             },
@@ -47,7 +47,7 @@ export default function(VueRouter,moduleRoutes,loginPage,defaultPage) {
           {
             name: '页面没有找到',
             path: 'notfound',
-            component: NkNotFound,
+            component: (resolve) => require(['../layout/NkNotFound'],resolve),
             meta: {
               title: '页面没有找到'
             },
@@ -55,7 +55,7 @@ export default function(VueRouter,moduleRoutes,loginPage,defaultPage) {
           {
             name: 'Api 文档',
             path: 'apidoc',
-            component: NkApi,
+            component: (resolve) => require(['../layout/NkApi'],resolve),
             meta: {
               title: 'Api 文档'
             }
