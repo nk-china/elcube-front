@@ -316,7 +316,7 @@ export default {
             const groups = this.queryBuilder.fields.filter(item=>item.groupBy).map(item=>'"'+item.alias+'"').join(', ');
             const having = this.queryBuilder.fields.filter(item=>item.having).map(item=>item.havingFormatted).join(' AND ');
             const sorted = this.queryBuilder.sorted.map(item=>item.formated).join(', ');
-            return `SELECT ${fields||'*'} FROM ${this.queryBuilder.index||'<document>'} ${filter.length?' WHERE':''} ${filter} ${groups.length?' GROUP BY':''} ${groups} ${having.length?' HAVING':''} ${having} ${sorted.length?' ORDER BY':''} ${sorted} LIMIT 1000`;
+            return `SELECT ${fields||'*'} FROM ${this.queryBuilder.index||'<document>'} ${filter.length?' WHERE':''} ${filter} ${groups.length?' GROUP BY':''} ${groups} ${having.length?' HAVING':''} ${having} ${sorted.length?' ORDER BY':''} ${sorted}`;
         }
     },
     created() {
@@ -331,7 +331,7 @@ export default {
         },
         runSql(){
             this.loading = true;
-            this.$http.postJSON(`/api/data/analyse/sql`,this.sql)
+            this.$http.postJSON(`/api/data/analyse/sql`,this.sql + ' LIMIT 1000')
                 .then(res=>{
                     this.data = res.data;
                 })
