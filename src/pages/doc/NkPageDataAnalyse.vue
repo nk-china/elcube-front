@@ -86,7 +86,7 @@
                         </a-button-group>
 
                         <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @change="addSort">
-                            <a-select-option v-for="field in aggregatableFields" :key="field.name">{{field.name}}</a-select-option>
+                            <a-select-option v-for="field in sortableFields" :key="field.name">{{field.name}}</a-select-option>
                         </a-select>
                     </nk-form-item>
                     <nk-form-item>
@@ -302,6 +302,16 @@ export default {
         aggregatableFields(){
             return this.availableFields.filter(i=>i.aggregatable);
         },
+        sortableFields(){
+            if(this.queryBuilder.fields.find(i=>i.groupBy||i.agg)){
+                return this.queryBuilder.fields.filter(i=>i.groupBy||i.agg).map(i=>{
+                    return {name:i.alias}
+                });
+            }
+            return this.aggregatableFields.map(i=>{
+                return {name:i.name}
+            });
+        },
         havingValueComponent(){
             const o = this.numberInputHaving.find(i=>i.k===this.editItem.having);
             return o&&o.c;
@@ -331,7 +341,8 @@ export default {
         },
         runSql(){
             this.loading = true;
-            this.$http.postJSON(`/api/data/analyse/sql`,this.sql + ' LIMIT 1000')
+            this.queryBuilder.sql = this.queryBuilder.custom?this.queryBuilder.sql:this.sql;
+            this.$http.postJSON(`/api/data/analyse/sql`,this.queryBuilder.sql + ' LIMIT 1000')
                 .then(res=>{
                     this.data = res.data;
                 })
@@ -490,12 +501,12 @@ export default {
             this.editItem.value[f] = e;
         },
         addSort(name){
-            this.queryBuilder.sorted.push({name,order:'ASC',formated:name+' ASC'})
+            this.queryBuilder.sorted.push({name,order:'ASC',formated:'"'+name+'" ASC'})
             this.selectedValue = undefined;
         },
         changeSort(item){
             item.order = (item.order === 'ASC' ? 'DESC' : 'ASC');
-            this.$set(item,'formated',item.name +' '+ item.order);
+            this.$set(item,'formated','"'+item.name +'" '+ item.order);
         },
         removeFrom(item,from){
             from.splice(from.indexOf(item),1);
