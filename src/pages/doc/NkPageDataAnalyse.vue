@@ -393,7 +393,8 @@ export default {
                 });
         },
         addField(name){
-            const item = Object.assign({formatted:name},this.availableFields.find(i=>i.name === name));
+            const alias = "____"+name;
+            const item = Object.assign({alias,formatted:(name + ' AS "' + alias+'"'),},this.availableFields.find(i=>i.name === name));
             this.queryBuilder.fields.push(item)
             this.selectedValue = undefined;
             if(item.aggregatable)
@@ -434,7 +435,7 @@ export default {
                 }
 
             }else{
-                this.editItem.formatted = this.editItem.name;
+                this.editItem.formatted = this.editItem.name+ ' AS "'+this.editItem.alias+'"';
             }
 
             this.$set(this.queryBuilder.fields,this.editSource,this.editItem);
