@@ -4,6 +4,17 @@
         title="数据分析器"
         sub-title="自定义数据统计"
     >
+        <div v-if="saveAsSource && saveAs.list&& saveAs.list.length" slot="content">
+            <label style="margin-right: 10px;">已保存的检索: </label>
+            <a-tag v-for="item in saveAs.list" :key="item.id"
+                   closable
+                   @click="saveAsClick(item)"
+                   @close="saveAsDelete(item)"
+            >
+                {{item.name}}
+            </a-tag>
+        </div>
+
         <a-card>
             <nk-form :col="1" class="form-content">
                 <template v-if="queryBuilder.custom">
@@ -15,18 +26,18 @@
                     </nk-form-item>
                     <nk-form-item>
                         <a-button class="selected-item" type="primary" @click="runSql">预览</a-button>
-                        <a-button class="selected-item" type="default">另存为...</a-button>
+                        <a-button class="selected-item" type="default" @click="saveAs.visible=true">另存为...</a-button>
                     </nk-form-item>
                 </template>
                 <template v-else>
                     <nk-form-item title="数据集">
-                        <a-select v-model="index" class="selected-item" style="width: 200px;" @change="indexChange">
+                        <a-select v-model="queryBuilder.index" class="selected-item" style="width: 200px;" @change="indexChange">
                             <a-select-option key="document">document</a-select-option>
                             <a-select-option key="doc-ext">doc-ext</a-select-option>
                             <a-select-option key="document-custom">document-custom</a-select-option>
                         </a-select>
                         <a-button class="selected-item" type="primary" @click="runSql">预览</a-button>
-                        <a-button class="selected-item" type="default">另存为...</a-button>
+                        <a-button class="selected-item" type="default" @click="saveAs.visible=true">另存为...</a-button>
                     </nk-form-item>
                     <nk-form-item title="字段">
                         <span class="selected-item empty" v-if="!queryBuilder.fields.length"></span>
@@ -172,6 +183,9 @@
                 </nk-form-item>
             </nk-form>
         </a-modal>
+        <a-modal v-model="saveAs.visible" centered title="请输入备注" @ok="saveAsPost" :confirm-loading="saveAs.confirmLoading">
+            <a-input v-model="saveAs.name" placeholder="请输入搜索备注，便于后期使用"></a-input>
+        </a-modal>
 
     </nk-page-layout>
 </template>
@@ -229,12 +243,12 @@ export default {
 
             queryBuilder:{
                 custom:false,
+                index:undefined,
                 fields:[],
                 filter:[],
                 sorted:[],
             },
 
-            index:undefined,
             availableFields:[],
 
             selectedValue:undefined,
@@ -247,6 +261,14 @@ export default {
             modalFieldVisible:false,
 
             data:{},
+
+            saveAsSource:"NK$DataAnalyse",
+            saveAs: {
+                visible: false,
+                name: undefined,
+                confirmLoading: false,
+                list: []
+            }
         }
     },
     computed:{
@@ -291,11 +313,11 @@ export default {
             const groups = this.queryBuilder.fields.filter(item=>item.groupBy).map(item=>'"_G_'+item.name+'"').join(', ');
             const having = this.queryBuilder.fields.filter(item=>item.having).map(item=>item.havingFormatted).join(' AND ');
             const sorted = this.queryBuilder.sorted.map(item=>item.formated).join(', ');
-            return `SELECT ${fields||'*'} FROM ${this.index||'<document>'} ${filter.length?' WHERE':''} ${filter} ${groups.length?' GROUP BY':''} ${groups} ${having.length?' HAVING':''} ${having} ${sorted.length?' ORDER BY':''} ${sorted} LIMIT 1000`;
+            return `SELECT ${fields||'*'} FROM ${this.queryBuilder.index||'<document>'} ${filter.length?' WHERE':''} ${filter} ${groups.length?' GROUP BY':''} ${groups} ${having.length?' HAVING':''} ${having} ${sorted.length?' ORDER BY':''} ${sorted} LIMIT 1000`;
         }
     },
     created() {
-
+        this.saveAsGet();
     },
     methods:{
         moment,
@@ -305,10 +327,45 @@ export default {
                 this.queryBuilder.sql = this.sql;
         },
         runSql(){
+            this.loading = true;
             this.$http.postJSON(`/api/data/analyse/sql`,this.sql)
                 .then(res=>{
                     this.data = res.data;
+                })
+                .finally(()=>{
+                    this.loading = false;
                 });
+        },
+        saveAsGet(){
+            this.$http.get("/api/webapp/user/saved/query/list?source="+this.saveAsSource)
+                .then((response)=>{
+                    this.saveAs.list = response.data;
+                })
+        },
+        saveAsPost(){
+            this.saveAs.confirmLoading = true;
+            this.$http.postJSON("/api/webapp/user/saved/query/create",{
+                name: this.saveAs.name || '未命名搜索',
+                source: this.saveAsSource,
+                json: JSON.stringify(this.queryBuilder)
+            }).then((response)=>{
+                this.saveAs.list.push(response.data);
+            }).finally(()=>{
+                this.saveAs.name=undefined;
+                this.saveAs.confirmLoading = false;
+                this.saveAs.visible = false;
+            })
+        },
+        saveAsDelete(item){
+            this.$http.post("/api/webapp/user/saved/query/delete?queryId="+item.id)
+                .then(()=>{
+                    this.saveAs.list.splice(this.saveAs.list.indexOf(item),1);
+                })
+        },
+        saveAsClick(item){
+            this.queryBuilder = JSON.parse(item.json||'{}');
+            this.runSql();
+            this.indexChange(this.queryBuilder.index);
         },
         indexChange(index){
             this.$http.post(`/api/data/analyse/fieldCaps/${index}`)
