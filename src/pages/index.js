@@ -14,6 +14,7 @@ import NkPageDocs from "./doc/NkPageDocs";
 import NkPageDocDetail from "./doc/NkPageDocDetail";
 import NkPageDocDetailDiff from "./doc/NkPageDocDetailDiff";
 import NkPageCustomQuery from "./doc/NkPageCustomQuery";
+import NkPageDataAnalyse from "./doc/NkPageDataAnalyse";
 
 /**
  * 设置界面
@@ -94,6 +95,21 @@ module.routes = [
         name: "单据对比",
         path: 'diff/:leftId/:rightId',
         component: NkPageDocDetailDiff
+      }
+    ]
+  },
+  {
+    name: "数据",
+    path: 'data',
+    meta:{
+      title: "数据分析",
+    },
+    component: NkPageDataAnalyse,
+    children: [
+      {
+        name: "数据分析",
+        path: ':id',
+        component: NkPageCustomQuery,
       }
     ]
   },

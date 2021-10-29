@@ -76,7 +76,11 @@ export default {
             return this.edit && this.$parent.$props.edit && this.$slots.edit
         },
         termClass(){
-            return [this.$parent.$props.edit?' edit':'',this.align]
+            return [
+                this.$parent.$props.edit?' edit':'',
+                this.align,
+                this.term || this.title ? ' hasContent':''
+            ]
         }
     },
     methods:{
@@ -144,14 +148,15 @@ export default {
         flex-shrink: 0;
         font-size: 12px;
 
-        &:after {
+        &.left{
+            text-align: left;
+        }
+
+        &.hasContent:after {
             content: ':';
             margin: 0 8px 0 2px;
             position: relative;
             top: -0.5px;
-        }
-        &.left{
-            text-align: left;
         }
     }
     .content{
@@ -159,7 +164,8 @@ export default {
         line-height: 22px;
         /*width: 100%;*/
         color: rgba(0,0,0,.65);
-        display: table-cell;
+        display: flex;
+        flex-wrap: wrap;
         width: 100%;
         padding: 0 32px 8px 0;
 
