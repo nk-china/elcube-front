@@ -119,6 +119,9 @@
             <nk-form :col="1">
                 <nk-form-item title="字段">{{editItem.name}}</nk-form-item>
                 <nk-form-item title="类型">{{editItem.type}}</nk-form-item>
+                <nk-form-item title="别名">
+                    <a-input v-model="editItem.alias">{{editItem.alias}}</a-input>
+                </nk-form-item>
                 <nk-form-item title="分组" v-if="editItem.aggregatable">
                     <a-switch v-model="editItem.groupBy"></a-switch>
                 </nk-form-item>
@@ -310,7 +313,7 @@ export default {
         sql(){
             const fields = this.queryBuilder.fields.map(item=>item.formatted).join(', ');
             const filter = this.queryBuilder.filter.map(item=>item.formatted).join(' AND ');
-            const groups = this.queryBuilder.fields.filter(item=>item.groupBy).map(item=>'"_G_'+item.name+'"').join(', ');
+            const groups = this.queryBuilder.fields.filter(item=>item.groupBy).map(item=>'"'+item.alias+'"').join(', ');
             const having = this.queryBuilder.fields.filter(item=>item.having).map(item=>item.havingFormatted).join(' AND ');
             const sorted = this.queryBuilder.sorted.map(item=>item.formated).join(', ');
             return `SELECT ${fields||'*'} FROM ${this.queryBuilder.index||'<document>'} ${filter.length?' WHERE':''} ${filter} ${groups.length?' GROUP BY':''} ${groups} ${having.length?' HAVING':''} ${having} ${sorted.length?' ORDER BY':''} ${sorted} LIMIT 1000`;
@@ -403,6 +406,8 @@ export default {
         },
         configField(){
 
+            this.editItem.alias = this.editItem.alias || ("____"+this.editItem.name);
+
             if(!this.editItemIsDate&&!this.editItemIsNumber){
                 this.editItem.interval = undefined
             }
@@ -413,18 +418,18 @@ export default {
                 this.editItem.agg=undefined;
 
                 if(this.editItemIsNumber){
-                    this.editItem.formatted = 'HISTOGRAM('+this.editItem.name+','+this.editItem.interval+') as "_G_'+this.editItem.name+'"';
+                    this.editItem.formatted = 'HISTOGRAM('+this.editItem.name+','+this.editItem.interval+') AS "'+this.editItem.alias+'"';
                 }else if(this.editItemIsDate){
-                    this.editItem.formatted = 'HISTOGRAM('+this.editItem.name+',INTERVAL '+this.editItem.interval+' '+this.editItem.intervalUnit+') as "_G_'+this.editItem.name+'"';
+                    this.editItem.formatted = 'HISTOGRAM('+this.editItem.name+',INTERVAL '+this.editItem.interval+' '+this.editItem.intervalUnit+') AS "'+this.editItem.alias+'"';
                 }else{
-                    this.editItem.formatted = this.editItem.name + ' as "_G_'+this.editItem.name+'"';
+                    this.editItem.formatted = this.editItem.name + ' AS "'+this.editItem.alias+'"';
                 }
 
             }else if(this.editItem.agg){
-                this.editItem.formatted = this.editItem.agg.replace('{}',this.editItem.name) + ' AS "_A_'+this.editItem.name+'"';
+                this.editItem.formatted = this.editItem.agg.replace('{}',this.editItem.name) + ' AS "'+this.editItem.alias+'"';
 
                 if(this.editItem.having){
-                    this.editItem.havingFormatted = '"_A_'+this.editItem.name +'" '+this.editItem.having + ' ' + this.editItem.havingValue;
+                    this.editItem.havingFormatted = '"'+this.editItem.alias +'" '+this.editItem.having + ' ' + this.editItem.havingValue;
                     this.editItem.viewFormatted = this.editItem.formatted + ' '+this.editItem.having + ' ' + this.editItem.havingValue;
                 }
 
