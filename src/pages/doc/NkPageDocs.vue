@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import NkUtil from "../../utils/NkUtil";
 import NkPagePreview from "./NkPagePreview";
 
 const classifies = [
@@ -86,7 +85,7 @@ export default {
                 },
                 {
                     name:'关键字',
-                    field:'keyword',
+                    field:['keyword','docName','partnerName'],
                     component:'nk-search-options-text',
                     placeholder:'请输入关键字'
                 },
@@ -126,7 +125,7 @@ export default {
     },
     methods:{
         search(params){
-            this.$http.postJSON("/api/doc/list/doc",NkUtil.toEsParams(params,this.preCondition,true))
+            this.$http.postJSON("/api/doc/list/document",params)
                 .then((res)=>{
                     this.$emit("setTab","单据");
                     if(this.$refs.layout)

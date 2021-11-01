@@ -7,8 +7,8 @@
         :search-items-more-def="searchItemsMoreDef"
         :dataTableColumns="columns"
         :save-as-source="custom.menuId"
-        :keyword-field="keywordField"
         :init-rows="defaultRows"
+        :sortConfig="sortConfig"
         :lazy="true"
         :selectable="false"
         @change="search"
@@ -29,12 +29,11 @@
             </a-dropdown>
         </a-button-group>
 
-        <nk-page-preview :params="previewParams" v-model="previewVisible" @close="previewClose"></nk-page-preview>
+        <nk-page-preview v-if="preview" :params="previewParams" v-model="previewVisible" @close="previewClose"></nk-page-preview>
     </nk-query-layout>
 </template>
 
 <script>
-import NkUtil from "../../utils/NkUtil";
 import NkPagePreview from "./NkPagePreview";
 import {mapGetters} from "vuex";
 
@@ -42,18 +41,21 @@ export default {
     components: {NkPagePreview},
     data(){
         return {
-            index:"doc",
-            keywordField:["docName","partnerName"],
-            defaultRows:10,
-            columns:[],
+            $debug:false,
+            index:"document",
+            postSql:undefined,
+            postCondition:undefined,
             searchItemsDefault:[],
             searchItemsMoreDef:[],
-            preCondition:{},
+            defaultRows:10,
+            columns:[],
+            sortConfig:undefined,
             creatable:undefined,
             custom:{},
+
+            preview:false,
             previewParams: {},
             previewVisible: false,
-            $debug:false
         }
     },
     created(){
@@ -111,25 +113,39 @@ export default {
         },
         search(params){
 
-            for(const key in this.$route.query){
-                if(this.$route.query.hasOwnProperty(key)){
-                    let value = this.$route.query[key];
-                    if(value.startsWith('[')||value.startsWith('{')){
-                        try{
-                            value = JSON.parse(value)
-                        }catch (e) {
-                            console.log(e);
-                        }
-                    }
-                    params[key]=value;
-                }
-            }
+            // for(const key in this.$route.query){
+            //     if(this.$route.query.hasOwnProperty(key)){
+            //         let value = this.$route.query[key];
+            //         if(value.startsWith('[')||value.startsWith('{')){
+            //             try{
+            //                 value = JSON.parse(value)
+            //             }catch (e) {
+            //                 console.log(e);
+            //             }
+            //         }
+            //         params[key]=value;
+            //     }
+            // }
 
-            this.$http.postJSON(`/api/doc/list/${this.index}`,NkUtil.toEsParams(params,this.preCondition,this.$debug))
-                .then((res)=>{
+            if(this.postSql){
+                this.$http.postJSON(`/api/data/analyse/sql`,Object.assign({
+                        sql: (this.postSql instanceof Array) ? this.postSql : [this.postSql],
+                        $debug: this.$debug,
+                    },params)
+                ).then((res)=>{
                     if(this.$refs.layout)
                         this.$refs.layout.setData(res.data)
                 });
+            }else{
+                this.$http.postJSON(`/api/doc/list/${this.index}`,Object.assign({
+                            postCondition: this.postCondition,
+                            $debug: this.$debug,
+                        },params)
+                ).then((res)=>{
+                    if(this.$refs.layout)
+                        this.$refs.layout.setData(res.data)
+                });
+            }
         },
         selected({row,$event}){
             if($event.target.tagName!=='A'){

@@ -23,17 +23,18 @@
                                :key="index"
                                :is="item.component"
                                :config="item"
-                               :option="item.options || aggs[item.field]"
-                               @changed="formItemChanged"
+                               :option="item.option || aggs[item.field]"
+                               @change="formItemChanged"
                     ></component>
                     <component v-for="(item) in searchItemsMoreSelected"
                                ref="searchMoreItems"
+                               slot="more"
                                :key="item.field"
                                :is="item.component"
                                :config="item"
                                :option="aggs[item.field]"
                                :closeable="true"
-                               @changed="formItemChanged"
+                               @change="formItemChanged"
                                @close="searchMoreItemClosed"
                     ></component>
                     <nk-search-item v-if="availableSearchItemsMoreDef && availableSearchItemsMoreDef.length" :min="0">
@@ -77,18 +78,17 @@
                 show-header-overflow="tooltip"
                 show-overflow="tooltip"
                 size="mini"
-                border="full"
+                border=inner
                 :columns="dataTableColumns"
                 :data="page.list"
                 :loading="loading"
                 @cell-click="vxeCellClick"
                 @current-change="vxeCurrentChanged"
                 @sort-change="vxeSortChanged"
-                :sort-config="sortConfig"
+                :sort-config="{trigger: 'cell', remote: true, defaultSort: {field: 'age', order: 'desc'}, orders: ['desc', 'asc', null]}"
             >
             </vxe-grid>
             <vxe-pager
-                v-if="page.page"
                 perfect
                 size="mini"
                 :current-page="page.page"
@@ -108,14 +108,19 @@
 
 <script>
 import XNkPageLayout from "./XNkPageLayout";
-
 export default {
     components:{
-        XNkPageLayout,
+        XNkPageLayout
     },
     props:{
         title:String,
         subTitle:String,
+        keywordField:{
+            type: Array,
+            default(){
+                return []
+            }
+        },
         searchItemsDefault:Array,
         searchItemsMoreDef:{
             type : Array,
@@ -142,17 +147,6 @@ export default {
         initRows:{
             type: Number,
             default: 10,
-        },
-        sortConfig:{
-            type: Object,
-            default(){
-                return {
-                    trigger: 'cell',
-                    remote: true,
-                    defaultSort: {field: 'age', order: 'desc'},
-                    orders: ['desc', 'asc', null]
-                };
-            }
         }
     },
     data(){
@@ -202,6 +196,7 @@ export default {
                 }
             })
             this.params._source=fields;
+            this.params._keywordField = this.keywordField.join(',');
 
 
             this.searchMoreDefUpdate();
@@ -217,34 +212,32 @@ export default {
                 this.saveAsGet();
             }
         },
-        reset(params){
+        reset(conditions){
 
-            if(params){
+            if(conditions){
                 this.searchItemsMoreFields = [];
                 this.searchItemsMoreSelected = [];
                 this.searchMoreDefUpdate();
 
-                for(let field in params.conditions){
+                for(let field in conditions){
                     let find = this.searchItemsMoreFields.indexOf(field);
                     if(find===-1){
-                        let def = this.searchItemsMoreDef.find(def=>def&&def.field===field);
+                        let def = this.searchItemsMoreDef.find(def=>def.field===field);
                         if(def){
                             def.doNotOpen = true;
                             this.searchItemsMoreFields.push(field);
                             this.searchItemsMoreSelected.push(def);
-
-                            if(this.availableSearchItemsMoreDef.indexOf(def)===-1)
-                                this.availableSearchItemsMoreDef.push(def);
+                            this.availableSearchItemsMoreDef.push(def);
                         }
                     }
                 }
                 this.$nextTick(()=>{
                     if(this.$refs.searchItems)
-                        this.$refs.searchItems    .forEach(item=>{if(item.setValue)item.setValue(params.conditions)});
+                        this.$refs.searchItems    .forEach(item=>{if(item.setValue)item.setValue(conditions)});
                     if(this.$refs.searchMoreItems)
-                        this.$refs.searchMoreItems.forEach(item=>{if(item.setValue)item.setValue(params.conditions)});
+                        this.$refs.searchMoreItems.forEach(item=>{if(item.setValue)item.setValue(conditions)});
                 })
-                this.params = Object.assign({from : this.params.from,rows : this.params.rows},params);
+                this.params = Object.assign({from : this.params.from,rows : this.params.rows},conditions);
 
             }else{
 
@@ -282,26 +275,11 @@ export default {
         //
         formItemChanged(e){
             if(e.field){
-                this.params.conditions = this.params.conditions||{};
-                if(e.condition){
-                    this.params.conditions[e.field]=e.condition;
-                }else{
-                    delete this.params.conditions[e.field]
+                this.params[e.field]=e.value;
+                if(!this.params['_highlight']){
+                    this.params['_highlight']={};
                 }
-
-                let highlight = this.params['_highlight'];
-                if(!highlight){
-                    highlight = [];
-                    this.params['_highlight']=highlight;
-                }
-
-                if(e.highlight){
-                    (e.field instanceof Array ? e.field : [e.field]).forEach(field=>{
-                        if(highlight.indexOf(field)===-1)
-                            highlight.push(field);
-                    })
-                }
-
+                this.params['_highlight'][e.field]=e.highlight;
                 this.searchMoreDefUpdate();
                 if(e.trigger){
                     this.params.from = 0;
@@ -382,11 +360,9 @@ export default {
         },
         // 排序跳转
         vxeSortChanged({column,property,order}){
-            if(this.sortConfig && this.sortConfig.remote){
-                this.params.orderField = order===null?null:((column.params&&column.params.orderField)||property);
-                this.params.order = order;
-                this.emitChange()
-            }
+            this.params.orderField = order===null?null:((column.params&&column.params.orderField)||property);
+            this.params.order = order;
+            this.emitChange()
         },
         // 页码跳转
         vxePageChanged(e){

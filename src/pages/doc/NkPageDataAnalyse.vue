@@ -355,7 +355,7 @@ export default {
         runSql(){
             this.loading = true;
             this.queryBuilder.sql = this.queryBuilder.custom?this.queryBuilder.sql:this.sql;
-            this.$http.postJSON(`/api/data/analyse/sql`,this.queryBuilder.sql + ' LIMIT 1000')
+            this.$http.postJSON(`/api/data/analyse/sql`,{sql:this.queryBuilder.sql + ' LIMIT 1000'})
                 .then(res=>{
                     this.data = res.data;
                 })

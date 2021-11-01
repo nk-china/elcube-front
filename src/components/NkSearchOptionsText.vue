@@ -6,7 +6,6 @@
 
 <script>
   export default {
-    name: "NkSearchOptionsDateRange",
     props:{
       config: Object,
       closeable: Boolean
@@ -18,16 +17,34 @@
     },
     methods:{
       setValue(values){
-        this.value = values[this.config.field];
+        this.value = values&&values[this.config.field]&&values[this.config.field].multi_match.query;
       },
       keydown(e){
         if(e.key==='Enter'){
-          this.$emit("change",Object.assign({value:this.value,trigger:true,highlight:!!this.value}, this.config));
+          const multi_match = {
+              query:this.value,
+              fields:this.config.field instanceof Array ? this.config.field : [this.config.field],
+          };
+          this.$emit("changed",{
+              field:this.config.field,
+              trigger:true,
+              highlight:true,
+              condition:this.value&&{multi_match}
+          })
           e.target.blur();
         }
       },
       change(){
-        this.$emit("change",Object.assign({value:this.value,highlight:!!this.value}, this.config));
+          const multi_match = {
+              query:this.value,
+              fields:this.config.field instanceof Array ? this.config.field : [this.config.field],
+          };
+          this.$emit("changed",{
+              field:this.config.field,
+              trigger:false,
+              highlight:true,
+              condition:this.value&&{multi_match}
+          })
       },
       close(){
         this.$emit("close",this.config);

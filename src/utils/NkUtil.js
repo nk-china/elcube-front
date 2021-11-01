@@ -62,6 +62,7 @@ export default {
                     np[field]=highlightFields.join(',');
                     break;
                 }
+                case "conditions":break;
                 default:
                     value = params[field];
                     if(value instanceof Array){

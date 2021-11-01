@@ -28,7 +28,6 @@
 <script>
 import NkFormat from "../utils/NkFormat";
 export default {
-    name: "NkSearchOptionsMultiple",
     props:{
         config: Object,
         option: Object,
@@ -42,16 +41,28 @@ export default {
     },
     methods:{
         setValue(values){
-            this.value = values[this.config.field];
+            this.value = values&&values[this.config.field]&&values[this.config.field].terms[this.config.field]
         },
         blur(e){
             if(this.valueChanged){
-                this.$emit("change",Object.assign({value:e, trigger:true}, this.config));
+                const terms = {};
+                terms[this.config.field]=e;
+                this.$emit("changed",{
+                    field:this.config.field,
+                    trigger:true,
+                    condition:e&&{terms}
+                })
                 this.valueChanged=false;
             }
         },
         change(e){
-            this.$emit("change",Object.assign({value:e, trigger:e.length===0}, this.config));
+            const terms = {};
+            terms[this.config.field]=e;
+            this.$emit("changed",{
+                field:this.config.field,
+                trigger:e.length===0,
+                condition:e&&{terms}
+            })
         },
         close(){
             this.$emit("close",this.config);
