@@ -36,7 +36,11 @@
                             <a-select-option key="doc-ext">doc-ext</a-select-option>
                             <a-select-option key="document-custom">document-custom</a-select-option>
                         </a-select>
-                        <a-button class="selected-item" type="primary" @click="runSql">预览</a-button>
+                        <a-button-group class="selected-item">
+                            <a-button type="primary" @click="runSql">执行</a-button>
+                            <a-button type="default" @click="dataV.visible=true">数据透视</a-button>
+                            <a-button type="default">导出</a-button>
+                        </a-button-group>
                         <a-button class="selected-item" type="default" @click="saveAs.visible=true">另存为...</a-button>
                     </nk-form-item>
                     <nk-form-item title="字段">
@@ -115,7 +119,7 @@
 
         </a-card>
 
-        <a-modal v-model="modalFieldVisible" :title="'字段:'+editItem.name" @ok="configField">
+        <a-modal v-model="modalFieldVisible" centered :title="'字段:'+editItem.name" @ok="configField">
             <nk-form :col="1">
                 <nk-form-item title="字段">{{editItem.name}}</nk-form-item>
                 <nk-form-item title="类型">{{editItem.type}}</nk-form-item>
@@ -159,7 +163,7 @@
             </nk-form>
         </a-modal>
 
-        <a-modal v-model="modalFilterVisible" :title="'条件:'+editItem.name" @ok="configFilter">
+        <a-modal v-model="modalFilterVisible" centered :title="'条件:'+editItem.name" @ok="configFilter">
             <nk-form :col="1">
                 <nk-form-item title="字段">{{editItem.name}}</nk-form-item>
                 <nk-form-item title="类型">{{editItem.type}}</nk-form-item>
@@ -189,6 +193,11 @@
         <a-modal v-model="saveAs.visible" centered title="请输入备注" @ok="saveAsPost" :confirm-loading="saveAs.confirmLoading">
             <a-input v-model="saveAs.name" placeholder="请输入搜索备注，便于后期使用"></a-input>
         </a-modal>
+
+        <a-modal v-model="dataV.visible" centered title="数据透视" width="800px">
+            <NkMeterAntVArea title="" :config="{sql:sql}" :editable="true" style="height: 300px;"></NkMeterAntVArea>
+        </a-modal>
+
 
     </nk-page-layout>
 </template>
@@ -271,6 +280,10 @@ export default {
                 name: undefined,
                 confirmLoading: false,
                 list: []
+            },
+
+            dataV:{
+                visible:false
             }
         }
     },
