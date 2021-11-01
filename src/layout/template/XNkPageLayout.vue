@@ -7,7 +7,7 @@
     <a-spin class="nk-page-layout" :spinning="spinning">
         <div class="nk-page-layout-header">
             <slot name="top"></slot>
-            <nk-sticky :stickyTop="-10" :z-index="5">
+            <nk-sticky :stickyTop="-10" :z-index="11">
                 <div class="nk-page-layout-stick" :class="{'show-right':headerIndent && rightBar}" style="padding-top: 20px;">
                     <div>
                         <span class="ant-page-header-heading-title">{{title}}</span>
