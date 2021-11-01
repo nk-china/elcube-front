@@ -8,6 +8,7 @@
         :dataTableColumns="columns"
         :save-as-source="custom.menuId"
         :init-rows="defaultRows"
+        :border="border"
         :sortConfig="sortConfig"
         :lazy="true"
         :selectable="false"
@@ -50,6 +51,7 @@ export default {
             defaultRows:10,
             columns:[],
             sortConfig:undefined,
+            border:undefined,
             creatable:undefined,
             custom:{},
 

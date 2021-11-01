@@ -77,7 +77,7 @@
                 show-header-overflow="tooltip"
                 show-overflow="tooltip"
                 size="mini"
-                border="full"
+                :border="border"
                 :columns="dataTableColumns"
                 :data="page.list"
                 :loading="loading"
@@ -142,6 +142,10 @@ export default {
         initRows:{
             type: Number,
             default: 10,
+        },
+        border:{
+            type:String,
+            default:"inner"
         },
         sortConfig:{
             type: Object,
