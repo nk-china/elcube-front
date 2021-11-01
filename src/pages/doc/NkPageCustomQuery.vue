@@ -129,7 +129,7 @@ export default {
 
             if(this.postSql){
                 this.$http.postJSON(`/api/data/analyse/sql`,Object.assign({
-                        sql: (this.postSql instanceof Array) ? this.postSql : [this.postSql],
+                        sqls: (this.postSql instanceof Array) ? this.postSql : [this.postSql],
                         $debug: this.$debug,
                     },params)
                 ).then((res)=>{
