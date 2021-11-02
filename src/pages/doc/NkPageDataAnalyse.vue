@@ -93,6 +93,25 @@
                             <a-select-option v-for="field in sortableFields" :key="field.name">{{field.name}}</a-select-option>
                         </a-select>
                     </nk-form-item>
+
+                    <nk-form-item title="图表">
+                        <span class="selected-item empty" v-if="!queryBuilder.sorted.length"></span>
+                        <a-button-group class="selected-item" v-for="(item,index) in queryBuilder.sorted" :key="index">
+                            <a-button @click="changeSort(item)">
+                                <a-icon v-if="item.order==='ASC'" type="up" class="tag ant-tag-green" />
+                                <a-icon v-else type="down" class="tag ant-tag-green" />
+                                {{ item.name }}
+                            </a-button>
+                            <a-button @click="removeFrom(item,queryBuilder.sorted)">
+                                <a-icon type="close" />
+                            </a-button>
+                        </a-button-group>
+
+                        <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @change="addSort">
+                            <a-select-option v-for="field in sortableFields" :key="field.name">{{field.name}}</a-select-option>
+                        </a-select>
+                    </nk-form-item>
+
                     <nk-form-item>
                         <a @click="custom">切换到高级模式</a>
                     </nk-form-item>
