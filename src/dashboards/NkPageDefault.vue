@@ -53,7 +53,7 @@
                                :editable="editable"
                                ref="items"
                                @remove="removeCard(item)"
-                               @update="cardConfigUpdated(item,$event)"
+                               @update:config="cardConfigUpdated(item,$event)"
                     ></component>
                     <a-card v-else :title="item.title" size="small" style="height:100%;" ref="items">
                         {{ item.i }}{{item.component}}
@@ -107,9 +107,13 @@ import NkAdvancedSearchInput from "@/pages/components/NkAdvancedSearchInput";
 import {mapGetters} from "vuex";
 
 export default {
-    name: "NkDashboard",
     components:{
       NkAdvancedSearchInput,
+    },
+    provide(){
+        return {
+            mode: 'dashboard'
+        };
     },
     data(){
         return {
@@ -199,7 +203,7 @@ export default {
                     });
             }
             if(e.key==="2"){
-                this.$http.get("/api/dashboard/card/list")
+                this.$http.get("/api/meter/card/list")
                     .then((res)=>{
                         this.modalAvailableCards.cards = res.data;
                         this.modalAvailableCards.visible=true;

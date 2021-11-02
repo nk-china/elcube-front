@@ -3,15 +3,17 @@
 
         <slot name="action" slot="action"></slot>
 
-        <div v-if="saveAsSource && saveAs.list&& saveAs.list.length" slot="content">
-            <label style="margin-right: 10px;">已保存的检索: </label>
-            <a-tag v-for="item in saveAs.list" :key="item.id"
-                   closable
-                   @click="saveAsClick(item)"
-                   @close="saveAsDelete(item)"
-            >
-                {{item.name}}
-            </a-tag>
+        <div v-if="saveAsSource && saveAs.list&& saveAs.list.length" slot="content" style="display: flex;align-items: flex-start">
+            <label style="margin-right: 10px;width: 6.5em;flex-shrink: 0;line-height: 26px;">已保存的检索: </label>
+            <div style="line-height: 26px;">
+                <a-tag v-for="item in saveAs.list" :key="item.id"
+                       closable
+                       @click="saveAsClick(item)"
+                       @close="saveAsDelete(item)"
+                >
+                    {{item.name}}
+                </a-tag>
+            </div>
         </div>
         <slot v-if="$slots.content" name="content" slot="content"></slot>
 

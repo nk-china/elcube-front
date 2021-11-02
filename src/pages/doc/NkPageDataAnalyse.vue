@@ -1,18 +1,20 @@
 <template>
     <nk-page-layout
         ref="layout"
-        title="数据分析器"
+        title="数据统计分析工具"
         sub-title="自定义数据统计"
     >
-        <div v-if="saveAsSource && saveAs.list&& saveAs.list.length" slot="content">
-            <label style="margin-right: 10px;">已保存的检索: </label>
-            <a-tag v-for="item in saveAs.list" :key="item.id"
-                   closable
-                   @click="saveAsClick(item)"
-                   @close="saveAsDelete(item)"
-            >
-                {{item.name}}
-            </a-tag>
+        <div v-if="saveAsSource && saveAs.list&& saveAs.list.length" slot="content" style="display: flex;align-items: flex-start">
+            <label style="margin-right: 10px;width: 6.5em;flex-shrink: 0;line-height: 26px;">已保存的统计: </label>
+            <div style="line-height: 26px;">
+                <a-tag v-for="item in saveAs.list" :key="item.id"
+                       closable
+                       @click="saveAsClick(item)"
+                       @close="saveAsDelete(item)"
+                >
+                    {{item.name}}
+                </a-tag>
+            </div>
         </div>
 
         <a-card>
@@ -25,7 +27,7 @@
                         <a @click="custom(false)">切换到普通模式</a>
                     </nk-form-item>
                     <nk-form-item>
-                        <a-button class="selected-item" type="primary" @click="runSql">预览</a-button>
+                        <a-button class="selected-item" type="primary" @click="runSql">执行</a-button>
                         <a-button class="selected-item" type="default" @click="saveAs.visible=true">另存为...</a-button>
                     </nk-form-item>
                 </template>
@@ -37,15 +39,14 @@
                             <a-select-option key="document-custom">document-custom</a-select-option>
                         </a-select>
                         <a-button-group class="selected-item">
-                            <a-button type="primary" @click="runSql">执行</a-button>
-                            <a-button type="default" @click="dataV.visible=true">数据透视</a-button>
-                            <a-button type="default">导出</a-button>
+                            <a-button type="primary" @click="runSql" :disabled="!(queryBuilder.index && queryBuilder.fields.length)">执行</a-button>
+                            <a-button type="default" :disabled="!(queryBuilder.index && queryBuilder.fields.length)">导出</a-button>
                         </a-button-group>
-                        <a-button class="selected-item" type="default" @click="saveAs.visible=true">另存为...</a-button>
+                        <a-button class="selected-item" type="default" @click="saveAs.visible=true" :disabled="!(queryBuilder.index && queryBuilder.fields.length)">另存为...</a-button>
                     </nk-form-item>
                     <nk-form-item title="字段">
                         <span class="selected-item empty" v-if="!queryBuilder.fields.length"></span>
-                        <a-button-group class="selected-item" v-for="(item,index) in queryBuilder.fields" :key="index">
+                        <a-button-group class="selected-item value" v-for="(item,index) in queryBuilder.fields" :key="index">
                             <a-button @click="editField(item)">
                                 <span class="tag ant-tag-red" v-if="item.groupBy">G</span>
                                 <span class="tag ant-tag-orange" v-if="item.agg">A</span>
@@ -64,7 +65,7 @@
                     <nk-form-item title="过滤条件">
 
                         <span class="selected-item empty" v-if="!queryBuilder.filter.length"></span>
-                        <a-button-group class="selected-item" v-for="(item,index) in queryBuilder.filter" :key="index">
+                        <a-button-group class="selected-item value" v-for="(item,index) in queryBuilder.filter" :key="index">
                             <a-button @click="editFilter(item)">{{ item.formatted }}</a-button>
                             <a-button @click="removeFrom(item,queryBuilder.filter)">
                                 <a-icon type="close" />
@@ -78,25 +79,7 @@
                     <nk-form-item title="排序">
 
                         <span class="selected-item empty" v-if="!queryBuilder.sorted.length"></span>
-                        <a-button-group class="selected-item" v-for="(item,index) in queryBuilder.sorted" :key="index">
-                            <a-button @click="changeSort(item)">
-                                <a-icon v-if="item.order==='ASC'" type="up" class="tag ant-tag-green" />
-                                <a-icon v-else type="down" class="tag ant-tag-green" />
-                                {{ item.name }}
-                            </a-button>
-                            <a-button @click="removeFrom(item,queryBuilder.sorted)">
-                                <a-icon type="close" />
-                            </a-button>
-                        </a-button-group>
-
-                        <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @change="addSort">
-                            <a-select-option v-for="field in sortableFields" :key="field.name">{{field.name}}</a-select-option>
-                        </a-select>
-                    </nk-form-item>
-
-                    <nk-form-item title="图表">
-                        <span class="selected-item empty" v-if="!queryBuilder.sorted.length"></span>
-                        <a-button-group class="selected-item" v-for="(item,index) in queryBuilder.sorted" :key="index">
+                        <a-button-group class="selected-item value" v-for="(item,index) in queryBuilder.sorted" :key="index">
                             <a-button @click="changeSort(item)">
                                 <a-icon v-if="item.order==='ASC'" type="up" class="tag ant-tag-green" />
                                 <a-icon v-else type="down" class="tag ant-tag-green" />
@@ -114,10 +97,20 @@
 
                     <nk-form-item>
                         <a @click="custom">切换到高级模式</a>
+                        <a v-if="gridData && !queryBuilder.chart" @click="setupChart" style="margin-left: 10px;">数据透视</a>
+                        <a v-if="gridData &&  queryBuilder.chart" @click="queryBuilder.chart=undefined" style="margin-left: 10px;">移除数据透视</a>
                     </nk-form-item>
                 </template>
             </nk-form>
 
+            <component v-if="queryBuilder.chart && queryBuilder.chart.component && gridData"
+                       :is="queryBuilder.chart.component"
+                       :config.sync="queryBuilder.chart"
+                       :editable="true"
+                       :default-data="gridData"
+                       :column-defs="gridColumns"
+                       style="height: 300px;">
+            </component>
             <vxe-grid
                 ref="grid"
                 auto-resize
@@ -126,7 +119,7 @@
                 show-header-overflow="tooltip"
                 show-overflow="tooltip"
                 size="mini"
-                border=inner
+                border="full"
                 max-height="500"
                 :columns="gridColumns"
                 :data="gridData"
@@ -209,14 +202,24 @@
                 </nk-form-item>
             </nk-form>
         </a-modal>
+
         <a-modal v-model="saveAs.visible" centered title="请输入备注" @ok="saveAsPost" :confirm-loading="saveAs.confirmLoading">
             <a-input v-model="saveAs.name" placeholder="请输入搜索备注，便于后期使用"></a-input>
         </a-modal>
 
-        <a-modal v-model="dataV.visible" centered title="数据透视" width="800px">
-            <NkMeterAntVArea title="" :config="{sql:sql}" :editable="true" style="height: 300px;"></NkMeterAntVArea>
+        <a-modal v-model="modalAvailableCards.visible" title="请选择图表模版">
+            <a-list bordered="" :data-source="modalAvailableCards.cards" size="small">
+                <a-list-item slot="renderItem" slot-scope="item">
+                    {{item.name}}
+                    <a slot="actions" @click="selectChart(item)">选择</a>
+                </a-list-item>
+            </a-list>
+            <template slot="footer">
+                <a-button key="back" @click="modalAvailableCards.visible=false">
+                    关闭
+                </a-button>
+            </template>
         </a-modal>
-
 
     </nk-page-layout>
 </template>
@@ -267,6 +270,11 @@ const operatorDefs = {
 
 
 export default {
+    provide(){
+        return {
+            mode: 'analyse'
+        };
+    },
     data(){
         return {
             loading:false,
@@ -278,6 +286,7 @@ export default {
                 fields:[],
                 filter:[],
                 sorted:[],
+                chart:undefined
             },
 
             availableFields:[],
@@ -293,6 +302,11 @@ export default {
 
             data:{},
 
+            modalAvailableCards:{
+                visible:false,
+                cards:[]
+            },
+
             saveAsSource:"NK$DataAnalyse",
             saveAs: {
                 visible: false,
@@ -300,18 +314,19 @@ export default {
                 confirmLoading: false,
                 list: []
             },
-
-            dataV:{
-                visible:false
-            }
         }
     },
     computed:{
+
         gridColumns(){
             return this.data.columns && this.data.columns.map(i=>{
                 return {
+                    // 用于vxe-table下拉菜单
                     title:i.name,
-                    field:i.name
+                    field:i.name,
+                    // 用于a-select下拉菜单
+                    label:i.name,
+                    value:i.name
                 };
             });
         },
@@ -372,6 +387,7 @@ export default {
                 this.queryBuilder.sql = this.sql;
         },
         runSql(){
+            this.data = {};
             this.loading = true;
             this.queryBuilder.sql = this.queryBuilder.custom?this.queryBuilder.sql:this.sql;
             this.$http.postJSON(`/api/data/analyse/sql`,{sql:this.queryBuilder.sql + ' LIMIT 1000'})
@@ -409,9 +425,12 @@ export default {
                 })
         },
         saveAsClick(item){
-            this.queryBuilder = JSON.parse(item.json||'{}');
-            this.runSql();
-            this.indexChange(this.queryBuilder.index);
+            this.data = {};
+            setTimeout(()=>{
+                this.queryBuilder = Object.assign({},JSON.parse(item.json||'{}'));
+                this.runSql();
+                this.indexChange(this.queryBuilder.index);
+            },100);
         },
         indexChange(index){
             this.$http.post(`/api/data/analyse/fieldCaps/${index}`)
@@ -497,7 +516,7 @@ export default {
             this.modalFilterOperators = operatorDefs[item.type];
             this.editSource = this.queryBuilder.filter.indexOf(item);
             this.editItem = JSON.parse(JSON.stringify(item));
-            this.$set(this.editItem,'value',this.editItem.value || undefined);
+            this.$set(this.editItem,'value',this.editItem.value);
         },
         configFilter(){
 
@@ -542,6 +561,18 @@ export default {
         },
         removeFrom(item,from){
             from.splice(from.indexOf(item),1);
+        },
+        setupChart(){
+            this.$http.get("/api/meter/card/list")
+                .then((res)=>{
+                    this.modalAvailableCards.cards = res.data;
+                    this.modalAvailableCards.visible=true;
+                });
+            //this.$set(this.queryBuilder,'chart',{});
+        },
+        selectChart(e){
+            this.$set(this.queryBuilder,'chart',{component:e.component,title:e.name});
+            this.modalAvailableCards.visible=false;
         }
     },
     mounted() {
@@ -553,7 +584,8 @@ export default {
 ::v-deep.form-content{
     .selected-item{
         margin: 2px 10px 2px 0;
-        button:nth-child(2){
+
+        &.value button:nth-child(2){
             padding-left: 7px;
             padding-right: 7px;
         }
