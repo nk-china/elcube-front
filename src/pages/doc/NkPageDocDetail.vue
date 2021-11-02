@@ -135,6 +135,7 @@
                        :createMode="createMode"
                        @nk-reload="reload"
                        @nk-save="doSave"
+                       @nk-submit="doSave"
                        @nk-calc="nkCalc(c,$event)"
                        @nk-changed="nkChanged($event,c)"
             />
@@ -357,6 +358,28 @@ export default {
             }
         },
         async doSave(state) {
+
+            if (this.$refs.components) {
+                for (let i in this.$refs.components) {
+                    let component = this.$refs.components[i];
+                    if(component.onSubmit){
+                        let onSubmit = component.onSubmit();
+                        if(onSubmit.then && typeof onSubmit.then === 'function'){
+                            try{
+                                onSubmit = await onSubmit;
+                                if(onSubmit===false){
+                                    return;
+                                }
+                            }catch (e){
+                                return;
+                            }
+                        }else if(!onSubmit){
+                            return;
+                        }
+                    }
+                }
+            }
+
             let error = this.$refs.header && this.$refs.header.hasError&&this.$refs.header.hasError();
             if (error) {
                 this.$message.error(error);
@@ -370,7 +393,12 @@ export default {
                         if(error) {
                             error = error===true?'校验错误':error;
                             if (error.then && typeof error.then === 'function') {
-                                error = await error
+                                try{
+                                    error = await error
+                                }catch (e){
+                                    this.$message.error(e);
+                                    return;
+                                }
                                 if (error) {
                                     this.$message.error(error);
                                     return;
