@@ -13,8 +13,9 @@ import NkPageTasks from "./task/NkPageTasks";
 import NkPageDocs from "./doc/NkPageDocs";
 import NkPageDocDetail from "./doc/NkPageDocDetail";
 import NkPageDocDetailDiff from "./doc/NkPageDocDetailDiff";
-import NkPageCustomQuery from "./doc/NkPageCustomQuery";
-import NkPageDataAnalyse from "./doc/NkPageDataAnalyse";
+import NkPageCustomQuery from "./data/NkPageCustomQuery";
+import NkPageDataDiscover from "./data/NkPageDataDiscover";
+import NkPageDataVisualize from "./data/NkPageDataVisualize";
 
 /**
  * 设置界面
@@ -101,14 +102,26 @@ module.routes = [
   {
     name: "数据",
     path: 'data',
-    meta:{
-      title: "数据分析",
-    },
-    component: NkPageDataAnalyse,
     children: [
       {
-        name: "数据分析",
-        path: ':id',
+        name: "发现",
+        path: 'discover',
+        component: NkPageDataDiscover,
+        meta:{
+          title: "数据发现",
+        }
+      },
+      {
+        name: "可视化",
+        path: 'visualize',
+        component: NkPageDataVisualize,
+        meta:{
+          title: "数据可视化",
+        }
+      },
+      {
+        name: "数据报表",
+        path: 'v/:id',
         component: NkPageCustomQuery,
       }
     ]

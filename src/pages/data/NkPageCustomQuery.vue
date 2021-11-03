@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import NkPagePreview from "./NkPagePreview";
+import NkPagePreview from "../doc/NkPagePreview";
 import {mapGetters} from "vuex";
 import NkUtil from "@/utils/NkUtil";
 

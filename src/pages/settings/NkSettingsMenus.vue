@@ -141,23 +141,7 @@ export default {
                     { required: true, message: '标题必须填写' }
                 ],
                 url: [
-                    { required: true, message: 'URL必须填写' },
-                    { validator({$table,row}){
-                        let error = undefined;
-                        $table.data.forEach(menu=>{
-                            if(menu!==row && menu.url === row.url){
-                                error = new Error('URL 重复');
-                            }
-                            if(menu.children){
-                                menu.children.forEach(menu=> {
-                                    if (menu !== row && menu.url === row.url) {
-                                        error = new Error('URL 重复');
-                                    }
-                                });
-                            }
-                        });
-                        return error;
-                    }}
+                    { required: true, message: 'URL必须填写' }
                 ],
                 age: [
                     { pattern: '^[0-9]{0,3}$', message: '格式不正确' }

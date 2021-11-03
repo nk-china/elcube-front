@@ -82,7 +82,11 @@ export default {
                 this.$refs.link.href=e.key;
                 this.$refs.link.click();
             }else if(this.$route.fullPath!==e.key) {
-                this.$router.push(e.key)
+                try{
+                    this.$router.push(e.key)
+                }catch (e){
+                    //eslint-disable-line
+                }
             }
         },
     }

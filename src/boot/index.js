@@ -21,7 +21,7 @@ import Http from "./Http";
 import NkComponent from "../components";
 import NkCards from "../cards";
 import NkCardLost from "../layout/NkCardLost";
-import NkDashboards from "../dashboards";
+import NkDashboards from "../pages/data/dashboards";
 import NkDocuments from "../documents";
 import NkPages from "../pages";
 
