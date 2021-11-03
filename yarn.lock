@@ -5934,6 +5934,11 @@ hex-color-regex@^1.1.0:
   resolved "http://ns.nkpro.cn/repository/npm-public/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha1-TAb8y0YC/iYCs8k9+C1+fb8aio4=
 
+hidpi-canvas@^1.0.10:
+  version "1.0.10"
+  resolved "http://ns.nkpro.cn/repository/npm-public/hidpi-canvas/-/hidpi-canvas-1.0.10.tgz#d0e99996bf4b91a4de1137e877cacf174716614d"
+  integrity sha1-0OmZlr9LkaTeETfod8rPF0cWYU0=
+
 highlight.js-async-webpack@^1.0.4:
   version "1.0.4"
   resolved "http://ns.nkpro.cn/repository/npm-public/highlight.js-async-webpack/-/highlight.js-async-webpack-1.0.4.tgz#c06b67bf99f049045d62b756e5855b0912ec616c"

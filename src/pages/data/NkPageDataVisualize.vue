@@ -33,7 +33,7 @@
 
 <script>
 
-import html2canvas from "html2canvas";
+import CanvasUtil from "@/utils/CanvasUtil";
 
 export default {
     data(){
@@ -124,30 +124,14 @@ export default {
         },
         doHtml2canvas(){
             let self = this;
-            html2canvas(document.body).then(function(canvas) {
 
-                const dw = 800,dh = 600;
-                const target = document.createElement("canvas");
-                target.setAttribute('width', dw.toString());
-                target.setAttribute('height',dh.toString());
-
-                let sx = 0,sy = 0,sw,sh;
-                if(canvas.width*dh>canvas.height*dw){
-                    sx = canvas.width - canvas.height;
-                    sw = canvas.height * dw/dh;
-                    sh = canvas.height;
-                }else{
-                    sy = canvas.height - canvas.width;
-                    sw = canvas.width;
-                    sw = canvas.width * dh/dw;
-                }
-
-                const ctx=target.getContext("2d");
-                ctx.drawImage(canvas,sx,sy,sw, sh,0,0,dw,dh);
-
-
+            CanvasUtil.html2canvas(document.body).then(function(canvas) {
                 self.dataVList.push({
-                    thumbnail:target.toDataURL("image/png"),
+                    thumbnail:canvas.toDataURL("image/png"),
+                    selected:false,
+                });
+                self.dataVList.push({
+                    thumbnail:CanvasUtil.scale(canvas,800,600).toDataURL("image/png"),
                     selected:false,
                 });
             });
