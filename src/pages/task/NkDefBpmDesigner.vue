@@ -47,7 +47,8 @@ import BpmnModeler                from 'bpmn-js/lib/Modeler';
 import propertiesPanelModule      from 'bpmn-js-properties-panel/lib';
 import propertiesProviderModule   from 'bpmn-js-properties-panel/lib/provider/camunda';
 import customTranslate            from './ref/customTranslate';
-import extensionModdle    from 'camunda-bpmn-moddle/resources/camunda.json';
+import extensionModdle            from 'camunda-bpmn-moddle/resources/camunda.json';
+import NkUtil                     from "@/utils/NkUtil";
 
 const initialDiagram =
     '<?xml version="1.0" encoding="UTF-8"?>' +
@@ -187,7 +188,7 @@ export default {
                             name:           process.getAttribute("name"),
                             resourceName:   `${process.getAttribute("id")}.bpmn`,
                             xml:            xml,
-                            isExecutable:   eval(process.getAttribute("isExecutable"))
+                            isExecutable:   NkUtil.parseJSON(process.getAttribute("isExecutable"))
                         });
 
                         if(!this.bpmInfo.name){

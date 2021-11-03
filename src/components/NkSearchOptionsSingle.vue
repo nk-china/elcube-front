@@ -55,13 +55,18 @@ export default {
         },
         format(value){
             if(this.config.formatter){
-                let name = this.config.formatter[0];
-                let params = [value];
-                for(let i=1;i<this.config.formatter.length;i++){
-                    params.push(this.config.formatter[i])
+                if(this.config.formatter instanceof Array){
+                    let name = this.config.formatter[0];
+                    let params = [value];
+                    for(let i=1;i<this.config.formatter.length;i++){
+                        params.push(this.config.formatter[i])
+                    }
+                    let func = NkFormat[name];
+                    return func.apply(this,params);
                 }
-                let func = NkFormat[name];
-                return func.apply(this,params);
+                if(this.config.formatter instanceof Function){
+                    return this.config.formatter(value);
+                }
             }
             return value;
         }

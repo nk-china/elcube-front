@@ -20,15 +20,15 @@
 </template>
 
 <script>
-import NkUtil from "../../utils/NkUtil";
 import NkPagePreview from "../doc/NkPagePreview";
 
-function formatterTaskState({cellValue}){
-    switch (cellValue){
+function formatterTaskState(e){
+    e = e.cellValue || e;
+    switch (e){
         case 'create':  return '待办';
         case 'complete':return '办结';
         case 'delete':  return '取消';
-        default: return cellValue;
+        default: return e;
     }
 }
 export default {
@@ -69,10 +69,11 @@ export default {
                 },
                 {
                     name:'任务状态',
-                    field:'state',
+                    field:'taskState',
                     component:'nk-search-options-single',
                     min:220,
-                    agg:true
+                    agg:true,
+                    formatter:formatterTaskState,
                 },
                 {
                     name:'关键字',
@@ -98,7 +99,7 @@ export default {
     },
     methods:{
         search(params){
-            this.$http.postJSON("/api/task/tasks",NkUtil.toEsParams(params,this.preCondition))
+            this.$http.postJSON("/api/task/tasks",params)
                 .then((res)=>{
                     this.$emit("setTab","任务");
                     if(this.$refs.layout)

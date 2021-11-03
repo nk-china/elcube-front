@@ -37,6 +37,7 @@
 <script>
 import NkPagePreview from "./NkPagePreview";
 import {mapGetters} from "vuex";
+import NkUtil from "@/utils/NkUtil";
 
 export default {
     components: {NkPagePreview},
@@ -93,11 +94,10 @@ export default {
                     }
 
                     if(this.custom.menuOptions){
-
-                        let options = {};
-                        eval("options="+this.custom.menuOptions);
+                        let options = NkUtil.parseJSON(this.custom.menuOptions);
                         for(let field in options){
-                            this[field] = options[field];
+                            if(options.hasOwnProperty(field))
+                                this[field] = options[field];
                         }
                         this.$nextTick(()=>{
                             this.$refs.layout.init();

@@ -9,7 +9,7 @@ html,body{
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    background-color: #000c17;
+    background-color: #ececec;
     position: fixed;
     z-index: 1;
     opacity: 0.6;

@@ -57,6 +57,7 @@
 
 import Sortable from "sortablejs";
 import XEUtils from "xe-utils";
+import NkUtil from "@/utils/NkUtil";
 
 export default {
 
@@ -273,7 +274,7 @@ export default {
                 return;
             }
             try{
-                eval('this.$testMenuOptions$='+this.menuOptions);
+                NkUtil.parseJSON(this.menuOptions);
                 this.menu.menuOptions=this.menuOptions;
                 this.modalVisible = false;
             }catch (e){

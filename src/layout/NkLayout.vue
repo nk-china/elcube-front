@@ -3,7 +3,7 @@
         <a-layout class="nk-layout-full">
             <a-layout-sider v-model="collapsed" :trigger="null" collapsible="collapsible" class="nk-layout-sider" width="256" :collapsed-width="60">
                 <div class="logo">
-                    <a href="http://www.nkpro.cn" target="_blank"><img src="/nk.logo.png" style="width: 48px;"/></a>
+                    <a href="http://www.nkpro.cn" target="_blank"><img src="/nk.logo.png" style="height: 48px;"/></a>
                 </div>
                 <nk-nav :active-page="activePage" :collapsed="collapsed"></nk-nav>
             </a-layout-sider>
