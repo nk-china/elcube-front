@@ -125,13 +125,13 @@ export default {
         doHtml2canvas(){
             let self = this;
 
-            CanvasUtil.html2canvas(document.body).then(function(canvas) {
+            CanvasUtil.html2canvas(this.$refs.container).then(function(canvas) {
                 self.dataVList.push({
                     thumbnail:canvas.toDataURL("image/png"),
                     selected:false,
                 });
                 self.dataVList.push({
-                    thumbnail:CanvasUtil.scale(canvas,800,600).toDataURL("image/png"),
+                    thumbnail:CanvasUtil.scale(canvas,400,300).toDataURL("image/png"),
                     selected:false,
                 });
             });
