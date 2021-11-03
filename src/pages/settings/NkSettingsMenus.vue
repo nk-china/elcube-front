@@ -179,6 +179,8 @@ export default {
                     const tableTreeData = this.menus
                     const selfRow = xTable.getRowNode(targetTrElem).item
                     const selfNode = XEUtils.findTree(tableTreeData, row => row === selfRow, options)
+
+                    //const wrapperRow = xTable.getRowNode(wrapperElem).item
                     if (prevTrElem) {
                         // 移动到节点
                         const prevRow = xTable.getRowNode(prevTrElem).item
@@ -195,7 +197,7 @@ export default {
                             prevRow[options.children].splice(0, 0, currRow)
                         } else {
                             // 移动到相邻节点
-                            prevNode.items.splice(prevNode.index + (selfNode.index < prevNode.index ? 0 : 1), 0, currRow)
+                            prevNode.items.splice(prevNode.index + (selfNode.index < prevNode.index && selfNode.parent === prevNode.parent ? 0 : 1), 0, currRow)
                         }
                     } else {
                         // 移动到第一行
@@ -204,6 +206,7 @@ export default {
                     }
                     // 如果变动了树层级，需要刷新数据
                     xTable.syncData();
+                    console.log(tableTreeData)
                 }
             })
         });
