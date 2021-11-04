@@ -132,6 +132,7 @@ export default {
                 this.$http.postJSON('/api/dataView/mload',selected.map(i=>i.id))
                     .then(res=> {
                         this.slides = res.data;
+                        this.slideIndex = 0;
                         const self = this;
                         DomUtils.requestFullScreen(undefined,()=>{
                             self.slides = undefined;

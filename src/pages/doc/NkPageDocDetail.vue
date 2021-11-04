@@ -363,7 +363,7 @@ export default {
                 for (let i in this.$refs.components) {
                     let component = this.$refs.components[i];
                     if(component.onSubmit){
-                        let onSubmit = component.onSubmit();
+                        let onSubmit = component.onSubmit(state);
                         if(onSubmit.then && typeof onSubmit.then === 'function'){
                             try{
                                 onSubmit = await onSubmit;
