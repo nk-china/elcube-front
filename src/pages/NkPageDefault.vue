@@ -10,7 +10,6 @@
                 >
                     {{item.name}}
                 </a-button>
-                <a-button @click="doHtml2canvas">test</a-button>
                 <a-dropdown >
                     <a-menu slot="overlay" @click="menuClick">
                         <a-menu-item key="2"> <a-icon type="plus" />添加卡片 </a-menu-item>
@@ -26,7 +25,7 @@
         <a-spin :active="true" :spinning="loading" ref="dashboard">
             <grid-layout
                 :layout.sync="layoutFilter"
-                :col-num="12"
+                :col-num="24"
                 :row-height="30"
                 :is-draggable="editable"
                 :is-resizable="editable"
@@ -102,11 +101,9 @@
 
 <script>
 
-//const defaultLayout = [{"x":0,"y":19,"w":8,"h":5,"i":"0","component":"nk-dashboard-bar1","title":"客户统计","moved":false},{"x":0,"y":24,"w":4,"h":6,"i":"1","component":"nk-dashboard-bar2","title":"坏账","moved":false},{"x":4,"y":0,"w":4,"h":6,"i":"2","component":"nk-dashboard-pie2","title":"订单概要","moved":false},{"x":8,"y":24,"w":4,"h":6,"i":"3","component":"nk-dashboard-scatter1","title":"逾期","moved":false},{"x":0,"y":11,"w":8,"h":8,"i":"4","component":"nk-dashboard-candlestick1","title":"任务","moved":false},{"x":4,"y":6,"w":4,"h":5,"i":"5","component":"nk-dashboard-radar1","moved":false},{"x":8,"y":14,"w":4,"h":10,"i":"6","component":"nk-dashboard-graph1","title":"计划","moved":false},{"x":0,"y":0,"w":4,"h":11,"i":"7","component":"nk-dashboard-gruge1","title":"今日关注","moved":false},{"x":4,"y":24,"w":4,"h":6,"i":"8","component":"nk-dashboard-bar3","title":"待跟进业务","moved":false},{"x":8,"y":5,"w":4,"h":9,"i":"9","component":"nk-dashboard-calendar1","title":"审批中","moved":false},{"x":8,"y":0,"w":4,"h":5,"i":"10","component":"nk-dashboard-simple1","title":"警告","moved":false}];
 import { v4 as uuidv4 } from 'uuid';
 import NkAdvancedSearchInput from "@/pages/components/NkAdvancedSearchInput";
 import {mapGetters} from "vuex";
-import html2canvas from "html2canvas";
 
 export default {
     components:{
@@ -167,7 +164,7 @@ export default {
         window.removeEventListener("resize",this.resizeEvent);
     },
     methods:{
-        $nkShow(){
+        nk$show(){
             window.dispatchEvent(new Event('resize'));
         },
         load(id){
@@ -277,11 +274,6 @@ export default {
                     setTimeout(component.resized,1);
                 }
             })
-        },
-        doHtml2canvas(){
-            html2canvas(this.$refs.dashboard.$el).then(function(canvas) {
-                document.body.appendChild(canvas);
-            });
         }
     }
 }

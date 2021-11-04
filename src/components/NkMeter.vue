@@ -1,35 +1,32 @@
 <template>
     <a-card class="meter" :title="title" size="small" :bodyStyle="{'height':'calc(100% - 38px)'}">
+
         <slot v-if="!settingMode" name="default"></slot>
         <div v-else style="display: flex;justify-content: center;align-items: center;height: 100%;">
             <a-button @click="openSetting" type="link">设置图表选项</a-button>
         </div>
-<!--        <div v-if="isSetting" class="setting-container">-->
-<!--            <slot name="setting"></slot>-->
-<!--        </div>-->
-<!--        <a-button-group v-if="isSetting" slot="extra" size="small">-->
-<!--            <a-button @click="submitSetting()" type="primary">确定</a-button>-->
-<!--            <a-button @click="setSettingMode(false)">取消</a-button>-->
-<!--        </a-button-group>-->
-        <a-dropdown v-if="mode==='dashboard'" slot="extra" :trigger="['click']" placement="bottomRight">
-            <a class="ant-dropdown-link" @click="e => e.preventDefault()" style="color: #000c17">
-                <a-icon type="ellipsis" />
-            </a>
-            <a-menu slot="overlay" @click="menuClick">
-                <a-menu-item key="@setting" v-if="enableSetting">
-                    <a-icon type="edit" /> 设置
-                </a-menu-item>
-                <a-menu-divider v-if="enableSetting" />
-                <a-menu-item key="@delete" >
-                    <a-icon type="delete" /> 移除
-                </a-menu-item>
-            </a-menu>
-        </a-dropdown>
-        <a-button v-else slot="extra" @click="openSetting" type="link">设置</a-button>
 
         <a-modal title="设置" v-model="settingVisible" @ok="submitSetting">
             <slot name="setting"></slot>
         </a-modal>
+
+        <template v-if="editable">
+            <a-dropdown v-if="mode==='dashboard'" slot="extra" :trigger="['click']" placement="bottomRight">
+                <a class="ant-dropdown-link" @click="e => e.preventDefault()" style="color: #000c17">
+                    <a-icon type="ellipsis" />
+                </a>
+                <a-menu slot="overlay" @click="menuClick">
+                    <a-menu-item key="@setting" v-if="enableSetting">
+                        <a-icon type="edit" /> 设置
+                    </a-menu-item>
+                    <a-menu-divider v-if="enableSetting" />
+                    <a-menu-item key="@delete" >
+                        <a-icon type="delete" /> 移除
+                    </a-menu-item>
+                </a-menu>
+            </a-dropdown>
+            <a-button v-else slot="extra" @click="openSetting" type="link">设置</a-button>
+        </template>
     </a-card>
 </template>
 

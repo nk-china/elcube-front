@@ -5934,11 +5934,6 @@ hex-color-regex@^1.1.0:
   resolved "http://ns.nkpro.cn/repository/npm-public/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha1-TAb8y0YC/iYCs8k9+C1+fb8aio4=
 
-hidpi-canvas@^1.0.10:
-  version "1.0.10"
-  resolved "http://ns.nkpro.cn/repository/npm-public/hidpi-canvas/-/hidpi-canvas-1.0.10.tgz#d0e99996bf4b91a4de1137e877cacf174716614d"
-  integrity sha1-0OmZlr9LkaTeETfod8rPF0cWYU0=
-
 highlight.js-async-webpack@^1.0.4:
   version "1.0.4"
   resolved "http://ns.nkpro.cn/repository/npm-public/highlight.js-async-webpack/-/highlight.js-async-webpack-1.0.4.tgz#c06b67bf99f049045d62b756e5855b0912ec616c"
@@ -9810,6 +9805,11 @@ sort-keys@^1.0.0:
   dependencies:
     is-plain-obj "^1.0.0"
 
+sortablejs@1.10.2:
+  version "1.10.2"
+  resolved "http://ns.nkpro.cn/repository/npm-public/sortablejs/-/sortablejs-1.10.2.tgz#6e40364d913f98b85a14f6678f92b5c1221f5290"
+  integrity sha1-bkA2TZE/mLhaFPZnj5K1wSIfUpA=
+
 sortablejs@^1.10.2:
   version "1.14.0"
   resolved "http://ns.nkpro.cn/repository/npm-public/sortablejs/-/sortablejs-1.14.0.tgz#6d2e17ccbdb25f464734df621d4f35d4ab35b3d8"
@@ -10947,6 +10947,13 @@ vue@^2.6.10, vue@^2.6.9:
   version "2.6.14"
   resolved "http://ns.nkpro.cn/repository/npm-public/vue/-/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
   integrity sha1-5RqlJQJQ1Wmj+606ilpofWA24jU=
+
+vuedraggable@^2.24.3:
+  version "2.24.3"
+  resolved "http://ns.nkpro.cn/repository/npm-public/vuedraggable/-/vuedraggable-2.24.3.tgz#43c93849b746a24ce503e123d5b259c701ba0d19"
+  integrity sha1-Q8k4SbdGokzlA+Ej1bJZxwG6DRk=
+  dependencies:
+    sortablejs "1.10.2"
 
 vuex@^3.4.0:
   version "3.6.2"

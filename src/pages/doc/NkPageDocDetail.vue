@@ -444,7 +444,7 @@ export default {
             const timeout = setTimeout(()=>{
                 this.loading=true;
             },100);
-            this.$http.postJSON(`/api/doc/calculate`,{doc:this.doc,cardKey:card.cardKey,options})
+            this.$http.postJSON(`/api/doc/calculate`,{doc:this.doc,fromCard:card.cardKey,options})
                 .then(response=>{
                     this.doc = response.data;
                     this.$nextTick(()=>{

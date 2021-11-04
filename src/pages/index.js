@@ -16,6 +16,7 @@ import NkPageDocDetailDiff from "./doc/NkPageDocDetailDiff";
 import NkPageCustomQuery from "./data/NkPageCustomQuery";
 import NkPageDataDiscover from "./data/NkPageDataDiscover";
 import NkPageDataVisualize from "./data/NkPageDataVisualize";
+import NkPageDataView from "./data/NkPageDataView";
 
 /**
  * 设置界面
@@ -117,7 +118,17 @@ module.routes = [
         component: NkPageDataVisualize,
         meta:{
           title: "数据可视化",
-        }
+        },
+        children: [
+          {
+            name: "数据视图",
+            path: 'view/:id',
+            component: NkPageDataView,
+            meta:{
+              title: "数据视图",
+            }
+          },
+        ]
       },
       {
         name: "数据报表",

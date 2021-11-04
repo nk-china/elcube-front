@@ -269,16 +269,16 @@ export default {
                 }
             }
             let prev = this.$refs.pages.find(i=>i.$vnode.key===this.activePage);
-            if(prev && prev['$nkHide']){
+            if(prev && prev['nk$hide']){
                 this.$nextTick(()=>{
-                    prev['$nkHide']();
+                    prev['nk$hide']();
                 })
             }
             this.activePage = route.fullPath;
             let page = this.$refs.pages.find(i=>i.$vnode.key===this.activePage);
-            if(page && page['$nkShow']){
+            if(page && page['nk$show']){
                 this.$nextTick(()=>{
-                    page['$nkShow']();
+                    page['nk$show']();
                 })
             }
         },

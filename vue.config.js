@@ -41,7 +41,8 @@ module.exports = {
     }
   },
   chainWebpack: config => {
-    config.module.rule('md')
+    config.module
+      .rule('md')
       .test(/\.md$/)
       .use('vue-loader')
       .loader('vue-loader')
@@ -68,6 +69,7 @@ module.exports = {
       .use("docs")
       .loader("./src/boot/docs-loader.js")
       .end();
+
   },
   configureWebpack: (config)=>{
 
