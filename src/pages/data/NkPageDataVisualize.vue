@@ -124,7 +124,6 @@ export default {
             this.doPlay(this.customPlay.interval)
         },
         doPlay(interval){
-            console.log(interval)
             let selected = this.dataVList.filter(i=>i.selected);
             selected = selected.length?selected:this.dataVList;
 
