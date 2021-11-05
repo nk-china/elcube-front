@@ -1,13 +1,21 @@
 <template>
     <div class="nk-application-logo">
         <a href="http://www.nkpro.cn" target="_blank">
-            <img src="../assets/nk.logo.png" alt=""/>
+            <img :src="img" alt=""/>
         </a>
     </div>
 </template>
 
 <script>
+
+import img from '@/assets/nk.logo.png';
+
 export default {
+    data(){
+        return {
+            img
+        }
+    }
 }
 </script>
 
