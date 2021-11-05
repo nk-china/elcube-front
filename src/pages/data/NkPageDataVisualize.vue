@@ -12,9 +12,14 @@
         <div ref="container" class="container" @mousedown="containerMousedown" @mousemove="containerMousemove" @mouseup="containerMouseup" @mouseleave="containerMouseup">
             <div class="box">
 
-                <div v-for="(dataV,index) in dataVList" :key="index" class="item" ref="items" :class="dataV.selected?'selected':''" @click="itemClick(dataV)">
+                <div v-for="(dataV) in dataVList" :key="dataV.id" class="item davaVItem" ref="items" :class="dataV.selected?'selected':''"
+                     draggable="true"
+                     @click="itemClick(dataV)"
+                     @dragover="itemDragOver"
+                     @dragstart="itemDragStart"
+                     @dragend="itemDragEnd">
                     <div class="border">
-                        <img v-if="dataV.thumbnail" :src="dataV.thumbnail" width="200" />
+                        <img v-if="dataV.thumbnail" :src="dataV.thumbnail" width="200" draggable="false" />
                         <div v-else class="blank">空白面板</div>
                     </div>
                     {{dataV.name}}
@@ -90,7 +95,10 @@ export default {
             customPlay:{
                 visible:false,
                 interval:10
-            }
+            },
+
+            dragElement:undefined,
+            dragIndexed:[]
         }
     },
     computed:{
@@ -175,6 +183,59 @@ export default {
                 this.$router.push('/apps/data/visualize/view/'+dataV.id)
             }
         },
+        itemDragStart(e){
+            e.dataTransfer.dropEffect = 'move';
+            this.dragElement = e.target;
+            this.dragIndexed = [];
+            e.target.parentNode.childNodes.forEach(e=>this.dragIndexed.push(e))
+        },
+        itemDragEnd(){
+            let dataVList = [];
+            this.dragElement.parentNode.childNodes.forEach(e=>{
+                let f = this.dataVList[this.dragIndexed.indexOf(e)];
+                if(f)dataVList.push(f);
+            });
+            let resume = this.dataVList;
+            this.$set(this,'dataVList',dataVList);
+
+            this.dragElement = undefined;
+            this.$http.postJSON('/api/dataView/update/order',dataVList.map(e=>e.id))
+                .then(()=>{
+                }).catch(()=>{
+                    this.dataVList = resume;
+                });
+        },
+        itemDragOver(e){
+
+            if(!this.dragElement){
+                return;
+            }
+
+            let target = e.target;
+            if(!DomUtils.hasClass(target,'davaVItem')){
+                target = DomUtils.findParent(e.target,(d)=>DomUtils.hasClass(d,'davaVItem'));
+            }
+
+            if(target){
+
+                e.dataTransfer.effectAllowed = 'move';
+                e.preventDefault();
+
+                if(target!==this.dragElement){
+
+                    for(let i = 0;i < target.parentNode.childNodes.length; i++){
+                        if(target.parentNode.childNodes[i]===target){
+                            target.parentNode.insertBefore(this.dragElement, target);
+                            break;
+                        }
+                        if(target.parentNode.childNodes[i]===this.dragElement){
+                            target.parentNode.insertBefore(this.dragElement, target.nextSibling);
+                            break;
+                        }
+                    }
+                }
+            }
+        },
         containerKeydown(e){
             if(e.key==='Control'||e.key==='Meta'){
                 this.cmdKeydown=true;
@@ -190,12 +251,14 @@ export default {
             if(this.cmdKeydown){
                 return;
             }
-            this.$set(this,"containerDragBox",{
-                sx: e.clientX,
-                sy: e.clientY,
-                ex: undefined,
-                ey: undefined,
-            });
+            if(e.target === this.$refs.container){
+                this.$set(this,"containerDragBox",{
+                    sx: e.clientX,
+                    sy: e.clientY,
+                    ex: undefined,
+                    ey: undefined,
+                });
+            }
         },
         containerMousemove(e){
             if(this.cmdKeydown){

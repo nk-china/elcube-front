@@ -23,6 +23,7 @@
                         <div ref="antTabsNavScroll" class="ant-tabs-nav-scroll">
                             <div ref="antTabsNav"
                                  class="ant-tabs-nav ant-tabs-nav-animated"
+                                 @dragover="dragover"
                             >
                                 <nk-tab-item v-for="(item,index) in items"
                                              :key="item.path||index"
@@ -152,8 +153,15 @@
       itemClose(e){
         this.$emit("close",e);
       },
+      dragover(e){
+        e.dataTransfer.dropEffect = "move";
+          e.dataTransfer.effectAllowed = "move";
+        e.preventDefault();
+      },
       itemDragstart(e){
         this.dragSrc = e;
+          e.event.dataTransfer.effectAllowed = "move";
+          e.event.dataTransfer.dropEffect = "move";
       },
       itemDragenter(e){
         if(e.target!==this.dragSrc.target){

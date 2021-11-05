@@ -65,7 +65,7 @@
         this.$emit("close",this.tab);
       },
       dragstart(e){
-        this.$emit("dragstart",{target:e.target,tab:this.tab});
+        this.$emit("dragstart",{event:e,target:e.target,tab:this.tab});
       },
       dragenter(e){
         if(this.tab.draggable){
