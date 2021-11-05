@@ -1,5 +1,5 @@
 <template>
-    <nk-page-layout :title="title" class="layout">
+    <nk-page-layout :title="appName" class="layout">
 
         <div slot="action" style="margin: 0 10px;">
             <a-button-group>
@@ -103,7 +103,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import NkAdvancedSearchInput from "@/pages/components/NkAdvancedSearchInput";
-import {mapGetters} from "vuex";
+import {mapGetters,mapState} from "vuex";
 
 export default {
     components:{
@@ -117,7 +117,6 @@ export default {
     data(){
         return {
             editable: true,
-            title: undefined,
             loading: true,
             layout: [],
             layoutJsonStringify:undefined,
@@ -136,11 +135,11 @@ export default {
     created(){
         this.load('');
         this.loading = false;
-
-        const titles = document.getElementsByTagName("title");
-        this.title = (titles && titles[0] && titles[0].getAttribute("title"))||'TS5统一开发平台';
     },
     computed:{
+        ...mapState('UI',[
+            'appName'
+        ]),
         ...mapGetters('User',[
             'user'
         ]),

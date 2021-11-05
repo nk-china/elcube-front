@@ -2,9 +2,7 @@
     <a-spin :spinning="loading" wrapperClassName="layout-spinning">
         <a-layout class="nk-layout-full">
             <a-layout-sider v-model="collapsed" :trigger="null" collapsible="collapsible" class="nk-layout-sider" width="256" :collapsed-width="60">
-                <div class="logo">
-                    <a href="http://www.nkpro.cn" target="_blank"><img src="/nk.logo.png" style="height: 48px;"/></a>
-                </div>
+                <component :is="logo"></component>
                 <nk-nav :active-page="activePage" :collapsed="collapsed"></nk-nav>
             </a-layout-sider>
             <a-layout class="nk-layout-right">
@@ -150,7 +148,7 @@ export default {
     },
     computed:{
         ...mapState('UI',[
-            'loading'
+            'loading','logo'
         ]),
         ...mapState('Debug',[
             'debugId'
@@ -400,15 +398,6 @@ export default {
     }
 }
 ::v-deep {
-    .ant-layout-sider-collapsed{
-        .logo.nk{
-            display: block;
-            height: 30px !important;
-            img{
-                width: 30px !important;
-            }
-        }
-    }
     .nk-layout-content .nk-layout-tabs{
         .ant-tabs-bar{
             margin: 16px 24px 0;
@@ -443,28 +432,6 @@ export default {
         z-index: 1;
         box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
         width: 256px;
-
-        .logo {
-            user-select: none;
-            margin: 16px;
-            text-align: center;
-            height: 48px;
-
-            &.no-logo{
-
-                height: 32px;
-                background: rgba(255, 255, 255, 0.2);
-                margin: 16px;
-                user-select: none;
-                color: #dddddd;
-                text-align: center;
-                line-height: 30px;
-
-                *{
-                    display: none;
-                }
-            }
-        }
     }
     .nk-layout-sider::-webkit-scrollbar{
         display: none;

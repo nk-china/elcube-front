@@ -5,7 +5,6 @@ module.exports = {
   "pages": {
     "index": {
       "entry": process.env.ENTRY_INDEX||'./src/main.js',
-      "title": process.env.ENTRY_INDEX_TITLE||'TS5统一开发平台',
     }
   },
   "runtimeCompiler":false,

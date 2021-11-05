@@ -3,10 +3,10 @@
 
         <div slot="action" style="margin: 0 10px;">
             <a-button-group>
-                <a-button type="primary" @click="doSave" :loading="loadingSave">保存</a-button>
-                <a-button type="default" @click="openSetting">设置</a-button>
-                <a-button type="default" @click="doPlay">预览</a-button>
-                <a-button type="default" @click="openCardList">添加卡片</a-button>
+                <a-button type="primary" @click="doSave" :loading="loadingSave"><a-icon type="save" /></a-button>
+                <a-button type="default" @click="openSetting"><a-icon type="edit" /></a-button>
+                <a-button type="default" @click="doPlay"><a-icon type="eye" /></a-button>
+                <a-button type="default" @click="openCardList"><a-icon type="table" /></a-button>
             </a-button-group>
         </div>
 
@@ -24,10 +24,7 @@
                     <a-input-number v-model="dataView.height"></a-input-number>
                 </nk-form-item>
                 <nk-form-item title="主题">
-                    <a-select v-model="dataView.theme">
-                        <a-select-option key="default">默认</a-select-option>
-                        <a-select-option key="nk1">纽扣1</a-select-option>
-                    </a-select>
+                    <a-select v-model="dataView.theme" :options="themes"></a-select>
                 </nk-form-item>
             </nk-form>
             <template slot="footer">
@@ -59,8 +56,9 @@ import {v4 as uuidv4} from "uuid";
 import DomUtils from "@/utils/DomUtils";
 import CanvasUtil from "@/utils/CanvasUtil";
 
-import "./themes/datav.nk1.less";
+import "@/boot/datav.theme.default.less";
 import NkDataV from "@/pages/data/NkDataV";
+import {mapState} from "vuex";
 
 export default {
     components:{
@@ -89,6 +87,9 @@ export default {
     },
     created(){
         this.load();
+    },
+    computed:{
+        ...mapState('DataV',['themes'])
     },
     methods:{
 

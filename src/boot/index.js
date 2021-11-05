@@ -38,6 +38,12 @@ import numeral from "numeral";
 import * as ant from 'ant-design-vue';
 import eval5 from "eval5";
 import * as g2plot from '@antv/g2plot';
+import NkPageDefault from "@/pages/NkPageDefault";
+import NkLogin from "@/layout/NkLogin";
+import NkLogo from "@/components/NkLogo";
+
+import StateUI from "@/store/StateUI";
+import StateDataV from "@/store/StateDataV";
 
 Vue.config.productionTip = false;
 Vue.prototype.$http = new Http(Vue);
@@ -76,6 +82,18 @@ Vue.mixin({
   }
 });
 
+let globalOptions = {
+  appName:    "TS5统一开发平台",
+  logo:       NkLogo,
+  loginPage:  NkLogin,
+  defaultPage:NkPageDefault,
+  dataV:      {
+    themes:[{
+      value:'default',label:'默认'
+    }]
+  }
+};
+
 const modules = {
   Mixin,
   MixinDef,
@@ -97,11 +115,11 @@ function NkVuexStore(moduleStores){
   })
 }
 
-function NkRouter(moduleRoutes,loginPage,defaultPage) {
+function NkRouter(moduleRoutes) {
   return new Router(VueRouter,[
       ...NkPages.routes,
       ...moduleRoutes
-  ],loginPage,defaultPage);
+  ],globalOptions.loginPage,globalOptions.defaultPage);
 }
 
 
@@ -160,6 +178,7 @@ function loadVueTemplate(componentName, template){
 }
 
 function reloadVueResources(){
+
   return new Promise((resolve,reject)=>{
     Vue.prototype.$http.instanceNone.get("/api/def/resources/vue")
       .then(res=>{
@@ -179,6 +198,28 @@ function reloadVueResources(){
   })
 }
 
+function NKStarter(options){
+  globalOptions = Object.assign(globalOptions,options);
+
+  StateUI.state.logo = globalOptions.logo || NkLogo;
+  StateUI.state.appName = globalOptions.appName;
+
+  StateDataV.state.themes = globalOptions.dataV.themes;
+
+  return new Promise((resolve, reject)=>{
+    reloadVueResources()
+        .then(()=>{
+           resolve({
+             Vue,
+             App,
+             NkRouter,
+             NkVuexStore,
+             i18n
+           });
+        }).catch(reject);
+  })
+}
+
 export {
 
   NkRouter,
@@ -194,5 +235,7 @@ export {
   i18n,
 
   reloadVueResources,
-  loadVueTemplate
+  loadVueTemplate,
+
+  NKStarter
 }

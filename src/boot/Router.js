@@ -1,10 +1,9 @@
 import AuthUtils from "./AuthUtils"
-import NkLogin from "../layout/NkLogin";
 import NkLayout from "../layout/NkLayout";
 import NkNotFound from "../layout/NkNotFound";
-import NkDefault from "../pages/NkPageDefault";
 import NkMe from "../layout/NkMe";
 import NkApi from "../layout/NkApi";
+import StateUI from "@/store/StateUI";
 
 export default function(VueRouter,moduleRoutes,loginPage,defaultPage) {
 
@@ -15,7 +14,7 @@ export default function(VueRouter,moduleRoutes,loginPage,defaultPage) {
       },
       {
         path: '/',
-        component: loginPage || NkLogin,
+        component: loginPage,
         meta: {
           title: '登陆',
           ignoreAuth : true
@@ -30,7 +29,7 @@ export default function(VueRouter,moduleRoutes,loginPage,defaultPage) {
           {
             name: '欢迎页',
             path: '/apps/default',
-            component: defaultPage || NkDefault,
+            component: defaultPage,
             closable :false,
             meta: {
               title: '欢迎页'
@@ -81,8 +80,7 @@ export default function(VueRouter,moduleRoutes,loginPage,defaultPage) {
     function updateMeta(to){
       let title = (to.meta&&to.meta.title)||to.name;
       if (title) {
-        const titles = document.getElementsByTagName("title");
-        document.title = title + '-' + ((titles && titles[0] && titles[0].getAttribute("title"))||'TS5统一开发平台');
+        document.title = title + '-' + StateUI.state.appName;
       }
     }
 

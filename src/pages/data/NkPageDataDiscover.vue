@@ -19,23 +19,26 @@
 
         <a-layout >
             <a-layout-sider theme="light" width="240" style="margin-right: 20px">
-                <a-list bordered :data-source="availableFields"  size="small" class="fieldList" style="height: 100%;border-radius: 0;border-color: #e8e8e8">
-                    <a-list-item slot="renderItem" slot-scope="item" class="filed">
+                <a-list bordered :data-source="listedFields"  size="small" class="fieldList" style="height: 100%;border-radius: 0;border-color: #e8e8e8">
+                    <a-list-item slot="renderItem" slot-scope="item" class="field" :class="item.selected&&'selected'">
                         <a-tag v-if="item.aggregatable" color="#108ee9" class="tag">A</a-tag>
                         {{ item.name }}
                         <div class="control">
                             <a-button type="link" @click="addField(item.name)"><a-icon type="plus" /></a-button>
-                            <a-button v-if="item.aggregatable" type="link" @click="addFilter(item.name)"><a-icon type="filter" /></a-button>
-                            <a-button v-if="item.aggregatable" type="link" @click="addSort(item.name)"><a-icon type="sort-ascending" /></a-button>
+                            <a-button type="link" @click="addFilter(item.name)"><a-icon type="filter" /></a-button>
+                            <a-button v-if="item.sortable"     type="link" @click="addSort(item.name)"><a-icon type="sort-ascending" /></a-button>
                         </div>
                     </a-list-item>
                     <div slot="header">
-                        <strong>字段列表</strong>
+                        <a-input v-model="filterListedField" placeholder="过滤字段" allow-clear></a-input>
                     </div>
                 </a-list>
             </a-layout-sider>
             <a-layout-content>
                 <a-card>
+                    <a-alert type="error" v-if="error.length" banner style="margin-bottom: 15px;" >
+                        <p v-for="(msg,index) in error" :key="index" slot="message" style="margin-bottom: 0;line-height: 20px;">{{index+1}}.{{msg}}</p>
+                    </a-alert>
                     <nk-form :col="1" class="form-content">
                         <template v-if="queryBuilder.custom">
                             <nk-form-item title="SQL">
@@ -45,31 +48,31 @@
                                 <a @click="custom(false)">切换到普通模式</a>
                             </nk-form-item>
                             <nk-form-item>
-                                <a-button class="selected-item" type="primary" @click="runSql">执行</a-button>
-                                <a-button class="selected-item" type="default" @click="saveAs.visible=true">另存为...</a-button>
+                                <a-button class="selected-item" type="primary" @click="runSql"><a-icon type="play-circle" /></a-button>
+                                <a-button class="selected-item" type="default" @click="saveAs.visible=true"><a-icon type="save" />...</a-button>
                             </nk-form-item>
                         </template>
                         <template v-else>
                             <nk-form-item title="数据集">
-                                <a-select v-model="queryBuilder.index" class="selected-item" style="width: 200px;" @change="indexChange">
+                                <a-select v-model="queryBuilder.index" class="selected-item" style="width: 200px;" @change="indexChange($event)">
                                     <a-select-option key="document">document</a-select-option>
                                     <a-select-option key="doc-ext">doc-ext</a-select-option>
                                     <a-select-option key="document-custom">document-custom</a-select-option>
                                 </a-select>
                                 <a-button-group class="selected-item">
-                                    <a-button type="primary" @click="runSql" :disabled="!(queryBuilder.index && queryBuilder.fields.length)">执行</a-button>
-                                    <a-button type="default" :disabled="!(queryBuilder.index && queryBuilder.fields.length)">导出</a-button>
+                                    <a-button type="primary" @click="runSql" :disabled="!(queryBuilder.index && queryBuilder.fields.length)"><a-icon type="play-circle" /></a-button>
+                                    <a-button type="default" :disabled="!(queryBuilder.index && queryBuilder.fields.length)"><a-icon type="export" /></a-button>
                                 </a-button-group>
-                                <a-button class="selected-item" type="default" @click="saveAs.visible=true" :disabled="!(queryBuilder.index && queryBuilder.fields.length)">另存为...</a-button>
+                                <a-button class="selected-item" type="default" @click="saveAs.visible=true" :disabled="!(queryBuilder.index && queryBuilder.fields.length)"><a-icon type="save" />...</a-button>
                             </nk-form-item>
-                            <nk-form-item title="字段">
-                                <span class="selected-item empty" v-if="!queryBuilder.fields.length"></span>
-                                <a-button-group class="selected-item value" v-for="(item,index) in queryBuilder.fields" :key="index">
+                            <nk-form-item title="维度" v-if="hasGroupOrAgg || groupFields.length">
+                                <span class="selected-item empty" v-if="!groupFields.length"></span>
+                                <a-button-group class="selected-item value" v-for="(item,index) in groupFields" :key="index">
                                     <a-button @click="editField(item)">
                                         <span class="tag ant-tag-red" v-if="item.groupBy">G</span>
                                         <span class="tag ant-tag-orange" v-if="item.agg">A</span>
                                         <span class="tag ant-tag-purple" v-if="item.having">H</span>
-                                        {{ item.viewFormatted || item.formatted }}
+                                        {{ item.formatted }}
                                     </a-button>
                                     <a-button @click="removeFrom(item,queryBuilder.fields)">
                                         <a-icon type="close" />
@@ -80,15 +83,64 @@
                                     <a-select-option v-for="field in availableFields" :key="field.name">{{field.name}}</a-select-option>
                                 </a-select>
                             </nk-form-item>
-                            <nk-form-item title="过滤条件">
+                            <nk-form-item title="指标" v-if="hasGroupOrAgg || aggFields.length">
+                                <span class="selected-item empty" v-if="!aggFields.length"></span>
+                                <a-button-group class="selected-item value" v-for="(item,index) in aggFields" :key="index">
+                                    <a-button @click="editField(item)">
+                                        <span class="tag ant-tag-red" v-if="item.groupBy">G</span>
+                                        <span class="tag ant-tag-orange" v-if="item.agg">A</span>
+                                        {{ item.formatted }}
+                                    </a-button>
+                                    <a-button @click="removeFrom(item,queryBuilder.fields)">
+                                        <a-icon type="close" />
+                                    </a-button>
+                                </a-button-group>
+
+                                <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addField">
+                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.name}}</a-select-option>
+                                </a-select>
+                            </nk-form-item>
+                            <nk-form-item title="字段" v-if="!hasGroupOrAgg || simpleFields.length">
+                                <span class="selected-item empty" v-if="!simpleFields.length"></span>
+                                <a-button-group class="selected-item value" v-for="(item,index) in simpleFields" :key="index">
+                                    <a-button @click="editField(item)" :type="item._error?'danger':'default'">
+                                        <span class="tag ant-tag-red" v-if="item.groupBy">G</span>
+                                        <span class="tag ant-tag-orange" v-if="item.agg">A</span>
+                                        <span class="tag ant-tag-purple" v-if="item.having">H</span>
+                                        {{ item.formatted }}
+                                    </a-button>
+                                    <a-button @click="removeFrom(item,queryBuilder.fields)" :type="item._error?'danger':'default'">
+                                        <a-icon type="close" />
+                                    </a-button>
+                                </a-button-group>
+
+                                <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addField">
+                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.name}}</a-select-option>
+                                </a-select>
+                            </nk-form-item>
+                            <nk-form-item title="条件过滤">
 
                                 <span class="selected-item empty" v-if="!queryBuilder.filter.length"></span>
-                                <a-button-group class="selected-item value" v-for="(item,index) in queryBuilder.filter" :key="index">
-                                    <a-button @click="editFilter(item)">{{ item.formatted }}</a-button>
+                                <a-button-group class="selected-item value" v-for="(item,index) in filterFields" :key="index">
+                                    <a-button @click="editFilter(item)">
+                                        <span class="tag ant-tag-cyan">W</span>
+                                        {{ item.formatted }}
+                                    </a-button>
                                     <a-button @click="removeFrom(item,queryBuilder.filter)">
                                         <a-icon type="close" />
                                     </a-button>
                                 </a-button-group>
+
+                                <a-button-group class="selected-item value" v-for="(item,index) in havingFields" :key="'h'+index">
+                                    <a-button @click="editField(item)">
+                                        <span class="tag ant-tag-purple">H</span>
+                                        {{ item.havingFormatted }}
+                                    </a-button>
+                                    <a-button @click="removeHaving(item)">
+                                        <a-icon type="close" />
+                                    </a-button>
+                                </a-button-group>
+
 
                                 <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addFilter">
                                     <a-select-option v-for="field in availableFields" :key="field.name">{{field.name}}</a-select-option>
@@ -97,13 +149,13 @@
                             <nk-form-item title="排序">
 
                                 <span class="selected-item empty" v-if="!queryBuilder.sorted.length"></span>
-                                <a-button-group class="selected-item value" v-for="(item,index) in queryBuilder.sorted" :key="index">
-                                    <a-button @click="changeSort(item)">
-                                        <a-icon v-if="item.order==='ASC'" type="sort-ascending" class="tag ant-tag-green" />
-                                        <a-icon v-else type="sort-descending" class="tag ant-tag-green" />
+                                <a-button-group class="selected-item value" v-for="(item,index) in sortedFields" :key="index">
+                                    <a-button @click="changeSort(item)" :type="item._error?'danger':'default'">
+                                        <a-icon v-if="item.order==='ASC'" type="sort-ascending" />
+                                        <a-icon v-else type="sort-descending" />
                                         {{ item.name }}
                                     </a-button>
-                                    <a-button @click="removeFrom(item,queryBuilder.sorted)">
+                                    <a-button @click="removeFrom(item,queryBuilder.sorted)" :type="item._error?'danger':'default'">
                                         <a-icon type="close" />
                                     </a-button>
                                 </a-button-group>
@@ -153,7 +205,10 @@
 
 
 
-        <a-modal v-model="modalFieldVisible" centered :title="'字段:'+editItem.name" @ok="configField">
+        <a-modal v-model="modalFieldVisible" centered :title="'字段:'+editItem.name" @ok="configField" :okButtonProps="{props: {
+            disabled: editItem.groupBy && (editItemIsDate||editItemIsNumber) && !(editItem.interval && editItem.intervalUnit)
+                    ||(editItem.having && !editItem.havingValue)
+        } }">
             <nk-form :col="1">
                 <nk-form-item title="字段">{{editItem.name}}</nk-form-item>
                 <nk-form-item title="类型">{{editItem.type}}</nk-form-item>
@@ -187,17 +242,26 @@
                     </a-select>
                 </nk-form-item>
                 <nk-form-item title="HAVING" v-if="editItem.aggregatable && editItem.agg && ['FIRST({})','LAST({})'].indexOf(editItem.agg)===-1">
-                    <a-select style="width: 150px;" v-model="editItem.having">
+                    <a-select style="width: 150px;" v-model="editItem.having" @change="$set(editItem,'havingValue',undefined)">
                         <a-select-option v-for="i in numberInputHaving" :key="i.k"> {{ i.v||i.k }} </a-select-option>
                     </a-select>
                 </nk-form-item>
                 <nk-form-item title="值" v-if="editItem.having && havingValueComponent">
                     <a-input-number v-if="havingValueComponent==='a-input-number'" v-model="editItem.havingValue"></a-input-number>
+                    <div            v-if="havingValueComponent==='a-range-number'">
+                        <a-input-number :defaultValue="editItem.havingValue&&editItem.havingValue[0]" @change="havingValueChange($event,0)"></a-input-number>
+                        ~
+                        <a-input-number :defaultValue="editItem.havingValue&&editItem.havingValue[1]" @change="havingValueChange($event,1)"></a-input-number>
+                    </div>
                 </nk-form-item>
             </nk-form>
         </a-modal>
 
-        <a-modal v-model="modalFilterVisible" centered :title="'条件:'+editItem.name" @ok="configFilter">
+        <a-modal v-model="modalFilterVisible" centered :title="'条件:'+editItem.name" @ok="configFilter" :okButtonProps="{props: {
+            disabled: !editItem.operator
+             || (editItemComponent&&!editItem.value)
+             || (editItemComponent&&(editItem.value instanceof Array && !editItem.value[0]))
+        } }">
             <nk-form :col="1">
                 <nk-form-item title="字段">{{editItem.name}}</nk-form-item>
                 <nk-form-item title="类型">{{editItem.type}}</nk-form-item>
@@ -215,7 +279,7 @@
                                                                                 @change="editItem.value=$event&&moment($event).format('YYYY-MM-DD')"></a-date-picker>
                     <a-range-picker v-if="editItemComponent==='a-range-picker'" :default-value="editItem.value&&[editItem.value[0]&&moment(editItem.value[0], 'YYYY-MM-DD'),editItem.value[1]&&moment(editItem.value[1], 'YYYY-MM-DD')]"
                                                                                 format="YYYY-MM-DD"
-                                                                                @change="editItem.value=$event&&[moment($event[0]).format('YYYY-MM-DD'),moment($event[1]).format('YYYY-MM-DD')]"></a-range-picker>
+                                                                                @change="editItem.value=$event&&$event[0]&&[moment($event[0]).format('YYYY-MM-DD'),moment($event[1]).format('YYYY-MM-DD')]"></a-range-picker>
                     <div            v-if="editItemComponent==='a-range-number'">
                         <a-input-number :defaultValue="editItem.value&&editItem.value[0]" @change="inputNumberChange($event,0)"></a-input-number>
                         ~
@@ -257,6 +321,7 @@ const numberInputHaving = [
     {k:'>=',c:'a-input-number'},
     {k:'<',c:'a-input-number'},
     {k:'<=',c:'a-input-number'},
+    {k:'BETWEEN',c:'a-range-number'},
 ];
 const numberInput = [
     {k:'=',c:'a-input-number'},
@@ -321,6 +386,7 @@ export default {
             modalFilterOperators:[],
 
             modalFieldVisible:false,
+            filterListedField:undefined,
 
             data:{},
 
@@ -368,11 +434,20 @@ export default {
                 this.editItem.aggregatable &&
                 ['short','integer','long','float','double','date'].indexOf(this.editItem.type)>-1;
         },
+        hasGroup(){
+            return !!this.queryBuilder.fields.find(i=>i.groupBy);
+        },
+        hasAgg(){
+            return !!this.queryBuilder.fields.find(i=>i.agg);
+        },
+        hasGroupOrAgg(){
+            return this.hasGroup || this.hasAgg;
+        },
         aggregatableFields(){
             return this.availableFields.filter(i=>i.aggregatable);
         },
         sortableFields(){
-            if(this.queryBuilder.fields.find(i=>i.groupBy||i.agg)){
+            if(this.hasGroupOrAgg){
                 return this.queryBuilder.fields.filter(i=>i.groupBy||i.agg).map(i=>{
                     return {name:i.alias}
                 });
@@ -380,6 +455,63 @@ export default {
             return this.aggregatableFields.map(i=>{
                 return {name:i.name}
             });
+        },
+        listedFields(){
+            const filter = this.filterListedField && this.filterListedField.trim();
+            return this.availableFields
+                .filter(i=>{
+                    return !filter || i.name.indexOf(filter)>-1;
+                })
+                .map(i=>{
+                    i.sortable = i.aggregatable && !this.hasGroupOrAgg;
+                    i.selected = !!this.queryBuilder.fields.find(f=>f.name===i.name);
+                    return i;
+                });
+        },
+        groupFields(){
+            return this.queryBuilder.fields.filter(i=>i.groupBy);
+        },
+        aggFields(){
+            return this.queryBuilder.fields.filter(i=>i.agg);
+        },
+        havingFields(){
+            return this.queryBuilder.fields.filter(i=>i.agg && i.having);
+        },
+        simpleFields(){
+            return this.queryBuilder.fields.filter(i=>!i.agg&&!i.groupBy)
+                .map(i=>{
+                    if(this.hasGroupOrAgg){
+                        this.$set(i,'_error',`${i.name}字段不可用`);
+                    }else{
+                        delete i._error;
+                    }
+                    return i;
+                });
+        },
+        filterFields(){
+            return this.queryBuilder.filter;
+        },
+        sortedFields(){
+            return this.queryBuilder.sorted.map(i=>{
+
+                delete i._error;
+                if(this.hasGroupOrAgg){
+                    if(!this.queryBuilder.fields.find(f=>f.alias===i.name&&(f.groupBy||f.agg))){
+                        this.$set(i,'_error',`${i.name}排序不可用`);
+                    }
+                }else{
+                    if(!this.aggregatableFields.find(f=>f.alias===i.name)){
+                        this.$set(i,'_error',`${i.name}排序不可用`);
+                    }
+                }
+                return i;
+            });
+        },
+        error(){
+            return [
+                ...this.simpleFields.filter(i=>i._error).map(i=>i._error),
+                ...this.sortedFields.filter(i=>i._error).map(i=>i._error),
+            ];
         },
         havingValueComponent(){
             const o = this.numberInputHaving.find(i=>i.k===this.editItem.having);
@@ -451,12 +583,22 @@ export default {
             setTimeout(()=>{
                 this.queryBuilder = Object.assign({},JSON.parse(item.json||'{}'));
                 this.runSql();
-                this.indexChange(this.queryBuilder.index);
+                this.indexChange(this.queryBuilder.index,true);
             },100);
         },
-        indexChange(index){
+        indexChange(index,keep){
             this.$http.post(`/api/data/analyse/fieldCaps/${index}`)
                 .then(res=>{
+                    if(!keep){
+                        this.queryBuilder = {
+                            custom:false,
+                            index,
+                            fields:[],
+                            filter:[],
+                            sorted:[],
+                            chart:undefined
+                        }
+                    }
                     const availableFields = [];
                     for(let field in res.data){
                         if(res.data.hasOwnProperty(field)){
@@ -474,15 +616,18 @@ export default {
                         }
                     }
                     this.availableFields = availableFields.sort((a,b)=>a.name > b.name ?1:-1);
+                    this.filterListedField = undefined;
                 });
         },
         addField(name){
             const alias = "____"+name;
             const item = Object.assign({alias,formatted:(name + ' AS "' + alias+'"'),},this.availableFields.find(i=>i.name === name));
-            this.queryBuilder.fields.push(item)
             this.selectedValue = undefined;
-            if(item.aggregatable)
+            if(item.aggregatable){
                 this.editField(item);
+            }else{
+                this.queryBuilder.fields.push(item)
+            }
         },
         editField(item){
             this.modalFieldVisible=true;
@@ -514,24 +659,30 @@ export default {
                 this.editItem.formatted = this.editItem.agg.replace('{}',this.editItem.name) + ' AS "'+this.editItem.alias+'"';
 
                 if(this.editItem.having){
-                    this.editItem.havingFormatted = '"'+this.editItem.alias +'" '+this.editItem.having + ' ' + this.editItem.havingValue;
-                    this.editItem.viewFormatted = this.editItem.formatted + ' '+this.editItem.having + ' ' + this.editItem.havingValue;
+                    if(this.editItem.having === 'BETWEEN'){
+                        this.editItem.havingFormatted = '"'+this.editItem.alias +'" '+this.editItem.having + ' ' + this.editItem.havingValue[0] + ' AND ' + this.editItem.havingValue[1];
+                        this.editItem.viewFormatted = this.editItem.formatted + ' '+this.editItem.having + ' ' + this.editItem.havingValue[0] + ' AND ' + this.editItem.havingValue[1];
+                    }else{
+                        this.editItem.havingFormatted = '"'+this.editItem.alias +'" '+this.editItem.having + ' ' + this.editItem.havingValue;
+                        this.editItem.viewFormatted = this.editItem.formatted + ' '+this.editItem.having + ' ' + this.editItem.havingValue;
+                    }
                 }
 
             }else{
                 this.editItem.formatted = this.editItem.name+ ' AS "'+this.editItem.alias+'"';
             }
 
-            this.$set(this.queryBuilder.fields,this.editSource,this.editItem);
+            if(this.editSource===-1){
+                this.queryBuilder.fields.push(this.editItem);
+            }else{
+                this.$set(this.queryBuilder.fields,this.editSource,this.editItem);
+            }
             this.modalFieldVisible = false;
         },
         addFilter(name){
             const item = Object.assign({formatted:name},this.availableFields.find(i=>i.name === name));
-            this.queryBuilder.filter.push(item)
             this.selectedValue = undefined;
-
-            if(item.aggregatable)
-                this.editFilter(item);
+            this.editFilter(item);
         },
         editFilter(item){
             this.modalFilterVisible=true;
@@ -566,12 +717,20 @@ export default {
             }
 
             this.editItem.formatted = this.editItem.name +' '+ this.editItem.operator + ' ' + value;
-            this.$set(this.queryBuilder.filter,this.editSource,this.editItem);
+            if(this.editSource===-1){
+                this.queryBuilder.filter.push(this.editItem);
+            }else{
+                this.$set(this.queryBuilder.filter,this.editSource,this.editItem);
+            }
             this.modalFilterVisible = false;
         },
         inputNumberChange(e,f){
             this.editItem.value = this.editItem.value || [];
             this.editItem.value[f] = e;
+        },
+        havingValueChange(e,f){
+            this.editItem.havingValue = this.editItem.havingValue || [];
+            this.editItem.havingValue[f] = e;
         },
         addSort(name){
             this.queryBuilder.sorted.push({name,order:'ASC',formated:'"'+name+'" ASC'})
@@ -583,6 +742,10 @@ export default {
         },
         removeFrom(item,from){
             from.splice(from.indexOf(item),1);
+        },
+        removeHaving(item){
+            item.having = undefined;
+            delete item.havingValue;
         },
         setupChart(){
             this.$http.get("/api/meter/card/list")
@@ -611,15 +774,24 @@ export default {
             padding-left: 7px;
             padding-right: 7px;
         }
+        &.error{
+            button{
+                border-color: #aa2222;
+            }
+        }
     }
 }
 ::v-deep.fieldList{
-    .filed{
+    .field{
         white-space:nowrap;
         overflow:hidden;
         text-overflow: ellipsis;
 
         position: relative;
+
+        &.selected{
+            background-color: #e6f7ff;
+        }
 
         .control{
             position: absolute;

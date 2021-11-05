@@ -4,8 +4,8 @@
         <div slot="action" style="margin: 0 10px;">
             <a-button-group>
                 <a-button type="primary" @click="doPlay()"><a-icon type="play-circle" /></a-button>
-                <a-button @click="customPlay.visible=true">自定义放映</a-button>
-                <a-button disabled>生成报告</a-button>
+                <a-button @click="customPlay.visible=true"><a-icon type="video-camera" /></a-button>
+                <a-button disabled><a-icon type="export" /></a-button>
             </a-button-group>
         </div>
 
