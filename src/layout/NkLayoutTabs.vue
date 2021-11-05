@@ -23,7 +23,6 @@
                         <div ref="antTabsNavScroll" class="ant-tabs-nav-scroll">
                             <div ref="antTabsNav"
                                  class="ant-tabs-nav ant-tabs-nav-animated"
-                                 @dragover="dragover"
                             >
                                 <nk-tab-item v-for="(item,index) in items"
                                              :key="item.path||index"
@@ -34,9 +33,9 @@
                                              @click="itemClick"
                                              @close="itemClose"
                                              @dragstart="itemDragstart"
-                                             @dragenter="itemDragenter"
+                                             @dragover="itemDragover"
                                              @dragend="itemDragend"
-                                             >
+                                >
                                 </nk-tab-item>
                             </div>
                         </div>
@@ -66,240 +65,250 @@
 </template>
 
 <script>
-  import NkTabItem from "./NkLayoutTabItem";
+import NkTabItem from "./NkLayoutTabItem";
+import DomUtils from "@/utils/DomUtils";
 
-  function getElementLeft(element){
+function getElementLeft(element){
     let actualLeft = element.offsetLeft;
     let current = element.offsetParent;
     while (current !== null){
-      actualLeft += current.offsetLeft;
-      current = current.offsetParent;
+        actualLeft += current.offsetLeft;
+        current = current.offsetParent;
     }
     return actualLeft;
-  }
+}
 
-  let self = undefined;
-  let timeout = undefined;
-  function resize(){
+let self = undefined;
+let timeout = undefined;
+function resize(){
     if(self){
-      if(timeout){
-        clearTimeout(timeout);
-      }
-      timeout = setTimeout(()=>{
-        timeout = undefined;
-        self.$nextTick(()=>{
-          self.updateScrolling();
-        });
-      },500);
+        if(timeout){
+            clearTimeout(timeout);
+        }
+        timeout = setTimeout(()=>{
+            timeout = undefined;
+            self.$nextTick(()=>{
+                self.updateScrolling();
+            });
+        },500);
     }
-  }
+}
 
-  export default {
+export default {
     name: "NkTabs",
     props: {
-      activePath: String,
-      items:{
-        type: Array,
-        default(){
-          return [];
+        activePath: String,
+        items:{
+            type: Array,
+            default(){
+                return [];
+            }
         }
-      }
     },
     components:{
-      NkTabItem
+        NkTabItem
     },
     data(){
-      return {
-        active: undefined,
-        dragSrc: undefined,
-        scrolling: false,
-        transformLeft: 0,
-        btnPrevDisabled: false,
-        btnNextDisabled: false,
-        screenWidth:document.documentElement.clientWidth,
-        dropdownIndex: undefined,
-        dropdownConfig: {
-          refresh:false,
-          close:false,
-          closeOthers:false,
-          closeAll:true
+        return {
+            active: undefined,
+            dragSrc: undefined,
+            scrolling: false,
+            transformLeft: 0,
+            btnPrevDisabled: false,
+            btnNextDisabled: false,
+            screenWidth:document.documentElement.clientWidth,
+            dropdownIndex: undefined,
+            dropdownConfig: {
+                refresh:false,
+                close:false,
+                closeOthers:false,
+                closeAll:true
+            }
         }
-      }
     },
     created() {
-      self = this;
+        self = this;
     },
     mounted(){
-      this.$nextTick(()=>{
-        this.updateScrolling();
-      });
-      window.addEventListener("resize",resize);
+        this.$nextTick(()=>{
+            this.updateScrolling();
+        });
+        window.addEventListener("resize",resize);
     },
     updated(){
-      this.$nextTick(()=>{
-        this.updateScrolling();
-      })
+        this.$nextTick(()=>{
+            this.updateScrolling();
+        })
     },
     methods:{
-      itemClick(e){
-        if(e.path!==this.activePath){
-            this.$router.push(e.route)
-          // this.$emit("change",e);
-          // this.$nextTick(()=>{
-          //  this.scrollToItem(e);
-          // })
-        }
-      },
-      itemClose(e){
-        this.$emit("close",e);
-      },
-      dragover(e){
-        e.dataTransfer.dropEffect = "move";
-          e.dataTransfer.effectAllowed = "move";
-        e.preventDefault();
-      },
-      itemDragstart(e){
-        this.dragSrc = e;
-          e.event.dataTransfer.effectAllowed = "move";
-          e.event.dataTransfer.dropEffect = "move";
-      },
-      itemDragenter(e){
-        if(e.target!==this.dragSrc.target){
-          if(e.before){
-            e.target.parentNode.insertBefore(this.dragSrc.target,e.target)
-          }else{
-            e.target.parentNode.insertBefore(this.dragSrc.target,e.target.nextSibling)
-          }
-        }
-      },
-      itemDragend(){
-        this.$nextTick(()=>{
-          let items = [];
-          this.$refs.antTabsNav.children.forEach(elTab=>{
-            const item = this.$refs.items.find(item=>item.$el===elTab);
-            items.push(item.tab);
-          });
-          this.$emit("sort",items);
-        })
-      },
-      max(){
-        return Math.max(this.$refs.antTabsNav.clientWidth - this.$refs.antTabsNavScroll.clientWidth, 0);
-      },
-      min(){
-        return 0;
-      },
-      /**
-       * 当items内容变化时，更新滚动状态
-       */
-      updateScrolling(){
-        if(this.$refs.antTabsNavScroll){
-          this.scrolling = this.$refs.antTabsNavScroll.clientWidth < this.$refs.antTabsNav.clientWidth;
-          if(!this.scrolling){
-            this.transformLeft = 0;
-          }
-          let item = this.items.find(item=>item.path === this.activePath);
-          if(item)this.scrollToItem(item);
-        }
-      },
-      /**
-       * 左右按钮切换
-       */
-      slide(direction){
-        let target = this.transformLeft + this.$refs.antTabsNavScroll.clientWidth * direction;
-        this.scrollTo(target);
-      },
-      /**
-       * 滑动到指定位置，并更新左右按钮状态
-       * @param transformLeft
-       */
-      scrollTo(transformLeft){
-        if(transformLeft!==undefined){
-          this.transformLeft = transformLeft;
-        }
-        this.transformLeft = Math.min(this.max(),this.transformLeft);
-        this.transformLeft = Math.max(this.min(),this.transformLeft);
-        this.$nextTick(()=>{
-          this.$refs.btnPrev.className = this.$refs.btnPrev.className.replace(' ant-tabs-tab-btn-disabled','')
-            + (this.transformLeft === 0?' ant-tabs-tab-btn-disabled':'');
-          this.$refs.btnNext.className = this.$refs.btnNext.className.replace(' ant-tabs-tab-btn-disabled','')
-            + (this.transformLeft >= this.$refs.antTabsNav.clientWidth - this.$refs.antTabsNavScroll.clientWidth?' ant-tabs-tab-btn-disabled':'');
-          this.$refs.antTabsNav.style.transform = `translate3d(${-this.transformLeft}px, 0px, 0px)`;
-        })
-      },
-      /**
-       * 滑动到指定的tab选项
-       * @param item
-       */
-      scrollToItem(item){
+        itemClick(e){
+            if(e.path!==this.activePath){
+                this.$router.push(e.route)
+            }
+        },
+        itemClose(e){
+            this.$emit("close",e);
+        },
+        itemDragstart(e){
+            this.dragSrc = e;
+            e.dataTransfer.effectAllowed = "move";
+        },
+        itemDragover(e){
+            let target = e.target;
+            if(!DomUtils.hasClass(target,'nk-nav-tab')){
+                target = DomUtils.findParent(target,(d)=>DomUtils.hasClass(d,'nk-nav-tab'));
+            }
+            if(target&&this.dragSrc){
+                e.dataTransfer.dropEffect = "move";
+                e.preventDefault();
+            }
+            if(this.dragSrc && target && target.draggable && target!==this.dragSrc.target){
 
-        let ref = this.$refs.items.find(ref=>ref.tab===item);
-        let targetX = ref.$el.offsetLeft;
-        let targetW = ref.$el.clientWidth;
-        let targetXR = targetX + targetW + 4;
+                for(let i = 0;i < target.parentNode.childNodes.length; i++){
+                    if(target.parentNode.childNodes[i]===target){
+                        target.parentNode.insertBefore(this.dragSrc.target, target);
+                        break;
+                    }
+                    if(target.parentNode.childNodes[i]===this.dragSrc.target){
+                        if(target.nextSibling){
+                            target.parentNode.insertBefore(this.dragSrc.target, target.nextSibling);
+                        }else{
+                            target.parentNode.appendChild(this.dragSrc.target);
+                        }
+                        break;
+                    }
+                }
+            }
+        },
+        itemDragend(){
+            this.dragSrc = undefined;
+            this.$nextTick(()=>{
+                let items = [];
+                this.$refs.antTabsNav.children.forEach(elTab=>{
+                    const item = this.$refs.items.find(item=>item.$el===elTab);
+                    items.push(item.tab);
+                });
+                this.$emit("sort",items);
+            })
+        },
+        max(){
+            return Math.max(this.$refs.antTabsNav.clientWidth - this.$refs.antTabsNavScroll.clientWidth, 0);
+        },
+        min(){
+            return 0;
+        },
+        /**
+         * 当items内容变化时，更新滚动状态
+         */
+        updateScrolling(){
+            if(this.$refs.antTabsNavScroll){
+                this.scrolling = this.$refs.antTabsNavScroll.clientWidth < this.$refs.antTabsNav.clientWidth;
+                if(!this.scrolling){
+                    this.transformLeft = 0;
+                }
+                let item = this.items.find(item=>item.path === this.activePath);
+                if(item)this.scrollToItem(item);
+            }
+        },
+        /**
+         * 左右按钮切换
+         */
+        slide(direction){
+            let target = this.transformLeft + this.$refs.antTabsNavScroll.clientWidth * direction;
+            this.scrollTo(target);
+        },
+        /**
+         * 滑动到指定位置，并更新左右按钮状态
+         * @param transformLeft
+         */
+        scrollTo(transformLeft){
+            if(transformLeft!==undefined){
+                this.transformLeft = transformLeft;
+            }
+            this.transformLeft = Math.min(this.max(),this.transformLeft);
+            this.transformLeft = Math.max(this.min(),this.transformLeft);
+            this.$nextTick(()=>{
+                this.$refs.btnPrev.className = this.$refs.btnPrev.className.replace(' ant-tabs-tab-btn-disabled','')
+                    + (this.transformLeft === 0?' ant-tabs-tab-btn-disabled':'');
+                this.$refs.btnNext.className = this.$refs.btnNext.className.replace(' ant-tabs-tab-btn-disabled','')
+                    + (this.transformLeft >= this.$refs.antTabsNav.clientWidth - this.$refs.antTabsNavScroll.clientWidth?' ant-tabs-tab-btn-disabled':'');
+                this.$refs.antTabsNav.style.transform = `translate3d(${-this.transformLeft}px, 0px, 0px)`;
+            })
+        },
+        /**
+         * 滑动到指定的tab选项
+         * @param item
+         */
+        scrollToItem(item){
 
-        if(targetX < this.transformLeft) {
-          this.scrollTo(targetX - 30);
-        }else if(targetXR > this.transformLeft + this.$refs.antTabsNavScroll.clientWidth){
-          this.scrollTo(targetXR - this.$refs.antTabsNavScroll.clientWidth + 30);
-        }else{
-          this.scrollTo();
-        }
-      },
-      getTargetTab(menuLeft){
-        let navLeft = getElementLeft(this.$refs.antTabsNav) - this.transformLeft;
+            let ref = this.$refs.items.find(ref=>ref.tab===item);
+            let targetX = ref.$el.offsetLeft;
+            let targetW = ref.$el.clientWidth;
+            let targetXR = targetX + targetW + 4;
 
-        let path = undefined;
-        for(let i in this.$refs.items){
-          let item = this.$refs.items[i];
-          let itemL = navLeft + item.$el.offsetLeft;
-          let itemR = itemL   + item.$el.clientWidth;
-          if(itemL <= menuLeft && menuLeft <= itemR){
-            path = item.path;
-            break;
-          }
-        }
-        return this.items.find(item=>item.path===path);
-      },
-      dropdownMousedown(e){
-        if(e.button===2){
-          let tab = this.getTargetTab(e.clientX);
-          if(tab){
-            this.dropdownConfig.close=tab.closable !== false;
-            this.dropdownConfig.refresh=this.activePath===tab.path;
-            this.dropdownConfig.closeOthers=true;
-          }else{
-            this.dropdownConfig.close=false;
-            this.dropdownConfig.refresh=false;
-            this.dropdownConfig.closeOthers=false;
-          }
-        }
-      },
-      dropdownChange(){},
-      contextClick(e){
+            if(targetX < this.transformLeft) {
+                this.scrollTo(targetX - 30);
+            }else if(targetXR > this.transformLeft + this.$refs.antTabsNavScroll.clientWidth){
+                this.scrollTo(targetXR - this.$refs.antTabsNavScroll.clientWidth + 30);
+            }else{
+                this.scrollTo();
+            }
+        },
+        getTargetTab(menuLeft){
+            let navLeft = getElementLeft(this.$refs.antTabsNav) - this.transformLeft;
 
-        let menuLeft = getElementLeft(this.$refs.contextMenu.$el);
-        let tab = this.getTargetTab(menuLeft);
+            let path = undefined;
+            for(let i in this.$refs.items){
+                let item = this.$refs.items[i];
+                let itemL = navLeft + item.$el.offsetLeft;
+                let itemR = itemL   + item.$el.clientWidth;
+                if(itemL <= menuLeft && menuLeft <= itemR){
+                    path = item.path;
+                    break;
+                }
+            }
+            return this.items.find(item=>item.path===path);
+        },
+        dropdownMousedown(e){
+            if(e.button===2){
+                let tab = this.getTargetTab(e.clientX);
+                if(tab){
+                    this.dropdownConfig.close=tab.closable !== false;
+                    this.dropdownConfig.refresh=this.activePath===tab.path;
+                    this.dropdownConfig.closeOthers=true;
+                }else{
+                    this.dropdownConfig.close=false;
+                    this.dropdownConfig.refresh=false;
+                    this.dropdownConfig.closeOthers=false;
+                }
+            }
+        },
+        dropdownChange(){},
+        contextClick(e){
 
-        if(tab){
-          if(e.key==='close'){
-            this.$emit('close',tab)
-          }else if(e.key==='closeOthers'){
-            this.$emit('closeOthers',tab)
-          }else if(e.key==='closeAll'){
-            this.$emit('closeAll')
-          }else if(e.key==='refresh'){
-            this.$emit('item-refresh',tab)
-          }else if(e.key==='openWin'){
-            window.open(`#${tab.path}`);
-          }
+            let menuLeft = getElementLeft(this.$refs.contextMenu.$el);
+            let tab = this.getTargetTab(menuLeft);
+
+            if(tab){
+                if(e.key==='close'){
+                    this.$emit('close',tab)
+                }else if(e.key==='closeOthers'){
+                    this.$emit('closeOthers',tab)
+                }else if(e.key==='closeAll'){
+                    this.$emit('closeAll')
+                }else if(e.key==='refresh'){
+                    this.$emit('item-refresh',tab)
+                }else if(e.key==='openWin'){
+                    window.open(`#${tab.path}`);
+                }
+            }
         }
-      }
     }
-  }
+}
 </script>
 
 <style scoped>
-    .ant-tabs-flex{
-        display: flex;
-    }
+.ant-tabs-flex{
+    display: flex;
+}
 </style>
