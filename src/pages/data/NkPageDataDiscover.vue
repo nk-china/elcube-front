@@ -17,119 +17,141 @@
             </div>
         </div>
 
-        <a-card>
-            <nk-form :col="1" class="form-content">
-                <template v-if="queryBuilder.custom">
-                    <nk-form-item title="SQL">
-                        <a-textarea v-model="queryBuilder.sql" :rows="6"></a-textarea>
-                    </nk-form-item>
-                    <nk-form-item>
-                        <a @click="custom(false)">切换到普通模式</a>
-                    </nk-form-item>
-                    <nk-form-item>
-                        <a-button class="selected-item" type="primary" @click="runSql">执行</a-button>
-                        <a-button class="selected-item" type="default" @click="saveAs.visible=true">另存为...</a-button>
-                    </nk-form-item>
-                </template>
-                <template v-else>
-                    <nk-form-item title="数据集">
-                        <a-select v-model="queryBuilder.index" class="selected-item" style="width: 200px;" @change="indexChange">
-                            <a-select-option key="document">document</a-select-option>
-                            <a-select-option key="doc-ext">doc-ext</a-select-option>
-                            <a-select-option key="document-custom">document-custom</a-select-option>
-                        </a-select>
-                        <a-button-group class="selected-item">
-                            <a-button type="primary" @click="runSql" :disabled="!(queryBuilder.index && queryBuilder.fields.length)">执行</a-button>
-                            <a-button type="default" :disabled="!(queryBuilder.index && queryBuilder.fields.length)">导出</a-button>
-                        </a-button-group>
-                        <a-button class="selected-item" type="default" @click="saveAs.visible=true" :disabled="!(queryBuilder.index && queryBuilder.fields.length)">另存为...</a-button>
-                    </nk-form-item>
-                    <nk-form-item title="字段">
-                        <span class="selected-item empty" v-if="!queryBuilder.fields.length"></span>
-                        <a-button-group class="selected-item value" v-for="(item,index) in queryBuilder.fields" :key="index">
-                            <a-button @click="editField(item)">
-                                <span class="tag ant-tag-red" v-if="item.groupBy">G</span>
-                                <span class="tag ant-tag-orange" v-if="item.agg">A</span>
-                                <span class="tag ant-tag-purple" v-if="item.having">H</span>
-                                {{ item.viewFormatted || item.formatted }}
-                            </a-button>
-                            <a-button @click="removeFrom(item,queryBuilder.fields)">
-                                <a-icon type="close" />
-                            </a-button>
-                        </a-button-group>
+        <a-layout >
+            <a-layout-sider theme="light" width="240" style="margin-right: 20px">
+                <a-list bordered :data-source="availableFields"  size="small" class="fieldList" style="height: 100%;border-radius: 0;border-color: #e8e8e8">
+                    <a-list-item slot="renderItem" slot-scope="item" class="filed">
+                        <a-tag v-if="item.aggregatable" color="#108ee9" class="tag">A</a-tag>
+                        {{ item.name }}
+                        <div class="control">
+                            <a-button type="link" @click="addField(item.name)"><a-icon type="plus" /></a-button>
+                            <a-button v-if="item.aggregatable" type="link" @click="addFilter(item.name)"><a-icon type="filter" /></a-button>
+                            <a-button v-if="item.aggregatable" type="link" @click="addSort(item.name)"><a-icon type="sort-ascending" /></a-button>
+                        </div>
+                    </a-list-item>
+                    <div slot="header">
+                        <strong>字段列表</strong>
+                    </div>
+                </a-list>
+            </a-layout-sider>
+            <a-layout-content>
+                <a-card>
+                    <nk-form :col="1" class="form-content">
+                        <template v-if="queryBuilder.custom">
+                            <nk-form-item title="SQL">
+                                <a-textarea v-model="queryBuilder.sql" :rows="6"></a-textarea>
+                            </nk-form-item>
+                            <nk-form-item>
+                                <a @click="custom(false)">切换到普通模式</a>
+                            </nk-form-item>
+                            <nk-form-item>
+                                <a-button class="selected-item" type="primary" @click="runSql">执行</a-button>
+                                <a-button class="selected-item" type="default" @click="saveAs.visible=true">另存为...</a-button>
+                            </nk-form-item>
+                        </template>
+                        <template v-else>
+                            <nk-form-item title="数据集">
+                                <a-select v-model="queryBuilder.index" class="selected-item" style="width: 200px;" @change="indexChange">
+                                    <a-select-option key="document">document</a-select-option>
+                                    <a-select-option key="doc-ext">doc-ext</a-select-option>
+                                    <a-select-option key="document-custom">document-custom</a-select-option>
+                                </a-select>
+                                <a-button-group class="selected-item">
+                                    <a-button type="primary" @click="runSql" :disabled="!(queryBuilder.index && queryBuilder.fields.length)">执行</a-button>
+                                    <a-button type="default" :disabled="!(queryBuilder.index && queryBuilder.fields.length)">导出</a-button>
+                                </a-button-group>
+                                <a-button class="selected-item" type="default" @click="saveAs.visible=true" :disabled="!(queryBuilder.index && queryBuilder.fields.length)">另存为...</a-button>
+                            </nk-form-item>
+                            <nk-form-item title="字段">
+                                <span class="selected-item empty" v-if="!queryBuilder.fields.length"></span>
+                                <a-button-group class="selected-item value" v-for="(item,index) in queryBuilder.fields" :key="index">
+                                    <a-button @click="editField(item)">
+                                        <span class="tag ant-tag-red" v-if="item.groupBy">G</span>
+                                        <span class="tag ant-tag-orange" v-if="item.agg">A</span>
+                                        <span class="tag ant-tag-purple" v-if="item.having">H</span>
+                                        {{ item.viewFormatted || item.formatted }}
+                                    </a-button>
+                                    <a-button @click="removeFrom(item,queryBuilder.fields)">
+                                        <a-icon type="close" />
+                                    </a-button>
+                                </a-button-group>
 
-                        <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addField">
-                            <a-select-option v-for="field in availableFields" :key="field.name">{{field.name}}</a-select-option>
-                        </a-select>
-                    </nk-form-item>
-                    <nk-form-item title="过滤条件">
+                                <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addField">
+                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.name}}</a-select-option>
+                                </a-select>
+                            </nk-form-item>
+                            <nk-form-item title="过滤条件">
 
-                        <span class="selected-item empty" v-if="!queryBuilder.filter.length"></span>
-                        <a-button-group class="selected-item value" v-for="(item,index) in queryBuilder.filter" :key="index">
-                            <a-button @click="editFilter(item)">{{ item.formatted }}</a-button>
-                            <a-button @click="removeFrom(item,queryBuilder.filter)">
-                                <a-icon type="close" />
-                            </a-button>
-                        </a-button-group>
+                                <span class="selected-item empty" v-if="!queryBuilder.filter.length"></span>
+                                <a-button-group class="selected-item value" v-for="(item,index) in queryBuilder.filter" :key="index">
+                                    <a-button @click="editFilter(item)">{{ item.formatted }}</a-button>
+                                    <a-button @click="removeFrom(item,queryBuilder.filter)">
+                                        <a-icon type="close" />
+                                    </a-button>
+                                </a-button-group>
 
-                        <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addFilter">
-                            <a-select-option v-for="field in availableFields" :key="field.name">{{field.name}}</a-select-option>
-                        </a-select>
-                    </nk-form-item>
-                    <nk-form-item title="排序">
+                                <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addFilter">
+                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.name}}</a-select-option>
+                                </a-select>
+                            </nk-form-item>
+                            <nk-form-item title="排序">
 
-                        <span class="selected-item empty" v-if="!queryBuilder.sorted.length"></span>
-                        <a-button-group class="selected-item value" v-for="(item,index) in queryBuilder.sorted" :key="index">
-                            <a-button @click="changeSort(item)">
-                                <a-icon v-if="item.order==='ASC'" type="up" class="tag ant-tag-green" />
-                                <a-icon v-else type="down" class="tag ant-tag-green" />
-                                {{ item.name }}
-                            </a-button>
-                            <a-button @click="removeFrom(item,queryBuilder.sorted)">
-                                <a-icon type="close" />
-                            </a-button>
-                        </a-button-group>
+                                <span class="selected-item empty" v-if="!queryBuilder.sorted.length"></span>
+                                <a-button-group class="selected-item value" v-for="(item,index) in queryBuilder.sorted" :key="index">
+                                    <a-button @click="changeSort(item)">
+                                        <a-icon v-if="item.order==='ASC'" type="sort-ascending" class="tag ant-tag-green" />
+                                        <a-icon v-else type="sort-descending" class="tag ant-tag-green" />
+                                        {{ item.name }}
+                                    </a-button>
+                                    <a-button @click="removeFrom(item,queryBuilder.sorted)">
+                                        <a-icon type="close" />
+                                    </a-button>
+                                </a-button-group>
 
-                        <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @change="addSort">
-                            <a-select-option v-for="field in sortableFields" :key="field.name">{{field.name}}</a-select-option>
-                        </a-select>
-                    </nk-form-item>
+                                <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @change="addSort">
+                                    <a-select-option v-for="field in sortableFields" :key="field.name">{{field.name}}</a-select-option>
+                                </a-select>
+                            </nk-form-item>
 
-                    <nk-form-item>
-                        <a @click="custom">切换到高级模式</a>
-                        <a v-if="gridData && !queryBuilder.chart" @click="setupChart" style="margin-left: 10px;">数据透视</a>
-                        <a v-if="gridData &&  queryBuilder.chart" @click="queryBuilder.chart=undefined" style="margin-left: 10px;">移除数据透视</a>
-                    </nk-form-item>
-                </template>
-            </nk-form>
+                            <nk-form-item>
+                                <a @click="custom">切换到高级模式</a>
+                                <a v-if="gridData && !queryBuilder.chart" @click="setupChart" style="margin-left: 10px;">数据透视</a>
+                                <a v-if="gridData &&  queryBuilder.chart" @click="queryBuilder.chart=undefined" style="margin-left: 10px;">移除数据透视</a>
+                            </nk-form-item>
+                        </template>
+                    </nk-form>
 
-            <component v-if="queryBuilder.chart && queryBuilder.chart.component && gridData"
-                       :is="queryBuilder.chart.component"
-                       :config.sync="queryBuilder.chart"
-                       :editable="true"
-                       :default-data="gridData"
-                       :column-defs="gridColumns"
-                       style="height: 300px;">
-            </component>
-            <vxe-grid
-                ref="grid"
-                auto-resize
-                resizable
-                highlight-hover-row
-                show-header-overflow="tooltip"
-                show-overflow="tooltip"
-                size="mini"
-                border="full"
-                max-height="500"
-                :columns="gridColumns"
-                :data="gridData"
-                :loading="loading"
-                :sort-config="{trigger: 'cell', remote: true, defaultSort: {field: 'age', order: 'desc'}, orders: ['desc', 'asc', null]}"
-            ></vxe-grid>
+                    <component v-if="queryBuilder.chart && queryBuilder.chart.component && gridData"
+                               :is="queryBuilder.chart.component"
+                               :config.sync="queryBuilder.chart"
+                               :editable="true"
+                               :default-data="gridData"
+                               :column-defs="gridColumns"
+                               style="height: 300px;">
+                    </component>
+                    <vxe-grid
+                        ref="grid"
+                        auto-resize
+                        resizable
+                        highlight-hover-row
+                        show-header-overflow="tooltip"
+                        show-overflow="tooltip"
+                        size="mini"
+                        border="full"
+                        max-height="500"
+                        :columns="gridColumns"
+                        :data="gridData"
+                        :loading="loading"
+                        :sort-config="{trigger: 'cell', remote: true, defaultSort: {field: 'age', order: 'desc'}, orders: ['desc', 'asc', null]}"
+                    ></vxe-grid>
 
 
 
-        </a-card>
+                </a-card>
+            </a-layout-content>
+        </a-layout>
+
+
 
         <a-modal v-model="modalFieldVisible" centered :title="'字段:'+editItem.name" @ok="configField">
             <nk-form :col="1">
@@ -591,6 +613,33 @@ export default {
         }
     }
 }
+::v-deep.fieldList{
+    .filed{
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow: ellipsis;
+
+        position: relative;
+
+        .control{
+            position: absolute;
+            right: 0;
+            top: 0;
+            line-height: 35px;
+            margin: 0 5px;
+            background-color: white;
+            display: none;
+        }
+
+        &:hover .control{
+            display: block;
+        }
+
+        button{
+            padding: 0 5px;
+        }
+    }
+}
 .empty{
     height: 28px;
     line-height:28px;
@@ -604,9 +653,10 @@ export default {
     border-radius: 4px;
     border-style: solid;
     border-width: 1px;
-    padding: 2px 3px;
+    padding: 0 3px;
     display: inline-block;
     margin-right: 2px;
+    line-height: 16px;
 }
 .g{
     color: #f5222d;
