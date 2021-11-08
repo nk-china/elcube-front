@@ -1,13 +1,8 @@
 import { NKStarter } from './boot';
-import NkPageDefault from "./pages/NkPageDefault";
-import NkLogo from "./components/NkLogo";
 import './boot/theme.less';
 import "./boot/datav.theme.nk1.less";
 
 NKStarter({
-    loginPage:  undefined,
-    defaultPage:NkPageDefault,
-    logo:       NkLogo,
     appName:    "TS5统一开发平台",
     dataV:      {
         themes:[{

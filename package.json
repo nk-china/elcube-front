@@ -81,7 +81,7 @@
     "vue-markdown-loader": "^2.4.1",
     "vue-template-compiler": "^2.6.10",
     "webpack-cli": "^4.8.0",
-    "yarn": "^1.22.10"
+    "yarn": "^1.22.17"
   },
   "eslintConfig": {
     "root": false,

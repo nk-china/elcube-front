@@ -196,21 +196,14 @@
                         :loading="loading"
                         :sort-config="{trigger: 'cell', remote: true, defaultSort: {field: 'age', order: 'desc'}, orders: ['desc', 'asc', null]}"
                     ></vxe-grid>
-
-
-
                 </a-card>
             </a-layout-content>
         </a-layout>
-
-
-
+        
         <a-modal v-model="modalFieldVisible" centered :title="'字段:'+editItem.name" @ok="configField" :okButtonProps="{props: {
             disabled: !!(
                 editItem.groupBy &&
-                    (
-                        (editItemIsNumber && !editItem.interval)||(editItemIsDate && !editItem.interval && !editItem.intervalUnit)
-                    )
+                    !((editItemIsNumber && editItem.interval)||(editItemIsDate && editItem.interval && editItem.intervalUnit))
                     ||(editItem.having  && !editItem.havingValue)
             )
         } }">
