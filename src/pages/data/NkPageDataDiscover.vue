@@ -206,8 +206,13 @@
 
 
         <a-modal v-model="modalFieldVisible" centered :title="'字段:'+editItem.name" @ok="configField" :okButtonProps="{props: {
-            disabled: editItem.groupBy && (editItemIsDate||editItemIsNumber) && !(editItem.interval && editItem.intervalUnit)
-                    ||(editItem.having && !editItem.havingValue)
+            disabled: !!(
+                editItem.groupBy &&
+                    (
+                        (editItemIsNumber && !editItem.interval)||(editItemIsDate && !editItem.interval && !editItem.intervalUnit)
+                    )
+                    ||(editItem.having  && !editItem.havingValue)
+            )
         } }">
             <nk-form :col="1">
                 <nk-form-item title="字段">{{editItem.name}}</nk-form-item>
