@@ -24,6 +24,7 @@ import NkCardLost from "../layout/NkCardLost";
 import NkDashboards from "../pages/data/dashboards";
 import NkDocuments from "../documents";
 import NkPages from "../pages";
+import NkData from "../data";
 
 // 导出引用
 import App from "../layout/NkApp";
@@ -61,6 +62,7 @@ Vue.use(NkCards);
 Vue.use(NkDashboards);
 Vue.use(NkDocuments);
 Vue.use(NkPages);
+Vue.use(NkData);
 
 
 Vue.component('nk-component-lost',NkCardLost);
