@@ -53,7 +53,8 @@
 
 <script>
 import MixinSortable from "../../utils/MixinSortable";
-// import NkUtil from "../../utils/NkUtil";
+import NkUtil from "@/utils/NkUtil";
+
 export default {
     mixins:[MixinSortable()],
     props:{
@@ -94,6 +95,8 @@ export default {
 
                     if(!this.docDef.cards.find(i=>i.cardKey===res.data.beanName)){
                         row.cardKey = res.data.beanName;
+                    }else{
+                        row.cardKey = NkUtil.uuid();
                     }
 
                     // if(NkUtil.isRepeat(this.docDef.cards,["cardKey"])){

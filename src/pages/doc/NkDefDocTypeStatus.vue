@@ -96,7 +96,7 @@ export default {
             const status = [{docState:'@'}];
             this.docDef.status && this.docDef.status.forEach(state=>{
                 if(state!==this.stateEditRow)
-                    status.push(state)
+                    status.push({docState:state.docState})
             });
             return status;
         },

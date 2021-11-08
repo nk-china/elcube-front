@@ -1,8 +1,12 @@
 
 import { Interpreter } from "eval5";
+import {v4 as uuidv4} from "uuid";
 
 export default {
 
+    uuid(){
+        return uuidv4();
+    },
     parseJSON(json,context){
         const interpreter = new Interpreter(context);
         return interpreter.evaluate("v="+json);

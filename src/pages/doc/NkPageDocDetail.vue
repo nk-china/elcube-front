@@ -21,7 +21,7 @@
                 </a>
             </div>
         </div>
-        <div slot="top" v-else-if="this.doc.def && this.doc.def.debug" class="alert">
+        <div slot="top" v-else-if="this.debugId" class="alert">
             <a-alert message="请注意： 当前配置为调试模式，单据的保存操作不会持久化" type="warning" show-icon />
         </div>
 
@@ -152,7 +152,7 @@
                 <a-anchor-link title="详情" :href="'#tfms'"></a-anchor-link>
                 <template v-for="(c) in availableCards">
                     <a-anchor-link v-if="c.position==='default'"
-                                   :key="c.dataComponentName"
+                                   :key="c.cardKey"
                                    :class="`${historyClass(c.component)}`"
                                    :title="c.cardName"
                                    :href="'#'+buildAnchorLink(c.cardKey)"
