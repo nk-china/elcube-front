@@ -1,11 +1,5 @@
 export default (defaultValue)=>{
 
-  if(typeof defaultValue==='function'){
-    defaultValue = defaultValue();
-  }else if(defaultValue){
-    defaultValue = JSON.parse(JSON.stringify(defaultValue));
-  }
-
   return {
     props: {
       editMode:Boolean,
@@ -14,6 +8,18 @@ export default (defaultValue)=>{
     },
     computed:{
       card(){
+
+        const card = this.docDef.cards.find(card=>card.cardKey===this.cardKey);
+        if(!card.config){
+
+          if(typeof defaultValue==='function'){
+            defaultValue = defaultValue();
+          }else if(defaultValue){
+            defaultValue = JSON.parse(JSON.stringify(defaultValue));
+          }
+
+          this.$set(card,'config',defaultValue);
+        }
         return this.docDef.cards.find(card=>card.cardKey===this.cardKey);
       },
       def:{
@@ -26,9 +32,6 @@ export default (defaultValue)=>{
       }
     },
     created(){
-      if(!this.card.config){
-        this.$set(this.card,'config',defaultValue);
-      }
     },
     methods:{
       nk$callDef(options){
