@@ -697,19 +697,19 @@ export default {
             if(this.editItem.operator==='IS NULL' || this.editItem.operator==='IS NOT NULL'){
                 value = ''
             }else if(this.editItem.operator==='BETWEEN'){
-                if(this.editItem.type==='text'||this.editItem.type==='date'){
+                if(this.editItem.type==='text'||this.editItem.type==='keyword'||this.editItem.type==='date'){
                     value = "'"+this.editItem.value.join("' AND '")+"'";
                 }else{
                     value = this.editItem.value.join(' AND ')
                 }
             }else if(this.editItem.operator==='IN'){
-                if(this.editItem.type==='text'||this.editItem.type==='date'){
+                if(this.editItem.type==='text'||this.editItem.type==='keyword'||this.editItem.type==='date'){
                     value = "('"+this.editItem.value.join("', '")+"')"
                 }else{
                     value = "("+this.editItem.value.join(', ')+")"
                 }
             }else{
-                if(this.editItem.type==='text'||this.editItem.type==='date'){
+                if(this.editItem.type==='text'||this.editItem.type==='keyword'||this.editItem.type==='date'){
                     value = "'"+this.editItem.value+"'";
                 }else{
                     value = this.editItem.value;
