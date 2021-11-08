@@ -60,7 +60,7 @@
                                     <a-select-option key="document-custom">document-custom</a-select-option>
                                 </a-select>
                                 <a-button-group class="selected-item">
-                                    <a-button type="primary" @click="runSql" :disabled="!(queryBuilder.index && queryBuilder.fields.length)"><a-icon type="play-circle" /></a-button>
+                                    <a-button type="primary" @click="runSql" :disabled="!(queryBuilder.index)"><a-icon type="play-circle" /></a-button>
                                     <a-button type="default" :disabled="!(queryBuilder.index && queryBuilder.fields.length)"><a-icon type="export" /></a-button>
                                 </a-button-group>
                                 <a-button class="selected-item" type="default" @click="saveAs.visible=true" :disabled="!(queryBuilder.index && queryBuilder.fields.length)"><a-icon type="save" />...</a-button>
@@ -549,7 +549,7 @@ export default {
             this.data = {};
             this.loading = true;
             this.queryBuilder.sql = this.queryBuilder.custom?this.queryBuilder.sql:this.sql;
-            this.$http.postJSON(`/api/data/analyse/sql`,{sql:this.queryBuilder.sql + ' LIMIT 1000'})
+            this.$http.postJSON(`/api/data/analyse/sql`,{sql:this.queryBuilder.sql})
                 .then(res=>{
                     this.data = res.data;
                 })
