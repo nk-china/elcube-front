@@ -199,7 +199,7 @@
                 </a-card>
             </a-layout-content>
         </a-layout>
-        
+
         <a-modal v-model="modalFieldVisible" centered :title="'字段:'+editItem.name" @ok="configField" :okButtonProps="{props: {
             disabled: !!(
                 editItem.groupBy &&
@@ -803,6 +803,10 @@ export default {
 
         &:hover .control{
             display: block;
+        }
+
+        &.selected:hover .control{
+            background-color: #e6f7ff;
         }
 
         button{
