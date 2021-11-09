@@ -125,7 +125,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 
 
 .nk-page-layout{

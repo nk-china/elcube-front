@@ -154,7 +154,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
 </style>
-<style scoped lang="scss">
+<style scoped lang="less">
 </style>

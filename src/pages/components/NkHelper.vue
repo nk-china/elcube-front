@@ -47,7 +47,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 
 ::v-deep.card{
     height: 100%;

@@ -200,7 +200,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 
 ::v-deep .ant-layout-sider{
     background: inherit;

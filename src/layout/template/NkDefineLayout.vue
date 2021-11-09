@@ -11,7 +11,7 @@ name: "NkDefineLayout"
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
     .nk-static-layout{
         height: calc(100vh - 120px);
 

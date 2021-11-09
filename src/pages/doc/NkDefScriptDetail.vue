@@ -447,7 +447,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
     .full-screen{
         position: fixed;
         top: 0;

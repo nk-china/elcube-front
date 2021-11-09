@@ -126,7 +126,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
     .result{
         margin-top: 12px;
     }

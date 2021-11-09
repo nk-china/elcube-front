@@ -134,7 +134,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 ::v-deep.nk-page-layout-card.no-expand{
     .ant-card-body{
         padding: 2px;

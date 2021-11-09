@@ -457,7 +457,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
     ::v-deep {
         .ant-card + .ant-card{
             margin-top: 20px;

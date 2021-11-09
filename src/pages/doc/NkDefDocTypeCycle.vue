@@ -105,7 +105,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
     ::v-deep.cycle{
         .term{
             min-width: 200px;

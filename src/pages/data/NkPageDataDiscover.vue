@@ -763,7 +763,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 ::v-deep.form-content{
     .selected-item{
         margin: 2px 10px 2px 0;

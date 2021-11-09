@@ -93,7 +93,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 .divider{
     min-width: 80%;width:80%; margin: 16px auto;background-color: rgba(255, 255, 255, 0.2);
 }

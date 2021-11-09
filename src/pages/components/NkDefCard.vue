@@ -101,7 +101,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 ::v-deep.vue-codemirror{
     width: 100%;
     height: 300px;

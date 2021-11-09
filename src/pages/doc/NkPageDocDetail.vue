@@ -508,7 +508,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 ::v-deep .ant-anchor{
     font-size: 12px;
 }

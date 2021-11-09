@@ -306,7 +306,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 
     .slide-fade-enter-active {transition: all .5s ease;}
     .slide-fade-leave-active {transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);}

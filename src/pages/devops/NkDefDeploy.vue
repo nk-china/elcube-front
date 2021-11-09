@@ -248,7 +248,7 @@
     }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
     .buttons{
         margin-left: 120px;margin-top: 20px;
 

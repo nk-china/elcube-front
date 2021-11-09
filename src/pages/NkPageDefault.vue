@@ -278,7 +278,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
     ::v-deep.nk-page-layout .nk-page-layout-content > .content{
         padding: 15px !important;
     }

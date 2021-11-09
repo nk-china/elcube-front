@@ -97,7 +97,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
     ::v-deep a + a{
         margin-left: 5px;
     }

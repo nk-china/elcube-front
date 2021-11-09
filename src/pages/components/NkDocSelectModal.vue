@@ -157,7 +157,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
 ::v-deep .ant-modal-body{
     padding:0 0;
 }

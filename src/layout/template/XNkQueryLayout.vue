@@ -419,7 +419,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 
 .list-actions{
     margin: 0 0 8px;

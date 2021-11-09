@@ -32,7 +32,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="less">
     .nk-search-item{
 
         display: flex;
