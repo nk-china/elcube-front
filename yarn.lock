@@ -9442,24 +9442,6 @@ safe-regex@^1.1.0:
   resolved "http://ns.nkpro.it/repository/npm-public/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha1-RPoWGwGHuVSd2Eu5GAL5vYOFzWo=
 
-sass-loader@^8.0.0:
-  version "8.0.2"
-  resolved "http://ns.nkpro.it/repository/npm-public/sass-loader/-/sass-loader-8.0.2.tgz#debecd8c3ce243c76454f2e8290482150380090d"
-  integrity sha1-3r7NjDziQ8dkVPLoKQSCFQOACQ0=
-  dependencies:
-    clone-deep "^4.0.1"
-    loader-utils "^1.2.3"
-    neo-async "^2.6.1"
-    schema-utils "^2.6.1"
-    semver "^6.3.0"
-
-sass@^1.19.0:
-  version "1.39.0"
-  resolved "http://ns.nkpro.it/repository/npm-public/sass/-/sass-1.39.0.tgz#6c64695d1c437767c8f1a4e471288e831f81d035"
-  integrity sha1-bGRpXRxDd2fI8aTkcSiOgx+B0DU=
-  dependencies:
-    chokidar ">=3.0.0 <4.0.0"
-
 sax@^1.1.4, sax@~1.2.4:
   version "1.2.4"
   resolved "http://ns.nkpro.it/repository/npm-public/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
