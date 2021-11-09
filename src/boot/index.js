@@ -6,7 +6,7 @@ import Vuex from 'vuex';
 import VueI18n from 'vue-i18n'
 import VueRouter from "vue-router";
 
-import Antd from 'ant-design-vue';
+import * as Antd from 'ant-design-vue';
 import VXETable from "./VXETable";
 
 import mavonEditor from 'mavon-editor';
@@ -36,7 +36,6 @@ import NkUtil from "../utils/NkUtil";
 import {loadModule} from "vue3-sfc-loader/dist/vue2-sfc-loader";
 import moment from "moment";
 import numeral from "numeral";
-import * as ant from 'ant-design-vue';
 import eval5 from "eval5";
 import * as g2plot from '@antv/g2plot';
 import NkPageDefault from "@/pages/NkPageDefault";
@@ -125,7 +124,8 @@ function NkRouter(moduleRoutes) {
 }
 
 
-function componentLoader(componentName, template, modules) {
+import less from "less";
+function componentLoader(componentName, template, NKModule) {
 
   return Vue.component(componentName,() => {
 
@@ -135,20 +135,22 @@ function componentLoader(componentName, template, modules) {
         componentName+".vue",
         {
           moduleCache: {
-            vue: Vue,
-            "ant-design-vue":ant,
+            'nk-ts5-platform' : NKModule,
+            'vue'             : Vue,
+            'ant-design-vue'  : Antd,
+            '@antv/g2plot'    : g2plot,
             moment,
             numeral,
             eval5,
-            'nk-ts5-platform': modules,
-            '@antv/g2plot': g2plot,
-            ...modules
+            less,
+            ...NKModule
           },
           getFile() {
             return template;
           },
           addStyle(textContent) {
-            document.head.append(Object.assign(document.createElement('style'), { textContent }));
+            if((textContent = textContent.trim()))
+              document.head.append(Object.assign(document.createElement('style'), { textContent }));
           },
           customBlockHandler(block) {
             if ( block.type === 'i18n' ){
@@ -168,7 +170,11 @@ function componentLoader(componentName, template, modules) {
         }
         resolve(component);
       }).catch((e)=>{
-        console.log(e);
+        Antd.Modal.error({
+          centered: true,
+          title: '['+componentName+']编译错误',
+          content: e.name + " : "+e.message
+        });
         reject(e);
       });
     });

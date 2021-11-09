@@ -18,7 +18,7 @@ module.exports = {
     }
   },
   "devServer": {
-    "port": "7300",
+    "port": "7200",
     "proxy": {
       "^/api": {
         "target": process.env.DEV_SERVER_PROXY_TARGET,
