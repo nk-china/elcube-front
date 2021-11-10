@@ -1,31 +1,26 @@
 <template>
-    <x-nk-page-layout :title="title" :sub-title="subTitle">
+    <x-nk-page-layout title="智能报表" sub-title="subTitle">
 
         <slot name="action" slot="action"></slot>
 
         <div v-if="saveAsSource && saveAs.list&& saveAs.list.length" slot="content" style="display: flex;align-items: flex-start">
             <label style="margin-right: 10px;width: 6.5em;flex-shrink: 0;line-height: 26px;">已保存的检索: </label>
             <div style="line-height: 26px;">
-                <a-tag v-for="item in saveAs.list" :key="item.id"
-                       closable
-                       @click="saveAsClick(item)"
-                       @close="saveAsDelete(item)"
-                >
+                <a-tag v-for="item in saveAs.list" :key="item.id" :closable="true" @click="saveAsClick(item)" @close="saveAsDelete(item)">
                     {{item.name}}
                 </a-tag>
             </div>
         </div>
-        <slot v-if="$slots.content" name="content" slot="content"></slot>
 
         <a-card>
             <a-form :label-col="{ span: 6 }" :wrapper-col="{ span: 17 }" @submit="formSubmit">
                 <nk-search-box>
-                    <component v-for="(item,index) in searchItemsDefault"
+                    <component v-for="(item,index) in config.searchItemsDefault"
                                ref="searchItems"
                                :key="index"
                                :is="item.component"
                                :config="item"
-                               :option="item.options || aggs[item.field]"
+                               :option="item.options"
                                @changed="formItemChanged"
                     ></component>
                     <component v-for="(item) in searchItemsMoreSelected"
@@ -33,7 +28,7 @@
                                :key="item.field"
                                :is="item.component"
                                :config="item"
-                               :option="aggs[item.field]"
+                               :option="item.options"
                                :closeable="true"
                                @changed="formItemChanged"
                                @close="searchMoreItemClosed"
@@ -70,31 +65,26 @@
                 </nk-search-box>
             </a-form>
 
-            <vxe-grid
+            <nk-page-data-smart-table-grid
                 ref="grid"
                 auto-resize
                 resizable
                 highlight-hover-row
-                :highlight-current-row="selectable"
+                :highlight-current-row="false"
                 show-header-overflow="tooltip"
                 show-overflow="tooltip"
                 size="mini"
-                :border="border"
+                :border="config.border"
                 :columns="columns"
                 :data="page.list"
                 :loading="loading"
                 @cell-click="vxeCellClick"
                 @current-change="vxeCurrentChanged"
                 @sort-change="vxeSortChanged"
-                :sort-config="sortConfig"
-            >
-                <template #drill="e">
-                    <a @click="emitDrill(e)">{{e.row[e.column.property]}} <i class="vxe-icon--caret-bottom"></i></a>
-                </template>
-                <template #drillExpand="{ row,column }">
-                    {{column}}
-                </template>
-            </vxe-grid>
+                @nk-row-drill="drill"
+                :sort-config="config.sortConfig"
+            ></nk-page-data-smart-table-grid>
+
             <vxe-pager
                 v-if="page.page"
                 perfect
@@ -104,9 +94,7 @@
                 :total="page.total"
                 :layouts="['PrevPage', 'JumpNumber', 'NextPage', 'FullJump', 'Sizes', 'Total']"
                 @page-change="vxePageChanged" />
-
         </a-card>
-        <slot></slot>
 
         <a-modal v-model="saveAs.visible" centered title="请输入备注" @ok="saveAsPost" :confirm-loading="saveAs.confirmLoading">
             <a-input v-model="saveAs.name" placeholder="请输入搜索备注，便于后期使用"></a-input>
@@ -115,61 +103,37 @@
 </template>
 
 <script>
-import XNkPageLayout from "./XNkPageLayout";
+import XNkPageLayout from "../../layout/template/XNkPageLayout";
+import NkPageDataSmartTableGrid from "./NkPageDataSmartTableGrid";
+import {mapGetters} from "vuex";
+import NkUtil from "../../utils/NkUtil";
 
 export default {
-    components:{
-        XNkPageLayout,
-    },
-    props:{
-        title:String,
-        subTitle:String,
-        searchItemsDefault:Array,
-        searchItemsMoreDef:{
-            type : Array,
-            default(){
-                return []
-            }
-        },
-        dataTableColumns:Array,
-        dataIncludeFields:{
-            type: Array,
-            default(){
-                return [];
-            }
-        },
-        saveAsSource:String,
-        lazy:{
-            type: Boolean,
-            default: false
-        },
-        selectable:{
-            type: Boolean,
-            default: false
-        },
-        initRows:{
-            type: Number,
-            default: 10,
-        },
-        border:{
-            type:String,
-            default:"inner"
-        },
-        sortConfig:{
-            type: Object,
-            default(){
-                return {
-                    trigger: 'cell',
-                    remote: true,
-                    defaultSort: {field: 'age', order: 'desc'},
-                    orders: ['desc', 'asc', null]
-                };
-            }
-        }
-    },
+    components: {XNkPageLayout,NkPageDataSmartTableGrid},
     data(){
         return {
+            config:{
+                $debug:false,
+                index:"document",
+                postSql:undefined,
+                postCondition:undefined,
+                searchItemsDefault:[],
+                searchItemsMoreDef:[],
+                defaultRows:10,
+                columns:[],
+                sortConfig:undefined,
+                border:undefined,
+                creatable:undefined,
+                custom:{},
+
+                preview:false,
+                previewParams: {},
+                previewVisible: false,
+            },
+
             loading: true,
+
+            saveAsSource:"DataSmartTable",
             page: {},
             availableSearchItemsMoreDef:[],
             searchItemsMoreSelected:[],
@@ -188,44 +152,159 @@ export default {
             }
         }
     },
-    mounted(){
-        if(!this.lazy) {
-            this.init()
-        }
+    created(){
+        this.loadCustom();
     },
     computed:{
-        aggs(){
-            return this.page.aggs || {}
-        },
+        ...mapGetters('User',[
+            'user'
+        ]),
         columns(){
             return [{
                 type:"expand",
+                width:1,
+                visible:false,
                 slots:{
                     content:"drillExpand"
                 }
-            },...this.dataTableColumns];
+            },...this.config.columns];
+        },
+        creatableFilter(){
+            return this.creatable && this.creatable.filter(item=>{
+                return this.user.authorities
+                    .find(authority=>
+                        authority.authority==='@'+item.docType+':WRITE'||
+                        authority.authority==='@'+item.docType+':*'||
+                        authority.authority==='@*:*'||
+                        authority.authority==='*:*')
+            })
         }
     },
     methods:{
+        loadCustom(){
+            this.$http.get(`/api/webapp/menu/${this.$route.params.id}`)
+                .then(res=>{
+                    this.custom = res.data;
+                    this.$emit("setTab",this.custom.title);
+
+                    const queryLength = Object.keys(this.$route.query).length;
+                    if(queryLength){
+                        this.$emit("setTab",this.custom.title+"[Filter:"+queryLength+"]");
+                    }else{
+                        this.$emit("setTab",this.custom.title);
+                    }
+
+                    if(this.custom.menuOptions){
+                        let options = NkUtil.parseJSON(this.custom.menuOptions);
+                        for(let field in options){
+                            if(options.hasOwnProperty(field))
+                                this.config[field] = options[field];
+                        }
+                        this.$nextTick(()=>{
+                            this.init();
+                        })
+                    }else{
+                        this.$error({
+                            title: '初始化失败',
+                            content: '自定义的选项错误！',
+                        });
+                    }
+
+                }).catch((e)=>{
+                    console.error(e);
+                });
+        },
+        /**
+         * 表单提交
+         */
+        formSubmit(e){
+            if(e)e.preventDefault();
+            this.$refs.grid.clearSort();
+            this.params.orderField = null;
+            this.params.order = null;
+            this.params.from = 0;
+            this.emitChange();
+            return false;
+        },
+        formItemChanged(e){
+            if(e.field){
+                this.params.conditions = this.params.conditions||{};
+                if(e.condition){
+                    this.params.conditions[e.field]=e.condition;
+                }else{
+                    delete this.params.conditions[e.field]
+                }
+
+                this.searchMoreDefUpdate();
+                if(e.trigger){
+                    this.params.from = 0;
+                    this.emitChange()
+                }
+            }
+        },
+        search(params){
+            this.params = params;
+            this.$http.postJSON(`/api/data/analyse/sql`,Object.assign({
+                    sqls: (this.config.postSql instanceof Array) ? this.config.postSql : [this.config.postSql],
+                    $debug: this.$debug,
+                },params)
+            ).then((res)=>{
+                this.setData(res.data)
+            });
+        },
+        selected({row,$event}){
+            if($event.target.tagName!=='A'){
+                this.previewVisible = true;
+                this.previewParams  = {
+                    mode: "detail",
+                    classify:row.classify,
+                    docId:row.docId
+                }
+            }
+        },
+        drill(e, parent){
+
+            if(e.$table.getRowExpandRecords().indexOf(e.row)>-1){
+                e.$table.setRowExpand([e.row],false);
+                this.$set(e.row,'$children',undefined);
+            }else{
+                // this.loading = true;
+                e.$table.setRowExpand([e.row],true);
+
+                const sqls = parent?parent.row.$sqls:(this.config.postSql instanceof Array) ? this.config.postSql : [this.config.postSql];
+
+                const column = this.columns.find(c=>c.field === e.column.property);
+                const dills = column.drills;
+                // const from      = parent===undefined?e.column.property:dills[parent.row.$drillIndex];
+                let drillIndex  = (parent===undefined?0:parent.row.$drillIndex+1);
+                const to        = dills[drillIndex];
+                this.$set(e.row,'$drillIndex',drillIndex);
+
+                this.$http.postJSON(`/api/data/analyse/sql`,Object.assign({
+                        sqls,
+                        $debug: this.$debug,
+                        drill: {
+                            from:e.column.property,
+                            fromValue: e.row[e.column.property],
+                            to
+                        }
+                    },this.params)
+                ).then((res)=>{
+                    this.$set(e.row,'$children',res.data.list.filter(i=>{i.$drillAble=drillIndex<dills.length-1;return true;}));
+                    this.$set(e.row,'$sqls',res.data.sqls);
+                    this.loading = false;
+                });
+            }
+        },
+
+
+
         init(){
             this.page.rows = this.initRows;
             this.params.rows = this.initRows;
 
-            // 设置索引的返回字段
-            const fields = this.dataIncludeFields;
-            if(fields.indexOf("docId")===-1){fields.push("docId")}
-            if(fields.indexOf("classify")===-1){fields.push("classify")}
-            if(fields.indexOf("itemType")===-1){fields.push("itemType")}
-            this.dataTableColumns.forEach(item=>{
-                if(item.field && fields.indexOf(item.field)===-1){
-                    fields.push(item.field);
-                }
-            })
-            this.params._source=fields;
-
-
             this.searchMoreDefUpdate();
-            this.searchItemsDefault
+            this.config.searchItemsDefault
                 .forEach(item=>{
                     if(item.defaultValue){
                         this.params[item.field]=item.defaultValue;
@@ -284,66 +363,14 @@ export default {
             this.loading = false;
         },
         /**
-         * 表单提交
-         */
-        formSubmit(e){
-            if(e)e.preventDefault();
-            this.$refs.grid.clearSort();
-            this.params.orderField = null;
-            this.params.order = null;
-            this.params.from = 0;
-            this.emitChange();
-            return false;
-        },
-        /**
-         * 【选项组件】值更新后触发
-         * @param e
-         */
-        //
-        formItemChanged(e){
-            if(e.field){
-                this.params.conditions = this.params.conditions||{};
-                if(e.condition){
-                    this.params.conditions[e.field]=e.condition;
-                }else{
-                    delete this.params.conditions[e.field]
-                }
-
-                let highlight = this.params['_highlight'];
-                if(!highlight){
-                    highlight = [];
-                    this.params['_highlight']=highlight;
-                }
-
-                if(e.highlight){
-                    (e.field instanceof Array ? e.field : [e.field]).forEach(field=>{
-                        if(highlight.indexOf(field)===-1)
-                            highlight.push(field);
-                    })
-                }
-
-                this.searchMoreDefUpdate();
-                if(e.trigger){
-                    this.params.from = 0;
-                    this.emitChange()
-                }
-            }
-        },
-        /**
          * 执行参数更新，并通知父组件，由父组件执行搜索
          */
         emitChange(){
             this.loading = true;
-
-            let $aggs = [];
-            this.searchItemsDefault.filter(i=>i.agg).forEach(i=>$aggs.push(i.field))
-            this.searchItemsMoreSelected.filter(i=>i.agg).forEach(i=>$aggs.push(i.field))
-            
-            this.$emit("change",Object.assign({$aggs},this.params))
+            this.search(this.params);
         },
-        emitDrill({row,column}){
-            this.$refs.grid.setRowExpand([row],true);
-            this.$emit("drill", column.property)
+        emitDrill(e){
+            e.$table.setRowExpand([e.row],true);
         },
         toggle(){
             this.expand = !this.expand
@@ -354,7 +381,7 @@ export default {
          */
         searchMoreDefUpdate(){
             this.availableSearchItemsMoreDef = [];
-            this.searchItemsMoreDef.forEach(item=>{
+            this.config.searchItemsMoreDef.forEach(item=>{
                 if(!item.condition || item.condition(this.params))
                     this.availableSearchItemsMoreDef.push(item);
             });
@@ -457,9 +484,6 @@ export default {
         },
         saveAsClick(item){
             this.reset(JSON.parse(item.json||'{}'));
-        },
-        grid(){
-            return this.$refs.grid;
         }
     }
 }

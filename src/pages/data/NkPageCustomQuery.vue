@@ -14,6 +14,7 @@
         :selectable="false"
         @change="search"
         @click="selected"
+        @drill="drill"
     >
         <a-button  slot="action"
                    type="primary"
@@ -59,6 +60,8 @@ export default {
             preview:false,
             previewParams: {},
             previewVisible: false,
+
+            params:undefined,
         }
     },
     created(){
@@ -129,6 +132,8 @@ export default {
             //     }
             // }
 
+            this.params = params;
+
             if(this.postSql){
                 this.$http.postJSON(`/api/data/analyse/sql`,Object.assign({
                         sqls: (this.postSql instanceof Array) ? this.postSql : [this.postSql],
@@ -157,6 +162,22 @@ export default {
                     classify:row.classify,
                     docId:row.docId
                 }
+            }
+        },
+        drill(field){
+            const column = this.columns.find(c=>c.field === field);
+            if(this.postSql){
+                this.$http.postJSON(`/api/data/analyse/sql`,Object.assign({
+                        sqls: (this.postSql instanceof Array) ? this.postSql : [this.postSql],
+                        $debug: this.$debug,
+                        drill: {
+                            from : field,
+                            to : column.drill
+                        }
+                    },this.params)
+                ).then((res)=>{
+                    console.log(res)
+                });
             }
         },
         previewClose(){
