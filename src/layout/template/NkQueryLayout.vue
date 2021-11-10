@@ -88,12 +88,6 @@
                 @sort-change="vxeSortChanged"
                 :sort-config="sortConfig"
             >
-                <template #drill="e">
-                    <a @click="emitDrill(e)">{{e.row[e.column.property]}} <i class="vxe-icon--caret-bottom"></i></a>
-                </template>
-                <template #drillExpand="{ row,column }">
-                    {{column}}
-                </template>
             </vxe-grid>
             <vxe-pager
                 v-if="page.page"
