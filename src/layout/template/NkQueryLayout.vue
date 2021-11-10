@@ -80,7 +80,7 @@
                 show-overflow="tooltip"
                 size="mini"
                 :border="border"
-                :columns="columns"
+                :columns="dataTableColumns"
                 :data="page.list"
                 :loading="loading"
                 @cell-click="vxeCellClick"
@@ -196,14 +196,6 @@ export default {
     computed:{
         aggs(){
             return this.page.aggs || {}
-        },
-        columns(){
-            return [{
-                type:"expand",
-                slots:{
-                    content:"drillExpand"
-                }
-            },...this.dataTableColumns];
         }
     },
     methods:{
