@@ -14,7 +14,8 @@ import NkPageDocs from "./doc/NkPageDocs";
 import NkPageDocDetail from "./doc/NkPageDocDetail";
 import NkPageDocDetailDiff from "./doc/NkPageDocDetailDiff";
 import NkPageCustomQuery from "./data/NkPageCustomQuery";
-import NkPageDataDiscover from "./data/NkPageDataDiscover";
+// import NkPageDataDiscover from "./data/NkPageDataDiscover";
+import NkPageDataDiscoverX from "./data/NkPageDataDiscoverX";
 import NkPageDataVisualize from "./data/NkPageDataVisualize";
 import NkPageDataView from "./data/NkPageDataView";
 
@@ -107,7 +108,7 @@ module.routes = [
       {
         name: "发现",
         path: 'discover',
-        component: NkPageDataDiscover,
+        component: NkPageDataDiscoverX,
         meta:{
           title: "数据发现",
         }
