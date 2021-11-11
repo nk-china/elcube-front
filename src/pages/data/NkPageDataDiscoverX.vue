@@ -62,10 +62,10 @@
                         </template>
                         <template v-else>
                             <nk-form-item title="数据集">
-                                <a-select v-model="queryBuilder.index" class="selected-item" style="width: 200px;" @change="indexChange($event)">
-                                    <a-select-option key="document">document</a-select-option>
-                                    <a-select-option key="doc-ext">doc-ext</a-select-option>
-                                    <a-select-option key="document-custom">document-custom</a-select-option>
+                                <a-select v-model="queryBuilder.index" class="selected-item" style="width: 200px;" @change="indexChange($event)" :dropdownMatchSelectWidth="false">
+                                    <a-select-option v-for="item in dataSources" :key="item.name">
+                                        <a-icon :component="icon['Icon'+item.type]" />{{item.name}}
+                                    </a-select-option>
                                 </a-select>
                                 <a-button-group class="selected-item">
                                     <a-button type="primary" @click="runSql" :disabled="!(!error.length && queryBuilder.index)"><a-icon type="play-circle" /></a-button>
@@ -259,9 +259,13 @@
 import NkNumberRange from "./NkNumberRange";
 import NkDateRange from "./NkDateRange";
 import NkInputRange from "./NkInputRange";
-import define from "./NkSqlDescription_ElasticSearch";
+import ElasticSearch from "./NkSqlDescription_ElasticSearch";
+import ClickHouse from "./NkSqlDescription_ClickHouse";
 
+import IconElasticSearch from "./IconElasticSearch";
+import IconClickHouse from "./IconClickHouse";
 
+const dataSourceDialects = {ElasticSearch,ClickHouse};
 
 export default {
     components:{
@@ -278,6 +282,13 @@ export default {
     },
     data(){
         return {
+            dataSources:[],
+            dialect:undefined,
+            icon:{
+                IconElasticSearch,
+                IconClickHouse,
+            },
+
             modalEdit:{
                 visible:false,
                 define:undefined,
@@ -472,7 +483,7 @@ export default {
 
             let sql = [
                 `SELECT ${fields||'*'}`,
-                `  FROM ${this.queryBuilder.index||'<document>'}`
+                `  FROM "${this.queryBuilder.index||'<document>'}"`
             ];
 
             if(filter.length){
@@ -492,9 +503,14 @@ export default {
         }
     },
     created() {
+        this.init();
         this.saveAsGet();
     },
     methods:{
+        init(){
+            this.$http.get('/api/data/analyse/dataSources')
+                .then(res=>this.dataSources=res.data);
+        },
         custom(f){
             this.queryBuilder.custom=f;
             if(f)
@@ -559,24 +575,11 @@ export default {
                             chart:undefined
                         }
                     }
-                    const availableFields = [];
-                    for(let field in res.data){
-                        if(res.data.hasOwnProperty(field)){
-
-                            const fieldMeta = res.data[field];
-
-                            if(field.startsWith('_'))continue;
-                            if(field==='$keyword')continue;
-                            if(fieldMeta.object)continue;
-
-                            for(let type in fieldMeta){
-                                if(fieldMeta.hasOwnProperty(type))
-                                    availableFields.push(fieldMeta[type])
-                            }
-                        }
-                    }
-                    this.availableFields = availableFields.sort((a,b)=>a.name > b.name ?1:-1);
+                    this.availableFields = res.data.sort((a,b)=>a.name > b.name ?1:-1);
                     this.filterListedField = undefined;
+
+                    const datasource = this.dataSources.find(i=>i.name===index);
+                    this.dialect = dataSourceDialects[datasource.type];
                 });
         },
         addField(name){
@@ -585,14 +588,22 @@ export default {
             if(item.aggregatable){
                 this.editField(item);
             }else{
-                define.fields[item.type].$format(item);
+                const config = this.dialect.fields[item.type];
+                if(!config){
+                    item.$format = {
+                        alias: name,
+                        select: name
+                    };
+                }else{
+                    config.$format(item);
+                }
                 this.queryBuilder.fields.push(item)
             }
         },
         editField(item){
             this.modalEdit.visible=true;
             this.modalEdit.ok = this.configField;
-            this.modalEdit.define = define.fields[item.type];
+            this.modalEdit.define = this.dialect.fields[item.type];
             this.editSource = this.queryBuilder.fields.indexOf(item);
             this.editItem = JSON.parse(JSON.stringify(item));
         },
@@ -614,12 +625,23 @@ export default {
         editFilter(item){
             this.modalEdit.visible=true;
             this.modalEdit.ok = this.configFilter;
-            this.modalEdit.define = define.filters[item.type];
+            this.modalEdit.define = this.dialect.filters[item.type];
             this.editSource = this.queryBuilder.filter.indexOf(item);
             this.editItem = JSON.parse(JSON.stringify(item));
         },
         configFilter(){
-            this.modalEdit.define.$format(this.editItem);
+
+            // this.$message.warn({
+            //     content:"字段["+name+"]暂不支持",
+            // })
+            // return
+            if(this.modalEdit.define){
+                this.modalEdit.define.$format(this.editItem);
+            }else{
+                this.editItem.$format = {
+                    where: `${this.editItem.name} IS NOT NULL`,
+                };
+            }
 
             if(this.editSource===-1){
                 this.queryBuilder.filter.push(this.editItem);
