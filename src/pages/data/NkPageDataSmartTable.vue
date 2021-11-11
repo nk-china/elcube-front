@@ -1,5 +1,5 @@
 <template>
-    <x-nk-page-layout title="智能报表" sub-title="subTitle">
+    <x-nk-page-layout sub-title="数据挖掘与分析" :title="custom.title">
 
         <slot name="action" slot="action"></slot>
 
@@ -11,6 +11,10 @@
                 </a-tag>
             </div>
         </div>
+
+        <span slot="action">仅下钻条目
+            <a-switch v-model="expandOnly"></a-switch>
+        </span>
 
         <a-card>
             <a-form :label-col="{ span: 6 }" :wrapper-col="{ span: 17 }" @submit="formSubmit">
@@ -44,7 +48,7 @@
                             @change="searchMoreChanged"
                             v-model="searchItemsMoreFields"
                         >
-                            <a-select-option v-for="(item) in availableSearchItemsMoreDef" :key="item.field">
+                            <a-select-option v-for="item in availableSearchItemsMoreDef" :key="item.field">
                                 {{item.name}}
                             </a-select-option>
                         </a-select>
@@ -74,14 +78,14 @@
                 show-header-overflow="tooltip"
                 show-overflow="tooltip"
                 size="mini"
+                :max-height="700"
                 :border="config.border"
                 :columns="columns"
-                :data="page.list"
+                :data="imitateRow.$$data"
                 :loading="loading"
-                @cell-click="vxeCellClick"
-                @current-change="vxeCurrentChanged"
+                :expand-only="expandOnly"
                 @sort-change="vxeSortChanged"
-                @nk-row-drill="drill"
+                @nk-row-drill="search"
                 :sort-config="config.sortConfig"
             ></nk-page-data-smart-table-grid>
 
@@ -105,13 +109,13 @@
 <script>
 import XNkPageLayout from "../../layout/template/XNkPageLayout";
 import NkPageDataSmartTableGrid from "./NkPageDataSmartTableGrid";
-import {mapGetters} from "vuex";
 import NkUtil from "../../utils/NkUtil";
 
 export default {
     components: {XNkPageLayout,NkPageDataSmartTableGrid},
     data(){
         return {
+            custom:{},
             config:{
                 $debug:false,
                 index:"document",
@@ -124,7 +128,6 @@ export default {
                 sortConfig:undefined,
                 border:undefined,
                 creatable:undefined,
-                custom:{},
 
                 preview:false,
                 previewParams: {},
@@ -135,9 +138,12 @@ export default {
 
             saveAsSource:"DataSmartTable",
             page: {},
+            imitateRow: {},
             availableSearchItemsMoreDef:[],
             searchItemsMoreSelected:[],
             searchItemsMoreFields:[],
+
+            expandOnly:true,
 
             params : {
                 from : 0,
@@ -156,9 +162,6 @@ export default {
         this.loadCustom();
     },
     computed:{
-        ...mapGetters('User',[
-            'user'
-        ]),
         columns(){
             return [{
                 type:"expand",
@@ -169,16 +172,9 @@ export default {
                 }
             },...this.config.columns];
         },
-        creatableFilter(){
-            return this.creatable && this.creatable.filter(item=>{
-                return this.user.authorities
-                    .find(authority=>
-                        authority.authority==='@'+item.docType+':WRITE'||
-                        authority.authority==='@'+item.docType+':*'||
-                        authority.authority==='@*:*'||
-                        authority.authority==='*:*')
-            })
-        }
+        preSql(){
+            return (this.config.postSql instanceof Array) ? this.config.postSql : [this.config.postSql];
+        },
     },
     methods:{
         loadCustom(){
@@ -214,92 +210,11 @@ export default {
                     console.error(e);
                 });
         },
-        /**
-         * 表单提交
-         */
-        formSubmit(e){
-            if(e)e.preventDefault();
-            this.$refs.grid.clearSort();
-            this.params.orderField = null;
-            this.params.order = null;
-            this.params.from = 0;
-            this.emitChange();
-            return false;
-        },
-        formItemChanged(e){
-            if(e.field){
-                this.params.conditions = this.params.conditions||{};
-                if(e.condition){
-                    this.params.conditions[e.field]=e.condition;
-                }else{
-                    delete this.params.conditions[e.field]
-                }
-
-                this.searchMoreDefUpdate();
-                if(e.trigger){
-                    this.params.from = 0;
-                    this.emitChange()
-                }
-            }
-        },
-        search(params){
-            this.params = params;
-            this.$http.postJSON(`/api/data/analyse/sql`,Object.assign({
-                    sqls: (this.config.postSql instanceof Array) ? this.config.postSql : [this.config.postSql],
-                    $debug: this.$debug,
-                },params)
-            ).then((res)=>{
-                this.setData(res.data)
-            });
-        },
-        selected({row,$event}){
-            if($event.target.tagName!=='A'){
-                this.previewVisible = true;
-                this.previewParams  = {
-                    mode: "detail",
-                    classify:row.classify,
-                    docId:row.docId
-                }
-            }
-        },
-        drill(e, parent){
-
-            if(e.$table.getRowExpandRecords().indexOf(e.row)>-1){
-                e.$table.setRowExpand([e.row],false);
-                this.$set(e.row,'$children',undefined);
-            }else{
-                // this.loading = true;
-                e.$table.setRowExpand([e.row],true);
-
-                const sqls = parent?parent.row.$sqls:(this.config.postSql instanceof Array) ? this.config.postSql : [this.config.postSql];
-
-                const column = this.columns.find(c=>c.field === e.column.property);
-                const dills = column.drills;
-                // const from      = parent===undefined?e.column.property:dills[parent.row.$drillIndex];
-                let drillIndex  = (parent===undefined?0:parent.row.$drillIndex+1);
-                const to        = dills[drillIndex];
-                this.$set(e.row,'$drillIndex',drillIndex);
-
-                this.$http.postJSON(`/api/data/analyse/sql`,Object.assign({
-                        sqls,
-                        $debug: this.$debug,
-                        drill: {
-                            from:e.column.property,
-                            fromValue: e.row[e.column.property],
-                            to
-                        }
-                    },this.params)
-                ).then((res)=>{
-                    this.$set(e.row,'$children',res.data.list.filter(i=>{i.$drillAble=drillIndex<dills.length-1;return true;}));
-                    this.$set(e.row,'$sqls',res.data.sqls);
-                    this.loading = false;
-                });
-            }
-        },
-
-
-
         init(){
+            if(this.saveAsSource){
+                this.saveAsGet();
+            }
+
             this.page.rows = this.initRows;
             this.params.rows = this.initRows;
 
@@ -311,10 +226,6 @@ export default {
                     }
                 });
             this.formSubmit();
-
-            if(this.saveAsSource){
-                this.saveAsGet();
-            }
         },
         reset(params){
 
@@ -323,7 +234,7 @@ export default {
                 this.searchItemsMoreSelected = [];
                 this.searchMoreDefUpdate();
 
-                for(let field in params.conditions){
+                for(let field in Object.keys(params.conditions)){
                     let find = this.searchItemsMoreFields.indexOf(field);
                     if(find===-1){
                         let def = this.searchItemsMoreDef.find(def=>def&&def.field===field);
@@ -352,29 +263,101 @@ export default {
                 this.searchItemsMoreSelected = [];
                 this.searchMoreDefUpdate();
             }
-            this.emitChange();
-        },
-        reload(){
-            this.emitChange();
-        },
-        // 设置组件祖居
-        setData(page){
-            this.page = page;
-            this.loading = false;
+            this.search();
         },
         /**
-         * 执行参数更新，并通知父组件，由父组件执行搜索
+         * event : 触发search的event，如果是第一层，event由外部触发，因此为空
+         * parent: 点击drill按钮所在table的上级event，如果点击的是第一层表格，则为空
          */
-        emitChange(){
-            this.loading = true;
-            this.search(this.params);
+        search(event,parent){
+
+            let $row            = this.imitateRow;
+            let drill           = undefined;
+            let step            = 0;
+            let sql             = this.preSql;
+            let drillable       = true;
+
+            if(parent){
+                sql         = parent.row.$$data.sqlList;
+                step        = parent.row['$$step']+1;
+            }
+
+            if(event){
+
+                const drills        = this.columns.find(c=>c.field === event.column.property).drills;
+                const $table        = event.$table;
+                      $row          = event.row;
+                      drillable     = step < drills.length - 1;
+
+                if($table.getRowExpandRecords().indexOf($row)>-1) {
+                    $table.setRowExpand([$row], false);
+                    $row.$$data = undefined;
+                    return;
+                }
+
+                drill = {
+                    from: event.column.property,
+                    fromValue: event.row[event.column.property],
+                    to:drills[step],
+                }
+            }else{
+                this.loading = true;
+            }
+
+            this.$http.postJSON(`/api/data/analyse/sql`,Object.assign({sqlList:sql,drill},this.params))
+                .then((res)=>{
+                    res.data.$$drillable = drillable;
+                    this.$set($row,'$$data',        res.data);
+                    this.$set($row,'$$step',        step);
+                    this.loading = false;
+
+                    if(event){
+                        event.$table.setRowExpand([event.row],true);
+                    }
+                });
         },
-        emitDrill(e){
-            e.$table.setRowExpand([e.row],true);
+        /**
+         * 表单提交
+         */
+        formSubmit(e){
+            if(e)e.preventDefault();
+            this.$refs.grid.clear();
+            this.params.orderField = null;
+            this.params.order = null;
+            this.params.from = 0;
+            this.search();
+            return false;
         },
-        toggle(){
-            this.expand = !this.expand
+        formItemChanged(e){
+            if(e.field){
+                this.params.conditions = this.params.conditions||{};
+                if(e.condition){
+                    this.params.conditions[e.field]=e.condition;
+                }else{
+                    delete this.params.conditions[e.field]
+                }
+
+                this.searchMoreDefUpdate();
+                if(e.trigger){
+                    this.params.from = 0;
+                    this.search();
+                }
+            }
         },
+        selected({row,$event}){
+            if($event.target.tagName!=='A'){
+                this.previewVisible = true;
+                this.previewParams  = {
+                    mode: "detail",
+                    classify:row.classify,
+                    docId:row.docId
+                }
+            }
+        },
+
+
+
+
         /**
          * 1、更新【更多选项按钮】的下拉列表值，
          * 2、如果被激活的选项组件所对应的选项被清楚的话，就移除选项组件
@@ -405,7 +388,7 @@ export default {
                     selected.push(items[0]);
             })
             this.searchItemsMoreSelected = selected;
-            this.emitChange()
+            this.search();
         },
         /**
          * 【选项组件】点击关闭事件
@@ -422,21 +405,15 @@ export default {
             if(index>-1){
                 this.searchItemsMoreSelected.splice(index, 1);
                 delete this.params[e.field];
-                this.emitChange()
+                this.search();
             }
-        },
-        vxeCurrentChanged(e){
-            this.$emit("select",e);
-        },
-        vxeCellClick(e){
-            this.$emit("click",e);
         },
         // 排序跳转
         vxeSortChanged({column,property,order}){
             if(this.sortConfig && this.sortConfig.remote){
                 this.params.orderField = order===null?null:((column.params&&column.params.orderField)||property);
                 this.params.order = order;
-                this.emitChange()
+                this.search();
             }
         },
         // 页码跳转
@@ -452,9 +429,11 @@ export default {
                 this.params.from = from;
                 this.params.rows = e.pageSize;
 
-                this.emitChange()
+                this.search();
             }
         },
+
+
         // 保存搜索
         saveAsGet(){
             this.$http.get("/api/webapp/user/saved/query/list?source="+this.saveAsSource)
