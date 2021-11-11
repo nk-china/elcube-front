@@ -9,8 +9,8 @@ const text = {
     },
     $format(e){
         e.$format = {
-            alias : e.alias,
-            select:`${e.name} AS "${e.alias}"`
+            alias : e.alias || e.name,
+            select:`${e.name} AS "${e.alias || e.name}"`
         };
     }
 }
