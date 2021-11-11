@@ -13,7 +13,7 @@ import NkPageTasks from "./task/NkPageTasks";
 import NkPageDocs from "./doc/NkPageDocs";
 import NkPageDocDetail from "./doc/NkPageDocDetail";
 import NkPageDocDetailDiff from "./doc/NkPageDocDetailDiff";
-import NkPageCustomQuery from "./data/NkPageCustomQuery";
+import NkPageDataTable from "./data/NkPageDataTable";
 import NkPageDataSmartTable from "./data/NkPageDataSmartTable";
 // import NkPageDataDiscover from "./data/NkPageDataDiscover";
 import NkPageDataDiscoverX from "./data/NkPageDataDiscoverX";
@@ -135,7 +135,7 @@ module.routes = [
       {
         name: "数据报表",
         path: 'v/:id',
-        component: NkPageCustomQuery,
+        component: NkPageDataTable,
       },
       {
         name: "智能报表",
@@ -151,7 +151,7 @@ module.routes = [
       {
         name: "检索",
         path: ':id',
-        component: NkPageCustomQuery,
+        component: NkPageDataTable,
       }
     ]
   },
