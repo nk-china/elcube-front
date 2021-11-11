@@ -327,10 +327,6 @@ export default {
             
             this.$emit("change",Object.assign({$aggs},this.params))
         },
-        emitDrill({row,column}){
-            this.$refs.grid.setRowExpand([row],true);
-            this.$emit("drill", column.property)
-        },
         toggle(){
             this.expand = !this.expand
         },
