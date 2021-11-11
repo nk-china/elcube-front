@@ -120,6 +120,7 @@ const date = {
         class:{width:'160px'}
     },
     having:{
+        required: false,
         label: '聚合筛选',
         type: 'a-select',
         visible(e){return !e.group&&e.aggregation;},
@@ -179,6 +180,7 @@ const number = {
         visible(e){return e.group;}
     },
     aggregation:{
+        required: false,
         label: '聚合',
         type: 'a-select',
         visible(e){return !e.group;},
@@ -193,6 +195,7 @@ const number = {
         class:{width:'160px'}
     },
     having:{
+        required: false,
         label: '聚合筛选',
         type: 'a-select',
         visible(e){return !e.group&&e.aggregation;},

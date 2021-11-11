@@ -304,7 +304,7 @@ export default {
                 this.loading = true;
             }
 
-            this.$http.postJSON(`/api/data/analyse/sql`,Object.assign({sqlList:sql,drill},this.params))
+            this.$http.postJSON(`/api/data/analyse/query`,Object.assign({sqlList:sql,drill},this.params))
                 .then((res)=>{
                     res.data.$$drillable = drillable;
                     this.$set($row,'$$data',        res.data);

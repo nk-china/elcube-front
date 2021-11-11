@@ -134,7 +134,7 @@ export default {
             this.params = params;
 
             if(this.postSql){
-                this.$http.postJSON(`/api/data/analyse/sql`,Object.assign({
+                this.$http.postJSON(`/api/data/analyse/query`,Object.assign({
                         sqlList: (this.postSql instanceof Array) ? this.postSql : [this.postSql],
                         $debug: this.$debug,
                     },params)

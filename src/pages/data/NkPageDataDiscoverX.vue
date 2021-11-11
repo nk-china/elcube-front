@@ -520,7 +520,7 @@ export default {
             this.data = {};
             this.loading = true;
             this.queryBuilder.sql = this.queryBuilder.custom?this.queryBuilder.sql:this.sql;
-            this.$http.postJSON(`/api/data/analyse/sql`,{sql:this.queryBuilder.sql})
+            this.$http.postJSON(`/api/data/analyse/query`,{sql:this.queryBuilder.sql})
                 .then(res=>{
                     this.data = res.data;
                 })
@@ -608,7 +608,15 @@ export default {
             this.editItem = JSON.parse(JSON.stringify(item));
         },
         configField(){
-            this.modalEdit.define.$format(this.editItem);
+
+            if(this.modalEdit.define){
+                this.modalEdit.define.$format(this.editItem);
+            }else{
+                this.editItem.$format = {
+                    alias: this.editItem.name,
+                    select: this.editItem.name
+                };
+            }
 
             if(this.editSource===-1){
                 this.queryBuilder.fields.push(this.editItem);
@@ -631,10 +639,6 @@ export default {
         },
         configFilter(){
 
-            // this.$message.warn({
-            //     content:"字段["+name+"]暂不支持",
-            // })
-            // return
             if(this.modalEdit.define){
                 this.modalEdit.define.$format(this.editItem);
             }else{
