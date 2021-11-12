@@ -2,7 +2,7 @@
     <div class="bg">
         <a-spin :spinning="spinning">
             <a-card :title="$t('login')" :bordered="false" style="width: 300px">
-                <a-alert v-if="error" type="error" :message="error.data" banner />
+                <a-alert v-if="error" type="error" :message="error.data" banner style="margin-bottom: 20px;border-radius: 4px;" />
                 <a-form :form="form" @submit="handleSubmit">
                     <a-form-item :validate-status="userNameError() ? 'error' : ''" :help="userNameError() || ''">
                         <a-input
