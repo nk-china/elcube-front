@@ -27,6 +27,19 @@
                             <a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" />
                         </a-input>
                     </a-form-item>
+                    <a-form-item v-if="retryTimes>0" :validate-status="verCodeError() ? 'error' : ''" :help="verCodeError() || ''" class="ver-code">
+                        <a-input
+                            v-decorator="[
+                                  'verCode',
+                                  { rules: [{ required: true, message: 'Please input your Ver Code!' }] },
+                                ]"
+                            type="text"
+                            :placeholder="$t('verCode')"
+                        >
+                            <a-icon slot="prefix" type="safety-certificate" style="color:rgba(0,0,0,.25)" />
+                            <img slot="addonAfter" :src="`/api/ver/code?`+random" height="26" @click="random=new Date().getTime()">
+                        </a-input>
+                    </a-form-item>
                     <a-form-item>
                         <a-button ref="submit" type="primary" html-type="submit" :disabled="hasErrors(form.getFieldsError())">
                             {{$t('login')}}
@@ -55,8 +68,11 @@ export default {
             error:undefined,
             username:undefined,
             password:undefined,
+            verCode:undefined,
             hasErrors,
             form: this.$form.createForm(this, { name: 'horizontal_login' }),
+            random:'',
+            retryTimes:0,
         }
     },
     mounted() {
@@ -86,6 +102,11 @@ export default {
             const { getFieldError, isFieldTouched } = this.form;
             return isFieldTouched('password') && getFieldError('password');
         },
+        // Only show error after a field is touched.
+        verCodeError() {
+            const { getFieldError } = this.form;
+            return getFieldError('verCode');
+        },
         handleSubmit(e) {
             e.preventDefault();
             this.spinning = true;
@@ -97,8 +118,10 @@ export default {
                         }).catch((error)=>{
                             this.error = error;
                             this.spinning = false;
+                            this.retryTimes++;
                         });
-                }
+                }else
+                    this.spinning = false;
             });
         },
     }
@@ -113,6 +136,9 @@ export default {
     justify-content: center;
     align-items: center;
 }
+::v-deep.ver-code .ant-input-group-addon{
+    padding: 0;
+}
 </style>
 
 <i18n>
@@ -120,12 +146,14 @@ export default {
     "zh_CN": {
         "login": "登陆",
         "username": "用户名",
-        "password": "密码"
+        "password": "密码",
+        "verCode": "验证码现在还是假的"
     },
     "en": {
         "login": "Login",
         "username": "Username",
-        "password": "Password"
+        "password": "Password",
+        "verCode": "VerCode"
     }
 }
 </i18n>
