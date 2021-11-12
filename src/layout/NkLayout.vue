@@ -78,12 +78,12 @@
                  width="400px"
                  :maskClosable="false"
                  :maskStyle="maskStyle"
-                 @cancel="logout()"
+                 @cancel="cancel()"
                  :okButtonProps="{props: {disabled:!password}}"
                  @ok="login({key:'Enter'})"
                  :confirm-loading="logging"
         >
-            <a-alert message="由于长时间未操作或尝试敏感操作的原因，需要您重新验证身份" banner />
+            <a-alert :message="reLoginMessage||'由于长时间未操作，需要您重新验证身份'" banner />
             <a-alert v-if="error" type="error" :message="error.data" banner />
             <a-form style="margin-top: 20px;">
                 <a-form-item>
@@ -109,6 +109,7 @@ import NkNav from "./NkNav";
 import NkHelper from "../pages/components/NkHelper";
 import NkDebugPanel from "./NkDebugPanel";
 import {reloadVueResources} from "../boot";
+import AuthUtils from "../boot/AuthUtils";
 
 export default {
     name: "NkLayout",
@@ -156,11 +157,16 @@ export default {
         ...mapState('NkDoc',[
             'layoutConfig'
         ]),
+        ...mapState('User',[
+            'reLoginMessage'
+        ]),
         ...mapGetters('User',[
             'user','reLogin','reLoginTime'
         ]),
         logoutText(){
-            return '退出('+this.reLoginTime+')';
+            if(this.reLoginTime)
+                return '退出('+this.reLoginTime+')';
+            return "取消";
         }
     },
     watch: {
@@ -183,7 +189,7 @@ export default {
     },
     methods:{
         ...mapMutations('User',[
-            'setUser','clearReLogin'
+            'setUser','clearReLogin','submitLogin'
         ]),
         ...mapMutations('NkDoc',[
             'setLayoutConfig'
@@ -359,8 +365,14 @@ export default {
                 item.component=c;
             });
         },
-        dragstart(e){
-            console.log(e)
+        dragstart(){
+        },
+        cancel(){
+            if(AuthUtils.state().authed){
+                this.clearReLogin();
+            }else{
+                this.logout();
+            }
         },
         logout(){
             this.$http.logout().then(()=>{
@@ -373,7 +385,7 @@ export default {
                 this.$http.login(this.user.username,this.password)
                     .then(()=>{
                         this.error = undefined;
-                        this.clearReLogin();
+                        this.submitLogin();
                     }).catch((error)=>{
                         this.error = error;
                     }).finally(()=>{

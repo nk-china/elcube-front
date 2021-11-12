@@ -1,16 +1,21 @@
 <template>
     <nk-page-layout title="部署" sub-title="导入或导出配置文件" :spinning="exportLoading">
 
+        <div v-if="debugId" slot="top" style="padding: 10px 10px 0">
+            <a-alert message="调试模式下导入导出不可用" type="error" show-icon />
+        </div>
         <nk-card class="card" title="配置导入" cardKey="import">
 <!--            <input type="file" @change="getFile" accept=".ts5 " ref="devContent" v-show="true"/>-->
             <a-upload
+                v-if="login"
                 name="file"
                 :multiple="false"
                 accept=".ts5"
                 :before-upload="upload"
             >
-                <a-button> <a-icon type="upload" /> Click to Upload </a-button>
+                <a-button v-if="login" :disabled="!!debugId"> <a-icon type="upload" /> Click to Upload </a-button>
             </a-upload>
+            <a-button v-else @click="setReLogin({callback:loginSuccess,message:'请进行二次身份验证',reLoginTime:undefined})">身份验证</a-button>
         </nk-card>
         <nk-card class="card" title="配置导出" cardKey="export">
             <nk-form :col="1" style="" :edit="true">
@@ -84,7 +89,7 @@
                     </div>
                 </nk-form-item>
                 <div class="buttons">
-                    <a-button class="button" @click="defExport" type="primary" icon="download"  :loading="exportLoading">
+                    <a-button class="button" @click="defExport" type="primary" icon="download"  :loading="exportLoading"  :disabled="!!debugId">
                         导出
                     </a-button>
                     <a-button class="button" icon="download" disabled="">
@@ -99,9 +104,7 @@
 </template>
 
 <script>
-    // const plainOptions = ['Apple', 'Pear', 'Orange'];
-    // const defaultCheckedList = ['Apple', 'Orange'];
-    import AuthUtils from "../../boot/AuthUtils";
+    import {mapMutations, mapState} from "vuex";
 
     export default {
         data() {
@@ -124,14 +127,26 @@
                 config: {
                     compress: true
                 },
-                exportLoading:false
-                //docType: "0012"
+                exportLoading:false,
+                //docType: "0012",
+                login:false
             }
         },
         created() {
             this.queryDoc();
         },
+        computed:{
+            ...mapState('Debug',[
+                'debugId'
+            ])
+        },
         methods: {
+            ...mapMutations('User',[
+                'setReLogin'
+            ]),
+            loginSuccess(){
+                this.login = true
+            },
             $nkShow(){
                 this.queryDoc();
             },
@@ -196,10 +211,6 @@
                         },
                         this.config
                     ),{
-                        headers: {
-                            'Content-Type': 'application/json; charset=utf-8',
-                            'NK-Token': AuthUtils.getToken()
-                        },
                         responseType: 'blob'
                     })
                     .then(response => {

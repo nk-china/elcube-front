@@ -4,16 +4,30 @@ export default {
         reLogin:false,
         reLoginSuccess:[],
         reLoginTime:90,
+        reLoginMessage:undefined,
         user: {}
     },
     mutations: {
         setUser(state,user){
             state.user = user;
         },
-        clearReLogin(state){
+        setReLogin(state,{message,callback,reLoginTime}){
+            state.reLogin = true;
+            state.reLoginMessage = message;
+            state.reLoginTime = reLoginTime;
+            if(callback)
+                state.reLoginSuccess.push(callback)
+        },
+        submitLogin(state){
             if(state.reLoginSuccess){
                 state.reLoginSuccess.forEach(func=>func());
             }
+            state.reLoginMessage = undefined;
+            state.reLogin = false;
+            state.reLoginSuccess = [];
+        },
+        clearReLogin(state){
+            state.reLoginMessage = undefined;
             state.reLogin = false;
             state.reLoginSuccess = [];
         }
