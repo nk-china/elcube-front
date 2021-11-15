@@ -87,7 +87,7 @@
             <a-list bordered="" :data-source="modalAvailableCards.cards" size="small">
                 <a-list-item slot="renderItem" slot-scope="item">
                     {{item.name}}
-                    <a slot="actions" @click="addCard(item.w,item.h,item.component,item.name)">添加</a>
+                    <a slot="actions" @click="addCard(item.w,item.h,item.component,item.name,item.config)">添加</a>
                 </a-list-item>
             </a-list>
             <template slot="footer">
@@ -209,7 +209,7 @@ export default {
                 //this.addCard(8,5,"nk-dashboard-bar1","客户统计123");
             }
         },
-        addCard(w,h,component,title){
+        addCard(w,h,component,title,config){
             let x = 0;
             let y = Math.max(Math.max.apply(null,this.layout.map(i=>i.y+i.h))+1,0);
 
@@ -221,6 +221,7 @@ export default {
                 h,
                 component,
                 title,
+                config
             });
         },
         removeCard(item){

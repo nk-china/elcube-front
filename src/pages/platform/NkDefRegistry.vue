@@ -152,6 +152,17 @@ export default {
             .then(res=>{
                 this.tree = res.data.map(e=>{e.selectable=true;return e;});
             });
+
+        this.$http.get("/api/meter/card/defs")
+            .then(res=>{
+                dataType["@METER"] = 
+                    res.data.map(i=>{
+                        return {
+                            title:i.name,
+                            value:i.component
+                        }
+                    });
+            });
     },
     methods:{
         select(e){
