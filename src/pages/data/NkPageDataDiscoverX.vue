@@ -22,7 +22,7 @@
                 <a-list bordered :data-source="listedFields"  size="small" class="fieldList" style="height: 100%;border-radius: 0;border-color: #e8e8e8">
                     <a-list-item slot="renderItem" slot-scope="item" class="field" :class="item.selected&&'selected'">
                         <a-tag v-if="item.aggregatable" color="#108ee9" class="tag">A</a-tag>
-                        {{ item.desc }}
+                        {{ item.desc||item.name }}
                         <div class="control">
                             <a-button type="link" @click="addField(item.name)"><a-icon type="plus" /></a-button>
                             <a-button type="link" @click="addFilter(item.name)"><a-icon type="filter" /></a-button>
@@ -88,7 +88,7 @@
                                 </a-button-group>
 
                                 <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addField">
-                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.desc}}</a-select-option>
+                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.desc||field.name}}</a-select-option>
                                 </a-select>
                             </nk-form-item>
                             <nk-form-item title="指标" v-if="hasGroupOrAgg || aggFields.length">
@@ -106,7 +106,7 @@
                                 </a-button-group>
 
                                 <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addField">
-                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.desc}}</a-select-option>
+                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.desc||field.name}}</a-select-option>
                                 </a-select>
                             </nk-form-item>
                             <nk-form-item title="字段" v-if="!hasGroupOrAgg || simpleFields.length">
@@ -124,7 +124,7 @@
                                 </a-button-group>
 
                                 <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addField">
-                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.desc}}</a-select-option>
+                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.desc||field.name}}</a-select-option>
                                 </a-select>
                             </nk-form-item>
                             <nk-form-item title="条件过滤">
@@ -153,7 +153,7 @@
 
 
                                 <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addFilter">
-                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.desc}}</a-select-option>
+                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.desc||field.name}}</a-select-option>
                                 </a-select>
                             </nk-form-item>
                             <nk-form-item title="排序">
@@ -171,7 +171,7 @@
                                 </a-button-group>
 
                                 <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @change="addSort">
-                                    <a-select-option v-for="field in sortableFields" :key="field.name">{{field.desc}}</a-select-option>
+                                    <a-select-option v-for="field in sortableFields" :key="field.name">{{field.desc||field.name}}</a-select-option>
                                 </a-select>
                             </nk-form-item>
 
@@ -341,7 +341,7 @@ export default {
         availableFields(){
             if(this.dataFieldsDesc&&this.dataFieldsDesc.fields){
                 return this.dataFields.map(i=>{
-                    i.desc = this.dataFieldsDesc.fields[i.name]||i.name;
+                    i.desc = this.dataFieldsDesc.fields[i.name];
                     return i;
                 });
             }
