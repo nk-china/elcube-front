@@ -49,7 +49,7 @@
                     <component v-if="item.component"
                                :is="item.componentLost?'nk-dashboard-lost':item.component"
                                :title="item.title"
-                               :config="item.config||{}"
+                               :value="item.config"
                                :editable="editable"
                                ref="items"
                                @remove="removeCard(item)"

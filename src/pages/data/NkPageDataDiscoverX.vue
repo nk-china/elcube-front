@@ -22,7 +22,7 @@
                 <a-list bordered :data-source="listedFields"  size="small" class="fieldList" style="height: 100%;border-radius: 0;border-color: #e8e8e8">
                     <a-list-item slot="renderItem" slot-scope="item" class="field" :class="item.selected&&'selected'">
                         <a-tag v-if="item.aggregatable" color="#108ee9" class="tag">A</a-tag>
-                        {{ item.name }}
+                        {{ item.desc }}
                         <div class="control">
                             <a-button type="link" @click="addField(item.name)"><a-icon type="plus" /></a-button>
                             <a-button type="link" @click="addFilter(item.name)"><a-icon type="filter" /></a-button>
@@ -88,7 +88,7 @@
                                 </a-button-group>
 
                                 <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addField">
-                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.name}}</a-select-option>
+                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.desc}}</a-select-option>
                                 </a-select>
                             </nk-form-item>
                             <nk-form-item title="指标" v-if="hasGroupOrAgg || aggFields.length">
@@ -106,7 +106,7 @@
                                 </a-button-group>
 
                                 <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addField">
-                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.name}}</a-select-option>
+                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.desc}}</a-select-option>
                                 </a-select>
                             </nk-form-item>
                             <nk-form-item title="字段" v-if="!hasGroupOrAgg || simpleFields.length">
@@ -124,7 +124,7 @@
                                 </a-button-group>
 
                                 <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addField">
-                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.name}}</a-select-option>
+                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.desc}}</a-select-option>
                                 </a-select>
                             </nk-form-item>
                             <nk-form-item title="条件过滤">
@@ -153,7 +153,7 @@
 
 
                                 <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @select="addFilter">
-                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.name}}</a-select-option>
+                                    <a-select-option v-for="field in availableFields" :key="field.name">{{field.desc}}</a-select-option>
                                 </a-select>
                             </nk-form-item>
                             <nk-form-item title="排序">
@@ -171,7 +171,7 @@
                                 </a-button-group>
 
                                 <a-select class="selected-item" v-model="selectedValue" style="width: 30px;" :dropdownMatchSelectWidth="false" @change="addSort">
-                                    <a-select-option v-for="field in sortableFields" :key="field.name">{{field.name}}</a-select-option>
+                                    <a-select-option v-for="field in sortableFields" :key="field.name">{{field.desc}}</a-select-option>
                                 </a-select>
                             </nk-form-item>
 
@@ -185,7 +185,7 @@
 
                     <component v-if="queryBuilder.chart && queryBuilder.chart.component && gridData"
                                :is="queryBuilder.chart.component"
-                               :config.sync="queryBuilder.chart"
+                               v-model="queryBuilder.chart"
                                :editable="true"
                                :default-data="gridData"
                                :column-defs="gridColumns"
@@ -307,7 +307,9 @@ export default {
                 chart:undefined
             },
 
-            availableFields:[],
+
+            dataFields:[],
+            dataFieldsDesc:undefined,
 
             selectedValue:undefined,
             editSource:-1,
@@ -336,6 +338,15 @@ export default {
         }
     },
     computed:{
+        availableFields(){
+            if(this.dataFieldsDesc&&this.dataFieldsDesc.fields){
+                return this.dataFields.map(i=>{
+                    i.desc = this.dataFieldsDesc.fields[i.name]||i.name;
+                    return i;
+                });
+            }
+            return this.dataFields;
+        },
         modalEditDefine(){
             return this.modalEdit.define
                 && Object.keys(this.modalEdit.define)
@@ -575,15 +586,18 @@ export default {
                             chart:undefined
                         }
                     }
-                    this.availableFields = res.data.sort((a,b)=>a.name > b.name ?1:-1);
+                    this.dataFields = res.data.sort((a,b)=>a.name > b.name ?1:-1);
                     this.filterListedField = undefined;
 
                     const datasource = this.dataSources.find(i=>i.name===index);
                     this.dialect = dataSourceDialects[datasource.type];
+
+                    this.$http.get(`/api/platform/registry/value/json/@DATASET/${index}`).then(res=>this.dataFieldsDesc = res.data);
                 });
         },
         addField(name){
             const item = Object.assign({},this.availableFields.find(i=>i.name === name));
+            item.alias = item.desc;
             this.selectedValue = undefined;
             if(item.aggregatable){
                 this.editField(item);
@@ -591,7 +605,7 @@ export default {
                 const config = this.dialect.fields[item.type];
                 if(!config){
                     item.$format = {
-                        alias: name,
+                        alias: item.desc,
                         select: name
                     };
                 }else{

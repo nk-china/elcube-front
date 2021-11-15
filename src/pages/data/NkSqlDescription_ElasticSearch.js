@@ -43,6 +43,7 @@ const keyword = {
     having:{
         label: '聚合筛选',
         type: 'a-select',
+        required: false,
         visible(e){return !e.group&&e.aggregation==='COUNT';},
         options(e){
             if(e.aggregation==='COUNT')
