@@ -1,5 +1,5 @@
 <template>
-    <a-card class="meter" :title="title" size="small" :bodyStyle="{'height':'calc(100% - 38px)'}">
+    <a-card class="meter" :title="title" size="small" :bodyStyle="{'height':bodyHeight}">
 
         <slot v-if="!settingMode" name="default"></slot>
         <div v-else style="display: flex;justify-content: center;align-items: center;height: 100%;">
@@ -40,7 +40,14 @@ export default {
             default:true
         }
     },
-    inject: ['mode'],
+    inject:{
+        mode:{
+            default:'setting'
+        },
+        bodyHeight:{
+            default: 'calc(100% - 38px)'
+        }
+    },
     data(){
         return {
             settingVisible:false,

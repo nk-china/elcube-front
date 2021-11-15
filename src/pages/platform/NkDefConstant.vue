@@ -16,18 +16,26 @@
                 :edit-config="{trigger: 'click', mode: 'row', activeMethod: ()=>{return true}}"
 
                 :data="list">
-                <vxe-table-column title="KEY"
-                                  field="constantKey"
+                <vxe-table-column title="REGTYPE"
+                                  field="regType"
                                   width="12%"
                                   fixed="left"
                                   :edit-render="{name:'$input'}"/>
+                <vxe-table-column title="KEY"
+                                  field="regKey"
+                                  width="12%"
+                                  fixed="left"
+                                  :edit-render="{name:'$input'}"/>
+                <vxe-table-column title="TITLE"
+                                  field="title"
+                                  width="20%"
+                                  :edit-render="{name:'$input'}"/>
                 <vxe-table-column title="VALUE"
-                                  field="constantValue"
-                                  width="78%"
+                                  field="content"
+                                  width="20%"
                                   :edit-render="{name:'$input'}"/>
                 <vxe-table-column title="#"
-                                  field=""
-                                  width="10%">
+                                  field="">
                     <template v-slot="{seq,items}">
                         <span @click="itemMove(seq)">
                             <i class="vxe-icon--remove"></i>
@@ -56,16 +64,17 @@ export default {
     methods:{
         add(){
             let newItem = {
-                constantKey:'KEY'
+                regKey:'KEY',
+                orderBy: 0,
             };
             this.list.push(newItem);
             this.$refs.xTable.loadData(this.list).then(() => this.$refs.xTable.setActiveRow(newItem));
         },
         save(){
-            if(NkUtil.isRepeat(this.list,['constantKey'])) {
+            if(NkUtil.isRepeat(this.list,['regType','regKey'])) {
                 return this.$message.error(`KEY重复，请检查后再次提交`);
             }
-            if(NkUtil.hasBlack(this.list,['constantKey'])) {
+            if(NkUtil.hasBlack(this.list,['regKey'])) {
                 return this.$message.error(`KEY不能为空，请检查后再次提交`);
             }
             this.$http.postJSON("/api/sys/constant/save",this.list)

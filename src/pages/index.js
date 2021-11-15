@@ -31,7 +31,8 @@ import NkSettingsMenus from "./settings/NkSettingsMenus";
 /**
  * 配置页面
  */
-import NkDefConstant from "./doc/NkDefConstant";
+//import NkDefConstant from "./platform/NkDefConstant";
+import NkDefRegistry from "./platform/NkDefRegistry";
 import NkDefScripts from "./doc/NkDefScripts";
 import NkDefScriptDetail from "./doc/NkDefScriptDetail";
 import NkDefDocs from "./doc/NkDefDocs";
@@ -204,6 +205,31 @@ module.routes = [
     path: "def",
     children: [
       {
+        name:"注册表",
+        path: 'constant',
+        component: NkDefRegistry,
+        meta:{
+          title: "注册表",
+        }
+      },
+      {
+        name: "组件",
+        path: 'component',
+        component: NkDefScripts,
+        children: [
+          {
+            name: "组件编辑器",
+            path: ':mode/:component/:version',
+            component: NkDefScriptDetail
+          },
+          {
+            name: "新建组件",
+            path: ':mode',
+            component: NkDefScriptDetail
+          },
+        ]
+      },
+      {
         name: "单据类型",
         path: 'doc',
         component: NkDefDocs,
@@ -225,31 +251,6 @@ module.routes = [
             }
           }
         ]
-      },
-      {
-        name: "脚本",
-        path: 'script',
-        component: NkDefScripts,
-        children: [
-          {
-            name: "脚本编辑器",
-            path: ':mode/:script/:version',
-            component: NkDefScriptDetail
-          },
-          {
-            name: "新建脚本",
-            path: ':mode',
-            component: NkDefScriptDetail
-          },
-        ]
-      },
-      {
-        name:"常量",
-        path: 'constant',
-        component: NkDefConstant,
-        meta:{
-          title: "常量",
-        }
       },
       {
         name:"部署",
