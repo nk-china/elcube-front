@@ -244,7 +244,7 @@ export default {
             this.selectedNode = selectNode;
         },
         remove(){
-            this.$http.postJSON(`/api/platform/registry/def/value/delete`,this.selectedNode).then(()=>{
+            this.$http.postJSON(`/api/platform/registry/def/value/delete`, {regType:this.selectedNode.regType,regKey:this.selectedNode.regKey}).then(()=>{
                 if(this.selectedNode.children){
                     this.selectedNode.content = undefined;
                     this.selectedNode.dataType= undefined;
