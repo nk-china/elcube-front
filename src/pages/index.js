@@ -205,11 +205,11 @@ module.routes = [
     path: "def",
     children: [
       {
-        name:"注册表",
-        path: 'constant',
+        name:"基础配置",
+        path: 'base',
         component: NkDefRegistry,
         meta:{
-          title: "注册表",
+          title: "基础配置",
         }
       },
       {

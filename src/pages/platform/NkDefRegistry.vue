@@ -1,5 +1,5 @@
 <template>
-    <nk-page-layout title="注册表" sub-title="设置系统通用属性" :loading="loading">
+    <nk-page-layout title="基础配置" sub-title="设置系统通用属性" :loading="loading">
 
         <div style="display: flex;;width: 100%;">
             <div
