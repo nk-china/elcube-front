@@ -64,7 +64,8 @@
                             <nk-form-item title="数据集">
                                 <a-select v-model="queryBuilder.index" class="selected-item" style="width: 200px;" @change="indexChange($event)" :dropdownMatchSelectWidth="false">
                                     <a-select-option v-for="item in dataSources" :key="item.name">
-                                        <a-icon :component="icon['Icon'+item.type]" />{{item.name}}
+                                        <a-icon :component="icon['Icon'+item.type]" />
+                                        {{item.name}}{{item.desc?' | ':''}}{{item.desc}}
                                     </a-select-option>
                                 </a-select>
                                 <a-button-group class="selected-item">
