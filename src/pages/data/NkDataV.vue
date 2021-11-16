@@ -24,7 +24,7 @@
                 <component v-if="item.component"
                            :is="item.componentLost?'nk-dashboard-lost':item.component"
                            :title="item.title"
-                           :config="item.config||{}"
+                           v-model="item.config"
                            :editable="editMode"
                            ref="items"
                            @remove="removeCard(item)"
