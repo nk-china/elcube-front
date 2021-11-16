@@ -422,9 +422,7 @@ export default {
                         this.$message.info("Tips: 调试模式下，单据未持久化")
                     }
                     if (this.$route.params.mode === 'create') {
-                        setTimeout(() => {
-                            this.$emit('replace', `/apps/docs/detail/${this.doc.docId}`);
-                        }, 200)
+                        this.waitDocIndexed();
                     } else {
                         this.doc = response.data;
                         this.$emit('setTab', this.doc.docName);
@@ -438,6 +436,23 @@ export default {
                     this.docState = originalState;
                     this.doc.docState = this.docState;
                 });
+        },
+        waitDocIndexed(retry){
+            retry = retry||0;
+            if(retry>=10){
+                this.$message.warn("系统似乎超时了...请尝试刷新浏览器");
+                return;
+            }
+            setTimeout(() => {
+                this.$http.get(`/api/doc/exists/${this.doc.docId}`)
+                    .then((res)=>{
+                        if(res.data111===true){
+                            this.$emit('replace', `/apps/docs/detail/${this.doc.docId}`);
+                        }else{
+                            this.waitDocIndexed(++retry);
+                        }
+                    });
+            }, (retry * 500) + 200)
         },
         nkCalc(card,options){
             // 如果计算耗时超过100ms，则弹出
