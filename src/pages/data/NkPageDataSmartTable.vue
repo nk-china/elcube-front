@@ -84,18 +84,18 @@
                 :data="imitateRow.$$data"
                 :loading="loading"
                 :expand-only="expandOnly"
-                @sort-change="vxeSortChanged"
+                @nk-sort-changed="vxeSortChanged"
                 @nk-row-drill="search"
                 :sort-config="config.sortConfig"
             ></nk-page-data-smart-table-grid>
 
             <vxe-pager
-                v-if="page.page"
+                v-if="imitateRow.$$data&&imitateRow.$$data.page&&imitateRow.$$data.total"
                 perfect
                 size="mini"
-                :current-page="page.page"
-                :page-size="page.rows"
-                :total="page.total"
+                :current-page="imitateRow.$$data.page"
+                :page-size="imitateRow.$$data.rows"
+                :total="imitateRow.$$data.total"
                 :layouts="['PrevPage', 'JumpNumber', 'NextPage', 'FullJump', 'Sizes', 'Total']"
                 @page-change="vxePageChanged" />
         </a-card>
@@ -137,7 +137,6 @@ export default {
             loading: true,
 
             saveAsSource:"DataSmartTable",
-            page: {},
             imitateRow: {},
             availableSearchItemsMoreDef:[],
             searchItemsMoreSelected:[],
@@ -215,8 +214,9 @@ export default {
                 this.saveAsGet();
             }
 
-            this.page.rows = this.initRows;
-            this.params.rows = this.initRows;
+            if(this.imitateRow.$$data)
+                this.imitateRow.$$data.rows = this.config.defaultRows;
+            this.params.rows = this.config.defaultRows;
 
             this.searchMoreDefUpdate();
             this.config.searchItemsDefault
@@ -410,7 +410,7 @@ export default {
         },
         // 排序跳转
         vxeSortChanged({column,property,order}){
-            if(this.sortConfig && this.sortConfig.remote){
+            if(this.config.sortConfig && this.config.sortConfig.remote){
                 this.params.orderField = order===null?null:((column.params&&column.params.orderField)||property);
                 this.params.order = order;
                 this.search();
@@ -424,7 +424,9 @@ export default {
             if(from + rows > 10000){
                 this.$message.error("查询记录数不能超过10000条");
                 this.$emit("error","查询记录数不能超过10000条");
-                this.page.page = this.params.from / this.params.rows + 1;
+
+                if(this.imitateRow.$$data)
+                    this.imitateRow.$$data.page = this.params.from / this.params.rows + 1;
             }else{
                 this.params.from = from;
                 this.params.rows = e.pageSize;
