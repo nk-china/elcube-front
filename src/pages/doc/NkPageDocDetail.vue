@@ -446,7 +446,7 @@ export default {
             setTimeout(() => {
                 this.$http.get(`/api/doc/exists/${this.doc.docId}`)
                     .then((res)=>{
-                        if(res.data111===true){
+                        if(res.data===true){
                             this.$emit('replace', `/apps/docs/detail/${this.doc.docId}`);
                         }else{
                             this.waitDocIndexed(++retry);
