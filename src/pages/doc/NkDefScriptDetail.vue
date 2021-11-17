@@ -274,7 +274,7 @@ export default {
         let promises = [];
         promises.push(this.$http.get(`/api/def/script/online/editing`));
         if(!this.isCreate){
-            promises.push(this.$http.get(`/api/def/script/detail/${this.routeParams.script}/${this.routeParams.version}`));
+            promises.push(this.$http.get(`/api/def/script/detail/${this.routeParams.component}/${this.routeParams.version}`));
         }
 
         Promise.all(promises)

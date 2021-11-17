@@ -63,7 +63,7 @@ export default {
                             return [h(
                                 'router-link',
                                 {
-                                    props:{to: `/apps/def/script/detail/${row.scriptName}/${row.version}`}
+                                    props:{to: `/apps/def/component/detail/${row.scriptName}/${row.version}`}
                                 },
                                 "详情"
                             )]
