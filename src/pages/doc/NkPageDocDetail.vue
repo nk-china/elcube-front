@@ -438,6 +438,11 @@ export default {
                 });
         },
         waitDocIndexed(retry){
+
+            if(this.debugId){
+                this.$emit('replace', `/apps/docs/detail/${this.doc.docId}`);
+            }
+
             retry = retry||0;
             if(retry>=10){
                 this.$message.warn("系统似乎超时了...请尝试刷新浏览器");

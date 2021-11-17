@@ -6,6 +6,7 @@ import NkDocSelectModal from "./components/NkDocSelectModal";
 import NkDocSelectEditor from "./components/NkDocSelectEditor";
 import NkSpELEditor from "./components/NkSpELEditor";
 import NkSpELTemplateEditor from "./components/NkSpELTemplateEditor";
+import NkStandardCardDefTable from "./components/NkStandardCardDefTable";
 /**
  * 页面
  */
@@ -72,6 +73,7 @@ module.install = function (Vue) {
   Vue.component('nk-doc-select-modal',NkDocSelectModal);
   Vue.component('nk-sp-el-editor',NkSpELEditor);
   Vue.component('nk-sp-el-template-editor',NkSpELTemplateEditor);
+  Vue.component('nk-standard-card-def-table',NkStandardCardDefTable);
 
   /**
    * 页面组件，预览页面需要嵌套的部分
