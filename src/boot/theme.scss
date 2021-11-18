@@ -1,11 +1,11 @@
 
 // 修改样式变量
-$vxe-font-size: 14px;
-$vxe-font-color: #666;
-$vxe-primary-color: #1890ff;
-$vxe-table-font-color: $vxe-font-color;
-$vxe-table-border-color: #e8eaec;
-$vxe-table-border-radius: 4px;
+$vxe-font-size: 14px !default;
+$vxe-font-color: #666 !default;
+$vxe-primary-color: #1890ff !default;
+$vxe-table-font-color: $vxe-font-color !default;
+$vxe-table-border-color: #e8eaec !default;
+$vxe-table-border-radius: 4px !default;
 
 @import '/node_modules/vxe-table/styles/index.scss';
 @import '/node_modules/vxe-table-plugin-antd/style.scss';
