@@ -385,7 +385,7 @@ export default {
                 this.loading = true;
                 this.$http.postJSON(`/api/def/script/breach`,this.script)
                     .then((res)=>{
-                        this.$emit("replace",`/apps/def/script/detail/${res.data.scriptName}/${res.data.version}`)
+                        this.$emit("replace",`/apps/def/component/detail/${res.data.scriptName}/${res.data.version}`)
                     })
                     .catch(()=>{
                         this.loading = false;
@@ -401,7 +401,7 @@ export default {
                 this.$http.postJSON(`/api/def/script/update`,this.script)
                     .then((res)=>{
                         if(!this.script.version){
-                            this.$emit("replace",`/apps/def/script/detail/${this.script.scriptName}/${res.data.version}`)
+                            this.$emit("replace",`/apps/def/component/detail/${this.script.scriptName}/${res.data.version}`)
                         }else{
                             this.script = res.data;
                             this.loading = false;
