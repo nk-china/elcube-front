@@ -5,7 +5,7 @@
         </a-button-group>
         <a-layout>
             <a-layout-sider theme="light" bordered>
-                <a-list item-layout="horizontal" :data-source="listFilter">
+                <a-list item-layout="horizontal" :data-source="listFilter" class="filter">
                     <a-input slot="header" placeholder="filter..." style="border: none" allow-clear v-model="filter"></a-input>
                     <a-list-item slot="renderItem"
                                  slot-scope="i"
@@ -204,30 +204,6 @@ export default {
 
 ::v-deep .ant-layout-sider{
     background: inherit;
-}
-::v-deep .ant-list{
-
-    background: white;
-
-    border: 1px solid #e8e8e8;
-
-    .ant-list-header{
-        padding: 0;
-
-        .ant-input{
-            height: 40px;
-            border: none;
-        }
-    }
-
-    .ant-list-item{
-        padding: 10px 10px;
-
-        &.selected{
-            background: #1890ff;
-            color: white;
-        }
-    }
 }
 ::v-deep.nk-form-item {
     align-items: flex-start;

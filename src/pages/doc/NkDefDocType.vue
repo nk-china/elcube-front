@@ -52,7 +52,7 @@
             </a-button-group>
         </div>
         <a-layout>
-            <a-layout-sider class="nk-list" bordered>
+            <a-layout-sider bordered theme="light">
                 <a-list item-layout="horizontal" :data-source="defaultCards">
                     <a-list-item slot="renderItem"
                                  slot-scope="i"

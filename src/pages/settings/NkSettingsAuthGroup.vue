@@ -5,7 +5,7 @@
         </a-button-group>
         <a-layout>
             <a-layout-sider theme="light" bordered>
-                <a-list item-layout="horizontal" :data-source="listFilter">
+                <a-list item-layout="horizontal" :data-source="listFilter" class="filter">
                     <a-input slot="header" placeholder="filter..." style="border: none" allow-clear v-model="filter"></a-input>
                     <a-list-item slot="renderItem"
                                  slot-scope="i"
@@ -83,6 +83,7 @@
                                     border=inner
                                     resizable
                                     highlight-hover-row
+                                    style="width:100%"
                                     header-cell-class-name="headerCellClassName"
                                     :data="item.authorities">
                                 <vxe-table-column   title="权限" field="authority"                width="15%"/>
@@ -214,30 +215,6 @@ export default {
 
 ::v-deep .ant-layout-sider{
     background: inherit;
-}
-::v-deep .ant-list{
-
-    background: white;
-
-    border: 1px solid #e8e8e8;
-
-    .ant-list-header{
-        padding: 0;
-
-        .ant-input{
-            height: 40px;
-            border: none;
-        }
-    }
-
-    .ant-list-item{
-        padding: 10px 10px;
-
-        &.selected{
-            background: #1890ff;
-            color: white;
-        }
-    }
 }
 .accounts{
     margin: 5px 0;
