@@ -1,5 +1,6 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const fs = require('fs');
 
 module.exports = {
   "pages": {
@@ -89,7 +90,20 @@ module.exports = {
       })
     );
 
-    if(process.env.npm_lifecycle_event.startsWith('build')){
+    if(config.mode === 'production'){
+
+      let externals = {}
+      fs.readdirSync(__dirname + '/node_modules').forEach(function(item) { // 我没有使用es6
+        if(item.indexOf('.') === 0) return
+        externals[item] = 'commonjs ' + item
+      })
+
+      config.externals = externals;
+      config.output.libraryTarget = 'umd';
+    }
+
+
+    if(process.env.npm_lifecycle_event && process.env.npm_lifecycle_event.startsWith('build')){
       config.plugins.push(
           new CompressionWebpackPlugin({
             test: /\.js$|\.html$|\.css/, //匹配文件名
