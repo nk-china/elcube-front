@@ -1,5 +1,6 @@
 import { NKStarter } from './boot';
 import './boot/theme.less';
+import './boot/theme.scss';
 import "./boot/datav.theme.nk1.less";
 
 NKStarter({

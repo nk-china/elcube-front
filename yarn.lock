@@ -9442,6 +9442,24 @@ safe-regex@^1.1.0:
   resolved "http://ns.nkpro.it/repository/npm-public/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha1-RPoWGwGHuVSd2Eu5GAL5vYOFzWo=
 
+sass-loader@^8.0.0:
+  version "8.0.2"
+  resolved "http://ns.nkpro.it/repository/npm-public/sass-loader/-/sass-loader-8.0.2.tgz#debecd8c3ce243c76454f2e8290482150380090d"
+  integrity sha1-3r7NjDziQ8dkVPLoKQSCFQOACQ0=
+  dependencies:
+    clone-deep "^4.0.1"
+    loader-utils "^1.2.3"
+    neo-async "^2.6.1"
+    schema-utils "^2.6.1"
+    semver "^6.3.0"
+
+sass@^1.19.0:
+  version "1.43.4"
+  resolved "http://ns.nkpro.it/repository/npm-public/sass/-/sass-1.43.4.tgz#68c7d6a1b004bef49af0d9caf750e9b252105d1f"
+  integrity sha1-aMfWobAEvvSa8NnK91DpslIQXR8=
+  dependencies:
+    chokidar ">=3.0.0 <4.0.0"
+
 sax@^1.1.4, sax@~1.2.4:
   version "1.2.4"
   resolved "http://ns.nkpro.it/repository/npm-public/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
@@ -10942,15 +10960,15 @@ vuex@^3.4.0:
   resolved "http://ns.nkpro.it/repository/npm-public/vuex/-/vuex-3.6.2.tgz#236bc086a870c3ae79946f107f16de59d5895e71"
   integrity sha1-I2vAhqhww655lG8QfxbeWdWJXnE=
 
-vxe-table-plugin-antd@^1.11.2:
-  version "1.11.2"
-  resolved "http://ns.nkpro.it/repository/npm-public/vxe-table-plugin-antd/-/vxe-table-plugin-antd-1.11.2.tgz#9e517272a816953d68e58e500a0da9098f12585e"
-  integrity sha1-nlFycqgWlT1o5Y5QCg2pCY8SWF4=
+vxe-table-plugin-antd@^1.11.3:
+  version "1.11.3"
+  resolved "http://ns.nkpro.it/repository/npm-public/vxe-table-plugin-antd/-/vxe-table-plugin-antd-1.11.3.tgz#e31c09d1e060b1f4b61af9d061f373a6413ec547"
+  integrity sha1-4xwJ0eBgsfS2GvnQYfNzpkE+xUc=
 
-vxe-table@^3.3.7:
-  version "3.3.12"
-  resolved "http://ns.nkpro.it/repository/npm-public/vxe-table/-/vxe-table-3.3.12.tgz#5f624915e5c0834a3e89caa227db9d36d1d7bd1e"
-  integrity sha1-X2JJFeXAg0o+icqiJ9udNtHXvR4=
+vxe-table@^3.4.6:
+  version "3.4.6"
+  resolved "http://ns.nkpro.it/repository/npm-public/vxe-table/-/vxe-table-3.4.6.tgz#ed2aba0a81c86c0ae8639b960f01bc9f806c39a0"
+  integrity sha1-7Sq6CoHIbAroY5uWDwG8n4BsOaA=
 
 warning@^4.0.0:
   version "4.0.3"
@@ -11276,10 +11294,10 @@ ws@^6.0.0, ws@^6.2.1:
   dependencies:
     async-limiter "~1.0.0"
 
-xe-utils@^3.3.2:
-  version "3.3.2"
-  resolved "http://ns.nkpro.it/repository/npm-public/xe-utils/-/xe-utils-3.3.2.tgz#b05817b094a6b40d897cd8d5df62ed716ff845f5"
-  integrity sha1-sFgXsJSmtA2JfNjV32LtcW/4RfU=
+xe-utils@^3.4.0:
+  version "3.4.0"
+  resolved "http://ns.nkpro.it/repository/npm-public/xe-utils/-/xe-utils-3.4.0.tgz#b5b52990858298e815763c46bada5741ebab15ed"
+  integrity sha1-tbUpkIWCmOgVdjxGutpXQeurFe0=
 
 "xml-name-validator@>= 2.0.1 < 3.0.0":
   version "2.0.1"

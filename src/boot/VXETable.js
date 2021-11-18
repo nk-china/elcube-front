@@ -3,8 +3,6 @@ import moment from "moment";
 import XEUtils from 'xe-utils'
 import VXETable from 'vxe-table'
 import VXETablePluginAntd from 'vxe-table-plugin-antd'
-import 'vxe-table/lib/style.min.css'
-import 'vxe-table-plugin-antd/dist/style.css'
 
 import NkFormat from "../utils/NkFormat";
 
