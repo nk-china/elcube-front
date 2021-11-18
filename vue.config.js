@@ -95,6 +95,7 @@ module.exports = {
       let externals = {}
       fs.readdirSync(__dirname + '/node_modules').forEach(function(item) { // 我没有使用es6
         if(item.indexOf('.') === 0) return
+        if(item==='vue-codemirror') return
         if(item==='codemirror') return
         externals[item] = 'commonjs ' + item
       })
