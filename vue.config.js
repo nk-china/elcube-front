@@ -83,7 +83,7 @@ module.exports = {
           },
           {
             flatten:true,
-            from: __dirname.replace(/[\\]/g,'/')+'/src/boot/*.less',
+            from: __dirname.replace(/[\\]/g,'/')+'/src/boot/*.((le)|(sc))ss',
             to: __dirname+'/dist/'
           },
         ]
