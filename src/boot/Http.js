@@ -39,6 +39,22 @@ export default (Vue) => {
     if(res.data && typeof res.data === 'string' && res.data.startsWith("H4s")){
       res.data = JSON.parse(TextUtils.uncompress(res.data));
     }
+
+    const logId = res.headers['nk-debug-log'];
+    if(logId){
+      axios.post("/api/debug/log/"+logId,{},{
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'NK-App': 'ts5',
+          'NK-Token': AuthUtils.getToken()
+        }
+      }).then(res=>{
+        if(res.data){
+          console.log(`\nRequest URL : ${res.request.responseURL}\n\n${res.data}`)
+        }
+      })
+    }
+
     return Promise.resolve(res)
   };
 

@@ -28,7 +28,7 @@
             <a-button type="default" @click="reloadVueResources">
                 <a-icon type="reload" /> Vue
             </a-button>
-            <a-button type="default">
+            <a-button type="default" @click="$message.info('按下F12打开开发者工具试一下')">
                 <a-icon type="number" /> Log
             </a-button>
         </a-button-group>
@@ -124,7 +124,7 @@ export default {
                 if(item.docType){
                     path = `/apps/def/doc/detail/${item.docType}/${item.version}`
                 }else{
-                    path = `/apps/def/script/detail/${item.scriptName}/${item.version}`
+                    path = `/apps/def/component/detail/${item.scriptName}/${item.version}`
                 }
                 if(this.$route.fullPath!==path)
                     this.$router.push(path)
