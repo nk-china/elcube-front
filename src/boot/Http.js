@@ -48,9 +48,9 @@ export default (Vue) => {
           'NK-App': 'ts5',
           'NK-Token': AuthUtils.getToken()
         }
-      }).then(res=>{
-        if(res.data){
-          console.log(`\nRequest URL : ${res.request.responseURL}\n\n${res.data}`)
+      }).then(log=>{
+        if(log.data){
+          console.log(`\nRequest URL : ${res.request.responseURL}\n\n${log.data}`)
         }
       })
     }
