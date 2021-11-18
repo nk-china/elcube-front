@@ -148,7 +148,7 @@
 <script>
 import XNkPageLayout from "../../layout/template/XNkPageLayout";
 import {mapState} from "vuex";
-import {loadVueTemplate} from "../../boot";
+import {loadVueTemplate} from "@/boot";
 
 import { codemirror } from 'vue-codemirror';
 import 'codemirror/lib/codemirror.css';
