@@ -1,5 +1,5 @@
 <template>
-    <nk-page-layout title="部署" sub-title="导入或导出配置文件" :spinning="exportLoading">
+    <nk-page-layout title="部署" sub-title="导入或导出配置文件" :spinning="loading">
 
         <div v-if="debugId" slot="top" style="padding: 10px 10px 0">
             <a-alert message="调试模式下导入导出不可用" type="error" show-icon />
@@ -22,71 +22,25 @@
                 <nk-form-item term="加密">
                     <a-switch default-checked @change="config.compress=$event"/>
                 </nk-form-item>
-                <nk-form-item term="基础配置">
-                    <a-switch @change="config.includeRegistry=$event"/>
-                </nk-form-item>
-                <nk-form-item term="主菜单">
-                    <a-switch @change="config.includeMenu=$event"/>
-                </nk-form-item>
-                <nk-form-item term="用户组与权限">
-                    <a-switch @change="config.includeAuth=$event"/>
-                </nk-form-item>
-                <nk-form-item term="组件对象">
-                    <div>
+                <nk-form-item v-for="item in exports" :term="item.name" :key="item.key">
+                    <div v-if="item.list" style="width:100%;">
                         <div :style="{ borderBottom: '1px solid #E9E9E9' }">
-                            <a-checkbox :indeterminate="indeterminateScripts" :checked="checkAllScripts" @change="onCheckAllScripts">
+                            <a-checkbox :indeterminate="checkIndeterminate[item.key]" :checked="checkAll[item.key]" @change="onCheckAll(item.key)">
                                 全选
                             </a-checkbox>
                         </div>
                         <br/>
-                        <a-checkbox-group @change="onChangeScript" v-model="checkedListScripts">
+                        <a-checkbox-group v-model="config[item.key]" style="width: 100%;">
                             <a-row>
-                                <a-col :span="12" v-for="item in plainScripts" :key="item.key">
-                                    <a-checkbox :value="item">
+                                <a-col :span="12" v-for="item in item.list" :key="item.key">
+                                    <a-checkbox :value="item.key">
                                         {{item.name}}
                                     </a-checkbox>
                                 </a-col>
                             </a-row>
                         </a-checkbox-group>
                     </div>
-                </nk-form-item>
-                <nk-form-item term="单据类型">
-                    <div>
-                        <div :style="{ borderBottom: '1px solid #E9E9E9' }">
-                            <a-checkbox :indeterminate="indeterminateDocTypes" :checked="checkAllDocTypes" @change="onCheckAllDocTypes">
-                                全选
-                            </a-checkbox>
-                        </div>
-                        <br/>
-                        <a-checkbox-group @change="onChangeDocType" v-model="checkedListDocTypes">
-                            <a-row>
-                                <a-col :span="12" v-for="item in plainDocTypes" :key="item.docType">
-                                    <a-checkbox :value="item">
-                                        {{item.docType}}-{{item.docName}}
-                                    </a-checkbox>
-                                </a-col>
-                            </a-row>
-                        </a-checkbox-group>
-                    </div>
-                </nk-form-item>
-                <nk-form-item term="工作流">
-                    <div style="width: 100%">
-                        <div :style="{ borderBottom: '1px solid #E9E9E9' }">
-                            <a-checkbox :indeterminate="indeterminateBpmns" :checked="checkAllBpmns" @change="onCheckAllBpmns">
-                                全选
-                            </a-checkbox>
-                        </div>
-                        <br/>
-                        <a-checkbox-group @change="onChangeBpmn" v-model="checkedListBpmns" style="width: 100%">
-                            <a-row>
-                                <a-col :span="12" v-for="item in plainBpmns" :key="item.deploymentId">
-                                    <a-checkbox :value="item">
-                                        {{item.resourceName}}-{{item.name}}
-                                    </a-checkbox>
-                                </a-col>
-                            </a-row>
-                        </a-checkbox-group>
-                    </div>
+                    <a-switch v-else @change="config[item.key]=$event"/>
                 </nk-form-item>
                 <div class="buttons">
                     <a-button class="button" @click="defExport" type="primary" icon="download"  :loading="exportLoading"  :disabled="!!debugId">
@@ -109,27 +63,15 @@
     export default {
         data() {
             return {
-                checkedListDocTypes: [],
-                indeterminateDocTypes: false,
-                checkAllDocTypes: false,
-                plainDocTypes: [],
-
-                checkedListScripts: [],
-                indeterminateScripts: false,
-                checkAllScripts: false,
-                plainScripts: [],
-
-                checkedListBpmns: [],
-                indeterminateBpmns: false,
-                checkAllBpmns: false,
-                plainBpmns: [],
+                login:false,
+                loading:false,
+                exportLoading:false,
 
                 config: {
                     compress: true
                 },
-                exportLoading:false,
-                //docType: "0012",
-                login:false
+
+                exports:[],
             }
         },
         created() {
@@ -138,7 +80,26 @@
         computed:{
             ...mapState('Debug',[
                 'debugId'
-            ])
+            ]),
+            checkAll(){
+                const c = {}
+                this.exports.forEach(item=>{
+                    if(item.list){
+                        c[item.key] = this.config[item.key] && this.config[item.key].length === item.list.length;
+                    }
+                })
+                console.log(c)
+                return c;
+            },
+            checkIndeterminate(){
+                const c = {}
+                this.exports.forEach(item=>{
+                    if(item.list){
+                        c[item.key] = this.config[item.key] && !!this.config[item.key].length && this.config[item.key].length < item.list.length;
+                    }
+                })
+                return c;
+            }
         },
         methods: {
             ...mapMutations('User',[
@@ -150,69 +111,24 @@
             $nkShow(){
                 this.queryDoc();
             },
-            onChangeScript(checkedList) {
-                this.indeterminateScripts = !!checkedList.length && checkedList.length < this.plainScripts.length;
-                this.checkAllScripts = checkedList.length === this.plainScripts.length;
-            },
-            onChangeDocType(checkedList) {
-                this.indeterminateDocTypes = !!checkedList.length && checkedList.length < this.plainDocTypes.length;
-                this.checkAllDocTypes = checkedList.length === this.plainDocTypes.length;
-            },
-            onChangeBpmn(checkedList) {
-                this.indeterminateBpmns = !!checkedList.length && checkedList.length < this.plainBpmns.length;
-                this.checkAllBpmns = checkedList.length === this.plainBpmns.length;
-            },
-            onCheckAllScripts({target}) {
-                Object.assign(this, {
-                    checkedListScripts: target.checked ? this.plainScripts : [],
-                    indeterminateScripts: false,
-                    checkAllScripts: target.checked,
-                });
-            },
-            onCheckAllDocTypes({target}) {
-                Object.assign(this, {
-                    checkedListDocTypes: target.checked ? this.plainDocTypes : [],
-                    indeterminateDocTypes: false,
-                    checkAllDocTypes: target.checked,
-                });
-            },
-            onCheckAllBpmns({target}) {
-                Object.assign(this, {
-                    checkedListBpmns: target.checked ? this.plainBpmns : [],
-                    indeterminateBpmns: false,
-                    checkAllBpmns: target.checked,
-                });
+            onCheckAll(key){
+                if(this.checkAll[key]){
+                    this.$set(this.config,key,[]);
+                }else{
+                    this.$set(this.config,key,this.exports.find(e=>e.key===key).list.map(l=>l.key));
+                }
             },
             queryDoc() {
-                this.$http.postJSON("/api/def/script/names").then(res => {
-                    this.plainScripts = res.data;
-                    this.checkedListScripts = res.data;
-                    this.checkAllScripts = true;
-                });
-                this.$http.postJSON("/api/def/doc/type/types").then(res => {
-                    this.plainDocTypes = res.data;
-                    this.checkedListDocTypes = res.data;
-                    this.checkAllDocTypes = true;
-                });
-                this.$http.postJSON("/api/def/bpm/deployments/all/latest").then(res => {
-                    this.plainBpmns = res.data;
-                    this.checkedListBpmns = res.data;
-                    this.checkAllBpmns = true;
+                this.loading = true;
+                this.$http.postJSON('/api/ops/deploy/load').then((res)=>{
+                    this.exports = res.data;
+                    this.loading = false;
                 });
             },
             defExport() {
+                this.loading = true;
                 this.exportLoading = true;
-                this.$http.postJSON(
-                    "/api/ops/deploy/export",
-                    Object.assign({
-                            docTypes:this.checkedListDocTypes.map(value => value.docType),
-                            bpmDefs:this.checkedListBpmns.map(value => value.definitionId),
-                            scripts:this.checkedListScripts.map(value => value.key),
-                        },
-                        this.config
-                    ),{
-                        responseType: 'blob'
-                    })
+                this.$http.postJSON("/api/ops/deploy/export",this.config,{responseType: 'blob'})
                     .then(response => {
                         const that = this;
 
@@ -230,6 +146,7 @@
                                 a.href = e.target.result;
                             }
                             a.click();
+                            that.loading = false;
                             that.exportLoading = false;
                         };
                     });
