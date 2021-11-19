@@ -73,7 +73,7 @@
         <a-modal :visible="reLogin"
                  centered
                  title="安全验证"
-                 okText="登陆"
+                 okText="确定"
                  :cancelText="logoutText"
                  width="400px"
                  :maskClosable="false"

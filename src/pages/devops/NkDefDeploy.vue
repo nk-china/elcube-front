@@ -5,7 +5,6 @@
             <a-alert message="调试模式下导入导出不可用" type="error" show-icon />
         </div>
         <nk-card class="card" title="配置导入" cardKey="import">
-<!--            <input type="file" @change="getFile" accept=".ts5 " ref="devContent" v-show="true"/>-->
             <a-upload
                 v-if="login"
                 name="file"
@@ -88,7 +87,6 @@
                         c[item.key] = this.config[item.key] && this.config[item.key].length === item.list.length;
                     }
                 })
-                console.log(c)
                 return c;
             },
             checkIndeterminate(){
@@ -108,7 +106,7 @@
             loginSuccess(){
                 this.login = true
             },
-            $nkShow(){
+            nk$show(){
                 this.queryDoc();
             },
             onCheckAll(key){
