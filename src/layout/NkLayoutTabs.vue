@@ -289,13 +289,16 @@ export default {
             let menuLeft = getElementLeft(this.$refs.contextMenu.$el);
             let tab = this.getTargetTab(menuLeft);
 
+            if(e.key==='closeAll'){
+                this.$emit('closeAll')
+                return;
+            }
+
             if(tab){
                 if(e.key==='close'){
                     this.$emit('close',tab)
                 }else if(e.key==='closeOthers'){
                     this.$emit('closeOthers',tab)
-                }else if(e.key==='closeAll'){
-                    this.$emit('closeAll')
                 }else if(e.key==='refresh'){
                     this.$emit('item-refresh',tab)
                 }else if(e.key==='openWin'){
