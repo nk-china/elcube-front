@@ -1,5 +1,5 @@
 <template>
-    <x-nk-page-layout :title="script.scriptName" :sub-title="script.scriptDesc" :spinning="loading" :class="{'full-screen':fullScreen}">
+    <nk-page-layout :title="script.scriptName" :sub-title="script.scriptDesc" :spinning="loading" :class="{'full-screen':fullScreen}">
 
         <div slot="top" v-if="script.debug" style="padding: 10px 10px 0 10px;">
             <a-alert message="卡片程序正在调试" type="warning" show-icon />
@@ -142,11 +142,10 @@
                 </a-card>
             </a-layout-content>
         </a-layout>
-    </x-nk-page-layout>
+    </nk-page-layout>
 </template>
 
 <script>
-import XNkPageLayout from "../../layout/template/XNkPageLayout";
 import {mapState} from "vuex";
 import {loadVueTemplate} from "@/boot";
 
@@ -196,7 +195,6 @@ const markdownOption = {
 
 export default {
     components:{
-        XNkPageLayout,
         codemirror
     },
     data(){

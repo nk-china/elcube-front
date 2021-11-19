@@ -1,5 +1,5 @@
 <template>
-    <x-nk-page-layout :title="title" :sub-title="subTitle">
+    <nk-page-layout :title="title" :sub-title="subTitle">
 
         <slot name="action" slot="action"></slot>
 
@@ -105,15 +105,13 @@
         <a-modal v-model="saveAs.visible" centered title="请输入备注" @ok="saveAsPost" :confirm-loading="saveAs.confirmLoading">
             <a-input v-model="saveAs.name" placeholder="请输入搜索备注，便于后期使用"></a-input>
         </a-modal>
-    </x-nk-page-layout>
+    </nk-page-layout>
 </template>
 
 <script>
-import XNkPageLayout from "./XNkPageLayout";
 
 export default {
     components:{
-        XNkPageLayout,
     },
     props:{
         title:String,
@@ -207,7 +205,7 @@ export default {
                     fields.push(item.field);
                 }
             })
-            this.params._source=fields;
+            this.params.source=fields;
 
 
             this.searchMoreDefUpdate();
@@ -295,10 +293,10 @@ export default {
                     delete this.params.conditions[e.field]
                 }
 
-                let highlight = this.params['_highlight'];
+                let highlight = this.params['highlight'];
                 if(!highlight){
                     highlight = [];
-                    this.params['_highlight']=highlight;
+                    this.params['highlight']=highlight;
                 }
 
                 if(e.highlight){
@@ -321,11 +319,11 @@ export default {
         emitChange(){
             this.loading = true;
 
-            let $aggs = [];
-            this.searchItemsDefault.filter(i=>i.agg).forEach(i=>$aggs.push(i.field))
-            this.searchItemsMoreSelected.filter(i=>i.agg).forEach(i=>$aggs.push(i.field))
+            let aggs = [];
+            this.searchItemsDefault.filter(i=>i.agg).forEach(i=>aggs.push(i.field))
+            this.searchItemsMoreSelected.filter(i=>i.agg).forEach(i=>aggs.push(i.field))
             
-            this.$emit("change",Object.assign({$aggs},this.params))
+            this.$emit("change",Object.assign({aggs},this.params))
         },
         toggle(){
             this.expand = !this.expand

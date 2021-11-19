@@ -1,5 +1,5 @@
 <template>
-    <x-nk-page-layout class="mini"
+    <nk-page-layout class="mini"
                     :spinning="spinning"
                     :showPageNav="false"
                     :showPageBar="true"
@@ -55,15 +55,13 @@
             </div>
         </template>
 
-    </x-nk-page-layout>
+    </nk-page-layout>
 </template>
 
 <script>
-import XNkPageLayout from "../../layout/template/XNkPageLayout";
 
 export default {
     components:{
-        XNkPageLayout
     },
     props:{
         params:Object

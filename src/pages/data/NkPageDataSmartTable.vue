@@ -1,5 +1,5 @@
 <template>
-    <x-nk-page-layout sub-title="数据挖掘与分析" :title="custom.title">
+    <nk-page-layout sub-title="数据挖掘与分析" :title="custom.title">
 
         <slot name="action" slot="action"></slot>
 
@@ -103,16 +103,15 @@
         <a-modal v-model="saveAs.visible" centered title="请输入备注" @ok="saveAsPost" :confirm-loading="saveAs.confirmLoading">
             <a-input v-model="saveAs.name" placeholder="请输入搜索备注，便于后期使用"></a-input>
         </a-modal>
-    </x-nk-page-layout>
+    </nk-page-layout>
 </template>
 
 <script>
-import XNkPageLayout from "../../layout/template/XNkPageLayout";
 import NkPageDataSmartTableGrid from "./NkPageDataSmartTableGrid";
 import NkUtil from "../../utils/NkUtil";
 
 export default {
-    components: {XNkPageLayout,NkPageDataSmartTableGrid},
+    components: {NkPageDataSmartTableGrid},
     data(){
         return {
             custom:{},

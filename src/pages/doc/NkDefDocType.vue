@@ -1,5 +1,5 @@
 <template>
-    <x-nk-page-layout :title="def.docType || '单据类型'" :sub-title="def.docName" :spinning="loading">
+    <nk-page-layout :title="def.docType || '单据类型'" :sub-title="def.docName" :spinning="loading">
 
         <div slot="top" v-if="def.debug" style="padding: 10px 10px 0 10px;">
             <a-alert message="单据配置正在调试" type="warning" show-icon />
@@ -136,11 +136,10 @@
         <a-modal v-model="visibleCreateRandom" centered title="请输入生成的单据数量" @ok="doRandom" width="320px" :confirm-loading="createRandomLoading">
             <a-input-number v-model="createRandomCount" placeholder="请输入生成的单据数量" style="width:100%"></a-input-number>
         </a-modal>
-    </x-nk-page-layout>
+    </nk-page-layout>
 </template>
 
 <script>
-import XNkPageLayout from "../../layout/template/XNkPageLayout";
 import NkDefDocTypeBase from "./NkDefDocTypeBase";
 import NkDefDocTypeStatus from "./NkDefDocTypeStatus";
 import NkDefDocTypeBizFlow from "./NkDefDocTypeBizFlow";
@@ -193,7 +192,6 @@ const markdownOption = {
 
 export default {
     components:{
-        XNkPageLayout
     },
     filters:{
         formatVersion : (v)=>{

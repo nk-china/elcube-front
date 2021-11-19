@@ -1,5 +1,5 @@
 <template>
-    <x-nk-page-layout class="mini"
+    <nk-page-layout class="mini"
                       :title="processInstance.processDefinitionName"
                       ref="nav"
                       sub-title="Process Instance Detail"
@@ -97,17 +97,15 @@
             <a-textarea v-model="completeTask.comment" placeholder="Comment"></a-textarea>
         </a-modal>
 
-    </x-nk-page-layout>
+    </nk-page-layout>
 </template>
 
 <script>
-import XNkPageLayout from "../../layout/template/XNkPageLayout";
 import NkBpmnView from "./NkBpmnView";
 
 export default {
     components:{
-        NkBpmnView,
-        XNkPageLayout
+        NkBpmnView
     },
     data(){
         return {

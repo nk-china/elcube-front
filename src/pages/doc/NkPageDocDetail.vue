@@ -1,5 +1,5 @@
 <template>
-    <x-nk-page-layout class="mini"
+    <nk-page-layout class="mini"
                       :title="doc.docName||'单据详情'"
                       ref="nav"
                       sub-title="单据详情"
@@ -178,19 +178,17 @@
             />
         </div>
 
-    </x-nk-page-layout>
+    </nk-page-layout>
 </template>
 
 <script>
 import qs from 'qs'
-import XNkPageLayout from "../../layout/template/XNkPageLayout";
 import {mapActions, mapGetters, mapState} from 'vuex';
 import NkCardBpmExecuter from "../task/NkCardBpmExecuter";
 
 export default {
     components:{
         NkCardBpmExecuter,
-        XNkPageLayout,
     },
     props:{
         bpmTask: Object,
