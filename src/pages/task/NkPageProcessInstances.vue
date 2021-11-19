@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import qs from 'qs';
+  import NkUtil from "@/utils/NkUtil";
   export default {
     data(){
       return {
@@ -43,52 +43,52 @@
           },
         ],
         searchItemsDefault:[
-          {
-            name:'关键字',
-            field:'source',
-            component:'nk-search-options-single',
-            placeholder:'请输入关键字',
-            defaultOptions: false,
-            defaultValue: 'runtime',
-            option:{
-              buckets:[
-                {
-                  name:'进行中实例',
-                  key:'runtime'
-                },
-                {
-                  name:'历史实例',
-                  key:'historic'
-                }
-              ]
-            }
-          },
-          {
-            name:'关键字',
-            field:'keyword',
-            component:'nk-search-options-text',
-            placeholder:'请输入关键字'
-          },
+          // {
+          //   name:'实例类型',
+          //   field:'source',
+          //   component:'nk-search-options-single',
+          //   defaultOptions: false,
+          //   defaultValue: 'runtime',
+          //   options:{
+          //     buckets:[
+          //       {
+          //         name:'进行中实例',
+          //         key:'runtime'
+          //       },
+          //       {
+          //         name:'历史实例',
+          //         key:'historic'
+          //       }
+          //     ]
+          //   }
+          // },
+          // {
+          //   name:'关键字',
+          //   field:'keyword',
+          //   component:'nk-search-options-text',
+          //   placeholder:'请输入关键字'
+          // },
         ]
       }
     },
     methods:{
       search(params){
 
-        if(!params.source || params.source==='runtime'){
-          this.$http.post("/api/ops/bpm/instances",qs.stringify(params, { arrayFormat: 'brackets' }))
+          // const keyValue = NkUtil.translateParamsToKeyValue(params);
+        // if(!keyValue.source || keyValue.source==='runtime'){
+          this.$http.post("/api/ops/bpm/instances",NkUtil.translateParamsToQueryString(params))
             .then((res)=>{
               this.$emit("setTab","流程实例");
               if(this.$refs.layout)
                 this.$refs.layout.setData(res.data)
             });
-        }else{
-          this.$http.post("/api/ops/bpm/instance/process/instances",qs.stringify(params, { arrayFormat: 'brackets' }))
-            .then((res)=>{
-              if(this.$refs.layout)
-                this.$refs.layout.setData(res.data)
-            });
-        }
+        // }else{
+        //   this.$http.post("/api/ops/bpm/instance/process/instances",NkUtil.translateParamsToQueryString(params))
+        //     .then((res)=>{
+        //       if(this.$refs.layout)
+        //         this.$refs.layout.setData(res.data)
+        //     });
+        // }
       },
       toCreate(){
         this.$router.push("/apps/def/partner/create")

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import qs from 'qs';
+  import NkUtil from "@/utils/NkUtil";
   export default {
     data(){
       return {
@@ -43,7 +43,7 @@
             component:'nk-search-options-single',
             defaultOptions:false,
             defaultValue:'true',
-            option:{
+            options:{
               buckets:[{
                 name: 'All',
                 key: 'false'
@@ -64,7 +64,7 @@
     },
     methods:{
       search(params){
-        this.$http.post("/api/def/bpm/process/definitions",qs.stringify(params, { arrayFormat: 'brackets' }))
+        this.$http.post("/api/def/bpm/process/definitions",NkUtil.translateParamsToQueryString(params))
           .then((res)=>{
             this.$emit("setTab","流程定义");
             if(this.$refs.layout)

@@ -1,6 +1,7 @@
 
 import { Interpreter } from "eval5";
 import {v4 as uuidv4} from "uuid";
+import qs from "qs";
 
 export default {
 
@@ -39,5 +40,24 @@ export default {
             }
         }
         return false;
+    },
+    translateParamsToKeyValue(params){
+        let queryString = {from:params.from,rows:params.rows};
+        if(params&&params.conditions){
+            Object.keys(params.conditions).forEach(key=>{
+                const condItem = params.conditions[key];
+                Object.keys(condItem).forEach(k=>{
+                    if(k==='term'){
+                        queryString = Object.assign(queryString,condItem[k]);
+                    }else if(k==='multi_match'){
+                        queryString.keyword = condItem[k].query;
+                    }
+                });
+            })
+        }
+        return queryString;
+    },
+    translateParamsToQueryString(params){
+        return qs.stringify(this.translateParamsToKeyValue(params), { arrayFormat: 'brackets' });
     }
 }

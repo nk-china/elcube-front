@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import qs from 'qs';
+  import NkUtil from "@/utils/NkUtil";
   export default {
     data(){
       return {
@@ -76,7 +76,7 @@
     },
     methods:{
       search(params){
-        this.$http.post("/api/def/dmn/definitions",qs.stringify(params, { arrayFormat: 'brackets' }))
+        this.$http.post("/api/def/dmn/definitions",NkUtil.translateParamsToQueryString(params))
           .then((res)=>{
             this.$emit("setTab","决策定义");
             if(this.$refs.layout)

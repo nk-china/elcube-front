@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import qs from 'qs';
+import NkUtil from "@/utils/NkUtil";
 
 const formatVersion = ({cellValue})=>{
     return cellValue.split('-')[0];
@@ -35,7 +35,7 @@ export default {
             return this.docTypes.map(docType=>{
                 return {
                     value:docType.docType,
-                    label:docType.docType,
+                    label:docType.docType + ' | ' + docType.docName,
                 };
             });
         },
@@ -45,7 +45,7 @@ export default {
                     name:'单据分类',
                     field:'docClassify',
                     component:'nk-search-options-single',
-                    option:{
+                    options:{
                         buckets:classifies
                     }
                 },
@@ -53,7 +53,7 @@ export default {
                     name:'单据类型',
                     field:'docType',
                     component:'nk-search-options-single',
-                    option:{
+                    options:{
                         buckets: this.docTypeOptions
                     }
                 },
@@ -61,10 +61,11 @@ export default {
                     name:'状态',
                     field:'state',
                     component:'nk-search-options-single',
-                    option:{
+                    options:{
                         buckets: [
-                            {label: "Active",value:"Active"},
-                            {label: "InActive",value:"InActive"},
+                            {label: "Active | 激活的",value:"Active"},
+                            {label: "InActive | 未激活",value:"InActive"},
+                            {label: "History | 历史",value:"History"},
                         ]
                     }
                 },
@@ -123,7 +124,7 @@ export default {
     },
     methods:{
         search(params){
-            this.$http.post("/api/def/doc/type/page",qs.stringify(params, { arrayFormat: 'brackets' }))
+            this.$http.post("/api/def/doc/type/page",NkUtil.translateParamsToQueryString(params))
                 .then((res)=>{
                     this.$emit("setTab","单据类型");
                     if(this.$refs.layout)

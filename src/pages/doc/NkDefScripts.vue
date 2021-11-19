@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import qs from "qs";
+import NkUtil from "@/utils/NkUtil";
 
 const formatVersion = ({cellValue})=>{
     return cellValue.split('-')[0];
@@ -41,10 +41,11 @@ export default {
                     name:'状态',
                     field:'state',
                     component:'nk-search-options-single',
-                    option:{
+                    options:{
                         buckets: [
-                            {label: "Active",value:"Active"},
-                            {label: "InActive",value:"InActive"},
+                            {label: "Active | 激活的",value:"Active"},
+                            {label: "InActive | 未激活",value:"InActive"},
+                            {label: "History | 历史",value:"History"},
                         ]
                     }
                 },
@@ -74,7 +75,7 @@ export default {
     },
     methods:{
         search(params){
-            this.$http.post("/api/def/script/page",qs.stringify(params, { arrayFormat: 'brackets' }))
+            this.$http.post("/api/def/script/page",NkUtil.translateParamsToQueryString(params))
                 .then((res)=>{
                     this.$emit("setTab","组件开发");
                     if(this.$refs.layout)
