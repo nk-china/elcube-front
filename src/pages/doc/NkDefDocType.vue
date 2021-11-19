@@ -299,10 +299,11 @@ export default {
                     this.$emit('setTab',`新建单据类型`);
                     if(res[1] && res[1].data){
                         this.def = res[1].data
-                        this.def.docName = 'Copy From ' + this.def.docType;
+                        this.def.docName = this.def.docName+'-副本';
                         this.def.docType = undefined;
                         this.def.version = undefined;
                         this.def.updatedTime = undefined;
+                        this.def.state = 'InActive';
                     }
                 }else{
                     this.def = res[1].data;
