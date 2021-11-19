@@ -22,16 +22,16 @@
                 <nk-form-item term="加密">
                     <a-switch default-checked @change="config.compress=$event"/>
                 </nk-form-item>
-                <nk-form-item term="注册表">
+                <nk-form-item term="基础配置">
                     <a-switch @change="config.includeRegistry=$event"/>
                 </nk-form-item>
-                <nk-form-item term="菜单">
+                <nk-form-item term="主菜单">
                     <a-switch @change="config.includeMenu=$event"/>
                 </nk-form-item>
-                <nk-form-item term="授权">
+                <nk-form-item term="用户组与权限">
                     <a-switch @change="config.includeAuth=$event"/>
                 </nk-form-item>
-                <nk-form-item term="脚本对象">
+                <nk-form-item term="组件对象">
                     <div>
                         <div :style="{ borderBottom: '1px solid #E9E9E9' }">
                             <a-checkbox :indeterminate="indeterminateScripts" :checked="checkAllScripts" @change="onCheckAllScripts">
