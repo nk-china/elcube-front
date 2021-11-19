@@ -29,6 +29,7 @@
             <slot name="extra" v-if="expand"></slot>
             <nk-script-label v-if="card.debug" :value="card.beanName"></nk-script-label>
             <nk-help-link v-if="cardComponent.$docs" />
+            <nk-help-link v-if="card.markdown" />
             <a-icon v-if="card.cardKey && !tabList" v-show="!expand" class="expand" type="caret-up"    @click="switchExpand"></a-icon>
             <a-icon v-if="card.cardKey && !tabList" v-show=" expand" class="expand" type="caret-down"  @click="switchExpand"></a-icon>
         </div>

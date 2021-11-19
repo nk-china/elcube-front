@@ -39,6 +39,7 @@ import moment from "moment";
 import numeral from "numeral";
 import eval5 from "eval5";
 import * as g2plot from '@antv/g2plot';
+import markdownIt from 'markdown-it';
 import NkPageDefault from "@/pages/NkPageDefault";
 import NkLogin from "@/layout/NkLogin";
 import NkLogo from "@/components/NkLogo";
@@ -93,7 +94,8 @@ let globalOptions = {
     themes:[{
       value:'default',label:'默认'
     }]
-  }
+  },
+  exportModules:[]
 };
 
 const modules = {
@@ -136,15 +138,17 @@ function componentLoader(componentName, template, NKModule) {
         componentName+".vue",
         {
           moduleCache: {
-            'nk-ts5-platform' : NKModule,
             'vue'             : Vue,
             'ant-design-vue'  : Antd,
             '@antv/g2plot'    : g2plot,
-            moment,
-            numeral,
-            eval5,
-            less,
-            ...NKModule
+            'eval5'           : eval5,
+            'moment'          : moment,
+            'numeral'         : numeral,
+            'markdown-it'     : markdownIt,
+            'less'            : less,
+            'nk-ts5-platform' : NKModule,
+            ...NKModule,
+            ...globalOptions.exportModules
           },
           getFile() {
             return template;
