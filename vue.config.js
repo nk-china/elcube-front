@@ -67,7 +67,7 @@ module.exports = {
       .resourceQuery(/blockType=docs/)
       .type('javascript/auto')
       .use("docs")
-      .loader("./src/boot/docs-loader.js")
+      .loader("./src/utils/docs-loader.js")
       .end();
 
   },
@@ -78,12 +78,12 @@ module.exports = {
         patterns:[
           {
             flatten:true,
-            from: __dirname.replace(/[\\]/g,'/')+'/src/boot/less/*.less',
+            from: __dirname.replace(/[\\]/g,'/')+'/src/apps/less/*.less',
             to: __dirname+'/dist/less/'
           },
           {
             flatten:true,
-            from: __dirname.replace(/[\\]/g,'/')+'/src/boot/*.((le)|(sc))ss',
+            from: __dirname.replace(/[\\]/g,'/')+'/src/apps/*.((le)|(sc))ss',
             to: __dirname+'/dist/'
           },
         ]
