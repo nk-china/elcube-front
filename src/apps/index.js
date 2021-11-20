@@ -73,12 +73,8 @@ let globalOptions = {
     logo:       'nk-logo',
     loginPage:  NkLogin,
     defaultPage:NkPageDefault,
-    dataV:      {
-        themes:[{
-            value:'default',label:'默认'
-        }]
-    },
-    exportModules:[]
+    enableSfc:  true,
+    sfc:        {}
 };
 
 // 加载各个模块，并将模块的routes和stores合并
@@ -91,8 +87,10 @@ let routes      = Kernel.routes,
     };
 
 
-const use = (module)=>{
-    Vue.use(module);
+const use = (module, options)=>{
+
+    if(module.install)
+        module.install(Vue, options)
 
     if(module.routes)
         routes = [...routes,...module.routes]
@@ -109,6 +107,8 @@ const use = (module)=>{
 
 
 const run = (options)=>{
+
+    Object.keys(options).forEach(key=>{if(options[key]===undefined)delete options[key];})
 
     globalOptions = Object.assign(globalOptions,options);
 
@@ -134,8 +134,9 @@ const run = (options)=>{
         'nk-ts5-kernel'   : sfc,
         'nk'              : sfc,
 
-        ...sfc
-    }, i18n, Vue.prototype.$http);
+        ...sfc,
+        ...globalOptions.sfc
+    }, i18n, Vue.prototype.$http, globalOptions.enableSfc);
     Vue.prototype.$sfc = sfcLoader;
 
     return new Promise((resolve,reject)=>{

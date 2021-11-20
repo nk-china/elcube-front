@@ -10,9 +10,15 @@ import NkPageDataTable from "../kernel/pages/NkPageDataTable";
 import NkPageDataSmartTable from "./pages/NkPageDataSmartTable";
 
 
-function install(Vue){
+function install(Vue, options){
     Vue.component("NkCardDataMapReduce",NkCardDataMapReduce);
     Vue.component("NkCardDataMapReduceDef",NkCardDataMapReduceDef);
+
+    options = Object.assign({themes:[{
+            value:'default',label:'默认'
+        }]},options)
+
+    DataV.state.themes = options.themes;
 }
 
 const routes = [

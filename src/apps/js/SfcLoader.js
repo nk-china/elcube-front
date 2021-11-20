@@ -1,7 +1,7 @@
 import { loadModule } from "vue3-sfc-loader/dist/vue2-sfc-loader";
 import { Modal } from "ant-design-vue";
 
-export default function (Vue, modules,i18n,$http){
+export default function (Vue, modules,i18n,$http, enable){
 
     function componentLoader(componentName, template, modules) {
 
@@ -50,10 +50,17 @@ export default function (Vue, modules,i18n,$http){
     }
 
     function loadVueTemplate(componentName, template){
+        if(!enable){
+            return Promise.reject('sfc 未启用');
+        }
         return componentLoader(componentName, template, modules)
     }
 
     function reloadVueResources(){
+
+        if(!enable){
+            return Promise.resolve({count:0});
+        }
 
         return new Promise((resolve,reject)=>{
             $http.instanceNone.get("/api/def/resources/vue")
