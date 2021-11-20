@@ -23,7 +23,7 @@ import Data from './modules/dataengine';
         logo:       undefined,
         loginPage:  undefined,
         defaultPage:undefined,
-        enableSfc:  false,
+        enableSfc:  true,
     })
     .then(({Vue,options})=>{
         new Vue(options).$mount('#app');
