@@ -3,11 +3,11 @@ import './apps/theme.less';
 import './apps/theme.scss';
 import "./apps/less/datav.theme.nk1.less";
 
-import ts5 from './apps'
+import ts5  from './apps'
+import Doc  from './modules/docengine'
+import Task from './modules/task'
+import Data from './modules/dataengine'
 
-import Doc  from './modules/docengine';
-import Task from './modules/task';
-import Data from './modules/dataengine';
 
  ts5.use(Doc)
     .use(Task)

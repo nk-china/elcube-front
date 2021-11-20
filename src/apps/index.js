@@ -27,13 +27,19 @@ import App from "./NkApp";
 import NkLogin from "./NkLogin";
 
 import LayoutComponent from '../modules/components';
+
 import Kernel from '../modules/kernel';
+// import Doc    from '../modules/docengine';
+// import Task   from '../modules/task';
+// import Data   from '../modules/dataengine';
+
 import NkPageDefault from "../modules/kernel/pages/NkPageDefault";
 
 
 import NkFormat from "../utils/NkFormat";
 import NkUtil from "../utils/NkUtil";
 import MixinSortable from "../utils/MixinSortable";
+
 
 Vue.config.productionTip = false;
 Vue.prototype.$http = new Http(Vue);
@@ -158,7 +164,10 @@ const run = (options)=>{
 const o = {
     use,
     run,
-    ...sfc
+    ...sfc,
+    // modules:{
+    //     Doc,Task,Data
+    // }
 }
 
 export default o
