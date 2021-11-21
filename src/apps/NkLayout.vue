@@ -350,17 +350,23 @@ export default {
             this.pages = items;
         },
         tabItemRefresh(item){
-
-            if(this.debugId){
-                this.$sfc.reloadVueResources().then((e)=>{
-                    this.$message.info(`Debug: 重新载入Vue组件${e.count}个`)
+            new Promise((resolve)=>{
+                if(this.debugId){
+                    this.$sfc.reloadVueResources().then((e)=>{
+                        this.$message.info(`Debug: 重新载入Vue组件${e.count}个`)
+                        resolve();
+                    }).catch((e)=>{
+                        this.$message.error(`Debug: 重新载入Vue组件失败 `+e.message)
+                    });
+                }else{
+                    resolve();
+                }
+            }).then(()=>{
+                let c = item.component;
+                item.component = undefined;
+                this.$nextTick(()=>{
+                    item.component=c;
                 });
-            }
-
-            let c = item.component;
-            item.component = undefined;
-            this.$nextTick(()=>{
-                item.component=c;
             });
         },
         dragstart(){

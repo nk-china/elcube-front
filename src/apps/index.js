@@ -142,7 +142,7 @@ const run = (options)=>{
 
         ...sfc,
         ...globalOptions.sfc
-    }, i18n, Vue.prototype.$http, globalOptions.enableSfc);
+    }, globalOptions.enableSfc);
     Vue.prototype.$sfc = sfcLoader;
 
     return new Promise((resolve,reject)=>{
@@ -164,10 +164,7 @@ const run = (options)=>{
 const o = {
     use,
     run,
-    ...sfc,
-    // modules:{
-    //     Doc,Task,Data
-    // }
+    ...sfc
 }
 
 export default o

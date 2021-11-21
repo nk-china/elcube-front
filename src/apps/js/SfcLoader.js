@@ -1,7 +1,7 @@
 import { loadModule } from "vue3-sfc-loader/dist/vue2-sfc-loader";
 import { Modal } from "ant-design-vue";
 
-export default function (Vue, modules,i18n,$http, enable){
+export default function (Vue, modules, enable){
 
     function componentLoader(componentName, template, modules) {
 
@@ -12,7 +12,8 @@ export default function (Vue, modules,i18n,$http, enable){
                 loadModule(
                     componentName+".vue",
                     {
-                        moduleCache: modules,
+                        // 禁用缓存，确保组件可以更新
+                        moduleCache: Object.assign({},modules),
                         getFile() {
                             return template;
                         },
@@ -63,12 +64,12 @@ export default function (Vue, modules,i18n,$http, enable){
         }
 
         return new Promise((resolve,reject)=>{
-            $http.instanceNone.get("/api/def/resources/vue")
+            Vue.prototype.$http.instanceNone.get("/api/def/resources/vue")
                 .then(res=>{
                     let count = 0;
                     for(let componentName in res.data){
                         if(res.data.hasOwnProperty(componentName)){
-                            componentLoader(componentName, res.data[componentName], modules, i18n)
+                            componentLoader(componentName, res.data[componentName], modules)
                         }
                         count ++;
                     }
