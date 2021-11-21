@@ -1,22 +1,31 @@
 import { loadModule } from "vue3-sfc-loader/dist/vue2-sfc-loader";
 import { Modal } from "ant-design-vue";
+import Vue from 'vue';
 
-export default function (Vue, modules,i18n,$http, enable){
+export default function (Vue123dd, modules,i18n,$http, enable){
 
     function componentLoader(componentName, template, modules) {
 
         return Vue.component(componentName,() => {
 
+            console.log(componentName)
+            console.log(Vue)
+            console.log(Vue123dd)
+            console.log(Vue===Vue123dd)
+
             return new Promise((resolve,reject)=>{
+                console.log(componentName)
                 let i18n,markdown;
                 loadModule(
                     componentName+".vue",
                     {
                         moduleCache: modules,
                         getFile() {
+                            console.log(template)
                             return template;
                         },
                         addStyle(textContent) {
+                            console.log(textContent)
                             if((textContent = textContent.trim()))
                                 document.head.append(Object.assign(document.createElement('style'), { textContent }));
                         },
@@ -36,14 +45,18 @@ export default function (Vue, modules,i18n,$http, enable){
                     if(markdown){
                         component.__docs = markdown.trim();
                     }
+                    console.log(component)
                     resolve(component);
                 }).catch((e)=>{
+                    console.log(e)
                     Modal.error({
                         centered: true,
                         title: '['+componentName+']编译错误',
                         content: e.name + " : "+e.message
                     });
                     reject(e);
+                }).finally(()=>{
+                    console.log(53)
                 });
             });
         });
