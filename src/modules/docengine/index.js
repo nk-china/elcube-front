@@ -4,6 +4,8 @@ import NkDoc from "./StateNkDoc";
 import Mixin from "./cards/Mixin";
 import MixinDef from "./cards/MixinDef";
 import NkCardLost from "./cards/NkCardLost";
+import NkDynamicForm from "./cards/NkDynamicForm";
+import NkDynamicFormDef from "./cards/NkDynamicFormDef";
 
 import NkScriptLabel from "./components/NkDefScriptLabel";
 import NkCard from "./components/NkCard";
@@ -37,6 +39,8 @@ module.install = function (Vue) {
   Vue.component('nk-script-label',NkScriptLabel);
   Vue.component('nk-card',NkCard);
   Vue.component('nk-def-card',NkDefCard);
+  Vue.component('NkDynamicForm',NkDynamicForm);
+  Vue.component('NkDynamicFormDef',NkDynamicFormDef);
   Vue.component('nk-doc-select-editor',NkDocSelectEditor);
   Vue.component('nk-doc-select-modal',NkDocSelectModal);
   Vue.component('nk-standard-card-def-table',NkStandardCardDefTable);

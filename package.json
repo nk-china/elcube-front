@@ -1,6 +1,6 @@
 {
   "name": "nk-ts5",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": false,
   "author": "Bean <mailxbs@126.com>",
   "files": [
@@ -13,9 +13,9 @@
     "dev": "vue-cli-service serve",
     "dev-remote": "vue-cli-service serve --mode sflc",
     "package": "vue-cli-service build --target lib --name nk --dest dist src/apps/index.js",
-    "package-module-doc":       "vue-cli-service build --no-clean --target lib --name index --dest dist/module-docengine src/modules/docengine/index.js",
-    "package-module-task":      "vue-cli-service build --no-clean --target lib --name index --dest dist/module-task src/modules/task/index.js",
-    "package-module-dataengine":"vue-cli-service build --no-clean --target lib --name index --dest dist/module-dataengine src/modules/dataengine/index.js",
+    "package-module-doc": "vue-cli-service build --no-clean --target lib --name index --dest dist/module-docengine src/modules/docengine/index.js",
+    "package-module-task": "vue-cli-service build --no-clean --target lib --name index --dest dist/module-task src/modules/task/index.js",
+    "package-module-dataengine": "vue-cli-service build --no-clean --target lib --name index --dest dist/module-dataengine src/modules/dataengine/index.js",
     "package-all": "yarn package && yarn package-module-doc && yarn package-module-task && yarn package-module-dataengine",
     "release": "yarn publish --registry http://ns.nkpro.it/repository/npm-local/",
     "package-release": "yarn package && yarn release"

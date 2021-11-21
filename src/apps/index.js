@@ -126,7 +126,7 @@ const run = (options)=>{
     const i18n = new VueI18n({
         locale: 'zh_CN', // 设置语言环境
     });
-    const sfcLoader = SfcLoader(Vue, {
+    const sfcLoader = new SfcLoader(Vue, {
         'vue'             : Vue,
         'ant-design-vue'  : Antd,
         '@antv/g2plot'    : g2plot,
