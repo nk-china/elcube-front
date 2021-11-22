@@ -42,7 +42,13 @@ export default {
         return false;
     },
     translateParamsToKeyValue(params){
-        let queryString = {from:params.from,rows:params.rows};
+        let queryString = {
+            from:           params.from,
+            rows:           params.rows,
+            orderField:     params.orderField,
+            order:          params.order
+        };
+
         if(params&&params.conditions){
             Object.keys(params.conditions).forEach(key=>{
                 const condItem = params.conditions[key];
@@ -50,7 +56,7 @@ export default {
                     if(k==='term'){
                         queryString = Object.assign(queryString,condItem[k]);
                     }else if(k==='multi_match'){
-                        queryString.keyword = condItem[k].query;
+                        queryString[key] = condItem[k].query;
                     }
                 });
             })
