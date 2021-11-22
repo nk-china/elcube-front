@@ -38,7 +38,7 @@ export default (defaultValue)=>{
         return new Promise((resolve,reject)=>{
           this.$http.postJSON(
               `/api/def/doc/call`,
-              {fromCard:this.cardKey,def:this.def,options}
+              {fromCard:this.card.beanName,def:this.def,options}
           )
           .then(response=>{
             resolve(response.data);
