@@ -60,7 +60,7 @@
                         {{i.name}}
                     </a-list-item>
                 </a-list>
-                <a-list v-if="script.scriptType==='Card'" item-layout="horizontal" :data-source="vueDefs">
+                <a-list v-if="addDefAble" item-layout="horizontal" :data-source="vueDefs">
                     <a-list-item slot="renderItem"
                                  slot-scope="i"
                                  @click="menuClick(i)"
@@ -71,7 +71,7 @@
             </a-layout-sider>
             <a-layout-content style="padding-left: 20px;">
                 <a-card v-if="selected.key==='info'" title="组件信息" :key="'base-'+selected.cardKey">
-                    <a-button v-if="editMode && script.scriptType!=='Card'" slot="extra" @click="addComponentDef" size="small">添加配置视图</a-button>
+                    <a-button v-if="editMode && addDefAble" slot="extra" @click="addComponentDef" size="small">添加配置视图</a-button>
                     <nk-form :col="1" :edit="editMode">
                         <nk-form-item title="类别">
                             {{script.scriptType}}
@@ -219,16 +219,16 @@ export default {
         isCreate(){
             return this.routeParams.mode==='create';
         },
+        addDefAble(){
+            return this.script.scriptType === 'Card' || this.script.scriptType === 'Field';
+        },
         menus(){
             const menus = [
                 {key:"info",        name:"基本信息",    },
                 {key:"groovy",      name:"处理程序",    },
             ];
 
-            if(this.script.scriptType==='Card'){
-                menus.push({key:"vue-main",name:"数据视图"});
-            }
-            if(this.script.scriptType==='Meter'){
+            if(this.script.scriptType==='Card'||this.script.scriptType==='Field'||this.script.scriptType==='Meter'){
                 menus.push({key:"vue-main",name:"数据视图"});
             }
 

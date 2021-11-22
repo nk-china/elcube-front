@@ -184,6 +184,15 @@ export default {
             & > .vxe-cell{
                 overflow: hidden;
             }
+
+            &.col--edit.vxe-body--column{
+                height: auto;
+
+                .vxe-cell{
+                    height: auto;
+                    max-height: 100px;
+                }
+            }
         }
     }
 </style>
