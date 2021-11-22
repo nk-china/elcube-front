@@ -44,7 +44,7 @@
             <vxe-table-column title="触发计算"
                               field="calcTrigger"
                               width="12%"
-                              :edit-render="{name:'$switch',props: {'open-value':1,'close-value':0}}"
+                              :edit-render="{name:'$switch',props: {'open-value':true,'close-value':false}}"
                               :formatter="boolFormat"></vxe-table-column>
             <vxe-table-column title="计算顺序"
                               field="calcOrder"
@@ -193,6 +193,7 @@ export default {
             this.activeRow = row;
             this.$refs.xTable.setAllRowExpand(false);
             this.$refs.xTable.setRowExpand([row], true);
+            this.sortable = false;
         },
         rowExpand(){
             // if(expanded){

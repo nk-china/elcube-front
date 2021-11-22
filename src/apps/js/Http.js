@@ -50,7 +50,7 @@ export default (Vue) => {
         }
       }).then(log=>{
         if(log.data){
-          console.log(`\nRequest URL : ${res.request.responseURL}\n\n${log.data}`)
+          console.debug(`\nRequest URL : ${res.request.responseURL}\n\n${log.data}`)
         }
       })
     }

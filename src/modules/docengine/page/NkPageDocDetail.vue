@@ -323,10 +323,9 @@ export default {
                     .then(response=>{
                         this.doc = response.data;
                         this.$emit('setTab',"NEW:"+this.doc.docName);
-                        this.loading = false;
                         this.nkEditModeChanged(true);
                         this.$emit("setTab",{confirm:"单据尚未保存，确认关闭吗？"});
-                        this.editMode = true;
+                        this.loading = false;
                     }).catch(res=>{
                         if(res.response.status===403){
                             this.$emit("close")
@@ -336,6 +335,7 @@ export default {
                 this.$http.get("/api/doc/detail/"+this.contextParams.docId)
                     .then(response=>{
                         this.doc = response.data;
+                        this.nkEditModeChanged(false);
                         this.$emit('setTab',this.doc.docName);
                         this.loading = false
                     }).catch(res=>{
@@ -484,7 +484,10 @@ export default {
             this.editMode = editMode;
             this.$emit("editModeChanged",this.editMode);
             this.$nextTick(()=>{
-                this.$refs.components&&this.$refs.components.forEach(c=>c.docEditModeChanged &&c.docEditModeChanged(this.editMode));
+                this.$refs.components&&this.$refs.components.forEach(c=> {
+                    c.docEditModeChanged && c.docEditModeChanged(this.editMode);
+                    c.nk$editModeChanged && c.nk$editModeChanged(this.editMode);
+                });
             });
         },
         cancel(){

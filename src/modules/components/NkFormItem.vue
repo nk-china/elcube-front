@@ -37,6 +37,11 @@ export default {
             type:Boolean,
             default: true
         },
+        // 在编辑模式下，如果edit插槽不存在，那么切换到default插槽
+        defaultIfEditLost:{
+            type:Boolean,
+            default: true
+        },
         col: {
             type: Number,
             default: 1
@@ -73,7 +78,20 @@ export default {
             }
         },
         editMode(){
-            return this.edit && this.$parent.$props.edit && this.$slots.edit
+            if(!this.edit)
+                return false;
+
+            if(!this.$parent.$props.edit)
+                return false;
+
+            // 如果 edit 插槽存在
+            if(this.$slots.edit)
+                return true;
+
+            // 如果 edit 不存在
+            return !this.defaultIfEditLost;
+
+
         },
         termClass(){
             return [
@@ -164,8 +182,8 @@ export default {
         line-height: 22px;
         /*width: 100%;*/
         color: rgba(0,0,0,.65);
-        display: flex;
-        flex-wrap: wrap;
+        //display: flex;
+        //flex-wrap: wrap;
         width: 100%;
         padding: 0 32px 8px 0;
 
