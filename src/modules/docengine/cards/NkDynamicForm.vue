@@ -49,7 +49,9 @@ export default {
         },
         itemChange(e,item){
             if(item.calcTrigger){
-                this.nk$calc();
+                this.nk$calc({
+                    triggerKey:item.key
+                });
             }
         },
         hasError(){

@@ -11,7 +11,7 @@
                            :is="item.component"
                            :config="item"
                            :option="item.option || aggs[item.field]"
-                           @change="formItemChanged"
+                           @changed="formItemChanged"
                 ></component>
                 <nk-search-item>
                     <a-button type="primary" html-type="submit"><a-icon type="search" /></a-button>
@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import NkUtil from "../../../utils/NkUtil";
 
 export default {
     name: "NkModalSelector",
@@ -60,8 +59,8 @@ export default {
                 return {
                     title:'选择',
                     width:"60%",
-                    preConditions:null,
-                    index:'doc',
+                    postConditions:null,
+                    index:'document',
                     searchItems:[
                         {
                             name:'搜索',
@@ -111,7 +110,8 @@ export default {
             params : {
                 from : 0,
                 rows : 10,
-                orderField: '_score'
+                orderField: '_score',
+                order: 'desc'
             }
         }
     },
@@ -125,13 +125,11 @@ export default {
     },
     methods:{
         query(){
-            let $aggs = this.modal.searchItems
-                .filter(i=>i.agg)
-                .map(i=>i.field);
+            const aggs = this.modal.searchItems.filter(i=>i.agg).map(i=>i.field);
+            const postCondition = this.modal.postCondition;
+            const url = `/api/doc/list/${this.modal.index||'document'}`;
 
-            const preConditions = typeof this.modal.preConditions==='string'?JSON.parse(this.modal.preConditions):this.modal.preConditions;
-            const url = `/api/doc/list/${this.modal.index||'doc'}`;
-            this.$http.postJSON(url,NkUtil.toEsParams(Object.assign({$aggs},this.params),preConditions))
+            this.$http.postJSON(url,Object.assign({aggs,postCondition},this.params))
                 .then(response=>{
                     this.page = response.data;
                 });
@@ -147,8 +145,15 @@ export default {
         },
         formItemChanged(e){
             if(e.field){
-                this.params[e.field]=e.value;
+                this.params.conditions = this.params.conditions||{};
+                if(e.condition){
+                    this.params.conditions[e.field]=e.condition;
+                }else{
+                    delete this.params.conditions[e.field]
+                }
+
                 if(e.trigger){
+                    this.params.from = 0;
                     this.query();
                 }
             }

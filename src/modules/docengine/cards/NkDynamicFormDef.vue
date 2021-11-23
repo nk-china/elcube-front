@@ -171,9 +171,10 @@ export default {
             this.$refs.xTable.loadData(this.def.items).then(() => this.$refs.xTable.setActiveRow(newItem));
         },
 
-        keyChanged({column,row},{value}){
-            row[column.property]=value && value.toUpperCase()
-        },
+        // keyChanged({column,row},{value}){
+        //     row[column.property]=value && value.toUpperCase()
+        // },
+        keyChanged(){},
         inputTypeChanged({row}){
             row.$options = this.inputTypeDefs.find(e=>e.value===row.inputType).options;
             for(let key in row.$options){
