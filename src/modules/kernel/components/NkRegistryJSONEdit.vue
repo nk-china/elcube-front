@@ -1,6 +1,6 @@
 <template>
     <div>
-        <a-textarea v-model="val" @blur="change" :auto-size="{minRows:5,maxRows:50}"></a-textarea>
+        <a-textarea v-model="val" @blur="change" :auto-size="{minRows:5,maxRows:20}"></a-textarea>
         <span v-if="error">{{error}}</span>
     </div>
 </template>

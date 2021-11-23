@@ -52,7 +52,7 @@
                         </nk-form-item>
                         <nk-form-item title="值" v-if="selectedNode.dataType && selectedNode.loaded">
                             <div style="width: 100%;">
-                                <component :is="selectedNode.dataType" v-model="selectedNode.content" :editable="true" style="max-height: 400px;"></component>
+                                <component :is="selectedNode.dataType" v-model="selectedNode.content" :editable="true"></component>
                             </div>
                         </nk-form-item>
                     </nk-form>
