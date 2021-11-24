@@ -2,11 +2,11 @@
     <nk-def-card>
         <nk-form :col="1" :edit="editMode" style="width:300px;">
             <nk-form-item title="序号列">
-                {{def.seq}}
+                {{def.seq | boolFormat}}
                 <a-switch size="small" slot="edit" v-model="def.seq"></a-switch>
             </nk-form-item>
             <nk-form-item title="调整顺序">
-                {{def.sortable}}
+                {{def.sortable | boolFormat}}
                 <a-switch size="small" slot="edit" v-model="def.sortable"></a-switch>
             </nk-form-item>
             <nk-form-item title="初始化SpEL">
@@ -149,7 +149,7 @@ export default {
                 key : 'key'+index,
                 name: '字段'+index,
                 col:1,
-                inputType:'',
+                inputType: this.inputTypeDefs[0].value,
                 calcTrigger:'',
                 calcOrder:1,
                 required:true,

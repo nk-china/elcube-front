@@ -1,5 +1,8 @@
 export default {
 
+    filters:{
+        boolFormat : (value)=>{return value?'是':'否'},
+    },
     data(){
         return {
             sortable:true,

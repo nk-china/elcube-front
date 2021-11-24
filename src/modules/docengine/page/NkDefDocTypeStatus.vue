@@ -23,7 +23,8 @@
                     props: {type: 'text',maxlength:4},
                     events:{change({column,row},{value}){row[column.property]=value.toUpperCase()}}
                 }"/>
-            <vxe-table-column   title="描述"      field="docStateDesc"  width="15%" :edit-render="{name: 'input', attrs: {type: 'text'}}"/>
+            <vxe-table-column   title="描述"      field="docStateDesc"  width="10%" :edit-render="{name: 'input', attrs: {type: 'text'}}"/>
+            <vxe-table-column   title="操作名"     field="operatorName"  width="10%" :edit-render="{name: 'input', attrs: {type: 'text'}}"/>
             <vxe-table-column   title="前序状态"   field="preDocState"      width="10%" :edit-render="{
                     name:'$select',
                     options: availableStatus,
@@ -49,7 +50,7 @@
                     <nk-help-link page="doc-sys-state" />
                 </template>
             </vxe-table-column>
-            <vxe-table-column   title="扩展程序"   field="refObjectType"     width="22%" :edit-render="{
+            <vxe-table-column   title="扩展程序"   field="refObjectType"     width="17%" :edit-render="{
                     name:'$select',
                     options: docOptions.docStateInterceptors,
                     optionProps: {value: 'key', label: 'name'},

@@ -31,11 +31,11 @@
                     </nk-form>
                     <a-button-group slot="extra" v-if="item.limitDesc">
                         <a-button type="primary" @click="itemUpdate" :disabled="$refs.form.hasError()">保存</a-button>
-                        <a-popconfirm placement="topLeft" ok-text="Yes" cancel-text="No" @confirm="itemRemove">
+                        <a-popconfirm v-if="item.limitId" placement="topLeft" ok-text="Yes" cancel-text="No" @confirm="itemRemove">
                             <template slot="title">
                                 <p>确认删除 '{{item.limitDesc}}'?</p>
                             </template>
-                            <a-button v-if="item.limitId">删除</a-button>
+                            <a-button>删除</a-button>
                         </a-popconfirm>
                     </a-button-group>
                 </a-card>
@@ -112,6 +112,7 @@ export default {
                     this.item = res.data;
                     this.reload();
                     this.$message.success('保存成功', 2.5)
+                }).finally(()=>{
                     this.spinning = false;
                 });
         },

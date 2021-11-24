@@ -6,15 +6,20 @@
                 <a-input v-if="routeParams.mode==='create'"
                          size="small"
                          v-model="docDef.docType"
+                         placeholder="请输入以X、Y、Z开头的4个字符的交易类型"
                          slot="edit"
                          :maxLength="4"
                          allowClear
                          @blur="()=>{docDef.docType=docDef.docType && docDef.docType.toUpperCase()}"
-                         style="width: 120px" />
+                         style="width: 280px" />
             </nk-form-item>
             <nk-form-item term="交易类型描述" :validateFor="docDef.docName" message="请输入交易类型描述" required len :max="20" lenMessage="交易类型描述1-20个字">
                 {{docDef.docName}}
-                <a-input size="small" v-model="docDef.docName" slot="edit" allowClear style="width: 300px"></a-input>
+                <a-input size="small"
+                         v-model="docDef.docName"
+                         placeholder="请输入20字以内的交易类型描述"
+                         slot="edit" allowClear
+                         style="width: 300px"></a-input>
             </nk-form-item>
             <nk-form-item term="有效期限" :validateFor="[docDef.validFrom,docDef.validTo]" required message="请输入有效期限">
                 {{docDef.validFrom}}-{{docDef.validTo}}

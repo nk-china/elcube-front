@@ -19,7 +19,7 @@
             header-cell-class-name="headerCellClassName"
             :edit-config="{trigger: 'click', mode: 'row', showIcon: editMode, activeMethod: ()=>{return editMode}}"
             :data="docDef.cards">
-            <vxe-table-column   title="卡片"         field="beanName"        width="24%"  :edit-render="{
+            <vxe-table-column   title="卡片"         field="beanName"        width="20%"  :edit-render="{
                         name: '$select',
                         options: docOptions.cards,
                         optionProps: {value: 'key', label: 'name'},
@@ -27,16 +27,20 @@
                 }" />
             <vxe-table-column   title="KEY"         field="cardKey"  width="13%"
                                 :edit-render="{name:'input'}"/>
-            <vxe-table-column   title="描述"         field="cardName"     width="13%"
+            <vxe-table-column   title="描述"         field="cardName"     width="11%"
                                 :edit-render="{name:'input'}"/>
             <vxe-table-column   title="计算顺序"      field="calcOrder"         width="10%"
                                 :edit-render="{name:'$input',props:{type:'integer',min:0}}"/>
             <vxe-table-column   title="计算次数"      field="calcTimes"         width="10%"
                                 :edit-render="{name:'$input',props:{type:'integer',min:1,max:5}}"/>
-            <vxe-table-column   title="编辑"  field="editableSpEL"             width="10%"
+            <vxe-table-column   title="编辑"  field="editableSpEL"             width="8%"
                                 :edit-render="{name:'$input',props:{placeholder:'{\'S001\',\'S002\'}.contains(docState)'}}"/>
-            <vxe-table-column   title="显示"  field="visibleSpEL"             width="10%"
+            <vxe-table-column   title="显示"  field="visibleSpEL"             width="8%"
                                 :edit-render="{name:'$input',props:{placeholder:'{\'S001\',\'S002\'}.contains(docState)'}}"/>
+            <vxe-table-column   title="数据复制"  field="copyFromRef"           width="10%"
+                                :formatter="boolFormat"
+                                :edit-render="{name:'$switch',props: {'open-value':1,'close-value':0}}"
+            />
             <vxe-table-column   title=""            field=""                   width="10%">
                 <template v-slot="{seq,row}">
                     <span v-if="editMode" class="drag-btn" style="margin-right: 10px;">
@@ -72,6 +76,7 @@ export default {
         this.$nkSortableVxeTable(true);
     },
     methods:{
+        boolFormat : ({cellValue})=>{return cellValue?'是':''},
         addComponent(){
             let row = {
                 beanName:'',
@@ -80,7 +85,8 @@ export default {
                 calcOrder:1,
                 calcTimes:1,
                 editableSpEL:'',
-                visibleSpEL:''
+                visibleSpEL:'',
+                copyFromRef:1,
             };
             this.docDef.cards.push(row)
             this.$refs.xTableComponent.setActiveRow(row);

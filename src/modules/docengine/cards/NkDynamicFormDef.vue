@@ -135,7 +135,7 @@ export default {
                 key : 'key'+index,
                 name: '字段'+index,
                 col:1,
-                inputType:'',
+                inputType: this.inputTypeDefs[0].value,
                 calcTrigger:'',
                 calcOrder:1,
                 required:true,
