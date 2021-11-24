@@ -4,7 +4,7 @@
 
             <template v-for="(item) in def.items" >
                 <nk-form-divider
-                    v-if="item.control >= 0 && item.inputType==='divider'"
+                    v-if="item.control >= 0 && (item.inputType==='divider'||item.inputType==='-'||item.inputType==='--')"
                     :key="item.key"
                     :title="item.name"></nk-form-divider>
                 <nk-form-item  v-else-if="item.control >= 0"

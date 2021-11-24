@@ -17,8 +17,7 @@
         <vxe-toolbar v-if="editMode">
             <template v-slot:buttons>
                 <vxe-button status="perfect" size="mini" @click="add()">新增</vxe-button>
-                <vxe-button status="perfect" size="mini" @click="rowExpandAll(true)">全部展开</vxe-button>
-                <vxe-button status="perfect" size="mini" @click="rowExpandAll()">全部收起</vxe-button>
+                <vxe-button status="perfect" size="mini" @click="rowExpandClear()">收起</vxe-button>
             </template>
         </vxe-toolbar>
         <vxe-table
@@ -128,50 +127,27 @@
 <script>
 import MixinDef from "./MixinDef";
 import MixinSortable from "../../../utils/MixinSortable";
+import MixinDynamicDef from "./MixinDynamicDef";
 
 export default {
-    mixins:[new MixinDef({}),MixinSortable()],
-    created() {
-        this.$nkSortableVxeTable(true);
-        if(!this.def.items){
-            this.$set(this.def,'items',[]);
-        }
-    },
+    mixins:[new MixinDef({}),MixinSortable(),MixinDynamicDef],
     data(){
         return {
-            sortable:true,
-            inputTypeDefs:[],
-            activeRow:undefined,
-        }
-    },
-    computed:{
-        fieldDefComponent(){
-            if(this.activeRow && this.activeRow.inputType){
-                const defName = this.activeRow.inputType + 'Def';
-                if(this.$options.components[defName]){
-                    console.log(defName)
-                    return defName;
-                }
-            }
-            return undefined;
         }
     },
     mounted() {
         this.nk$callDef()
             .then(res=>{
                 this.inputTypeDefs = res;
-                this.inputTypeDefs.push({value:'divider',label:'分隔'})
             });
     },
     methods:{
-        boolFormat : ({cellValue})=>{return cellValue?'是':''},
-        activeMethod(){return this.editMode;},
-
 
         add(){
+            const index = this.def.items.length||'';
             let newItem = {
-                key:'KEY',
-                name:'新字段',
+                key : 'key'+index,
+                name: '字段'+index,
                 col:1,
                 inputType:'',
                 calcTrigger:'',
@@ -184,50 +160,6 @@ export default {
             };
             this.def.items.push(newItem);
             this.$refs.xTable.loadData(this.def.items).then(() => this.$refs.xTable.setActiveRow(newItem));
-        },
-
-        keyChanged({column,row},{value}){
-            row[column.property]=value && value.toUpperCase()
-        },
-        inputTypeChanged({row}){
-            row.$options = this.inputTypeDefs.find(e=>e.value===row.inputType).options;
-            for(let key in row.$options){
-                this.$set(row,key,row.$options[key]);
-            }
-        },
-
-        rowEditClosed(){
-            //this.activeRow = undefined;
-            //this.$refs.xTable.setAllRowExpand(false);
-        },
-        rowEditActived({row}){
-            // 初始化inputOptions的值，避免双向绑定数据失败
-            if(!row.inputOptions){
-                this.$set(row,'inputOptions',{});
-            }
-            this.activeRow = row;
-            this.$refs.xTable.setAllRowExpand(false);
-            this.$refs.xTable.setRowExpand([row], true);
-            this.sortable = false;
-        },
-        rowExpand(){
-            // if(expanded){
-                //this.initRowOptions(row);
-            // }
-            this.sortable = this.$refs.xTable.getRowExpandRecords().length === 0;
-            this.$nkSortableVxeTable(this.sortable);
-        },
-        rowExpandAll(bool){
-            if(bool){
-                // this.def.items.forEach((row)=>{
-                    //this.initRowOptions(row);
-                // });
-                this.$refs.xTable.setAllRowExpand(bool);
-            }else{
-                this.$refs.xTable.clearRowExpand();
-            }
-            this.sortable = this.$refs.xTable.getRowExpandRecords().length === 0;
-            this.$nkSortableVxeTable(this.sortable);
         },
     }
 }
