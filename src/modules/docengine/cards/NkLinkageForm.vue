@@ -1,6 +1,6 @@
 <template>
     <nk-card>
-        <nk-form ref="form" :col="def.col||1" :edit="editMode">
+        <nk-form ref="form" :col="def.col" :edit="editMode">
 
             <template v-for="(item) in def.items" >
                 <nk-form-divider
@@ -47,10 +47,11 @@ export default {
                 c.nk$editModeChanged &&c.nk$editModeChanged(editMode);
             });
         },
-        itemChange(e,item){
+        itemChange(triggerEvent,item){
             if(item.calcTrigger){
                 this.nk$calc({
-                    triggerKey:item.key
+                    triggerKey:item.key,
+                    triggerEvent
                 });
             }
         },

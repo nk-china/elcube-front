@@ -111,22 +111,26 @@ export default {
 
                 if(this.required || v){
 
-
                     if ((this.required || this.len || typeof this.max === 'number' || typeof this.min === 'number')
                         && (v === undefined || v === null || v === '' || v.length===0 )) {
+                        console.debug(v)
                         return this.message;
                     }
 
                     if ( this.len && typeof this.max === 'number' && v && v.length > this.max) {
+                        console.debug(this.max)
                         return this.lenMessage || this.message;
                     }
                     if ( this.len && typeof this.min === 'number' && v && v.length < this.min) {
+                        console.debug(this.min)
                         return this.lenMessage || this.message;
                     }
                     if (!this.len && typeof this.max === 'number' && v && v > this.max) {
+                        console.debug(this.max)
                         return this.lenMessage || this.message;
                     }
                     if (!this.len && typeof this.min === 'number' && v && v < this.min) {
+                        console.debug(this.min)
                         return this.lenMessage || this.message;
                     }
 
