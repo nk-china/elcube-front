@@ -1,6 +1,6 @@
 <template>
     <div>
-        <component :is="inputComponent" @click="open" v-model="value" size="small" read-only readonly class="readonly"></component>
+        <component :is="inputComponent" @click="open" v-model="value" size="small" read-only class="readonly"></component>
         <component :is="component" v-model="visible" title="SpEL模版编辑器（严格JSON格式）" width="60%" centered :mask-closable="false" :esc-closable="true">
 
             <a-textarea v-model="el" :rows="10" placeholder="SpEL模版，必须为严格JSON格式"></a-textarea>

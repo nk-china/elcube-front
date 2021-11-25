@@ -17,6 +17,7 @@ export default (defaultValue)=>{
           }else if(defaultValue){
             defaultValue = JSON.parse(JSON.stringify(defaultValue));
           }
+          console.log(defaultValue)
 
           this.$set(card,'config',defaultValue);
         }

@@ -43,6 +43,9 @@
                         <a-menu-item key="doDelete" :disabled="isCreate || def.state==='Active'">
                             <a-icon type="delete" /> 删除
                         </a-menu-item>
+                        <a-menu-item key="doDeleteForce" :disabled="isCreate">
+                            <a-icon type="delete" /> 强制删除
+                        </a-menu-item>
                         <a-menu-item key="doRandom" :disabled="!(def.debug || def.state==='Active')">
                             <a-icon type="robot" /> 生成随机数据
                         </a-menu-item>
@@ -345,9 +348,9 @@ export default {
                     this.loading = false;
                 })
         },
-        doDelete(){
+        doDelete(force){
             this.loading = true;
-            this.$http.postJSON(`/api/def/doc/type/delete`,this.def)
+            this.$http.postJSON(`/api/def/doc/type/delete${force&&'?force=true'}`,this.def)
                 .then(()=>{
                     this.$emit("close");
                 })
@@ -446,6 +449,7 @@ export default {
         handleMenuClick({key}){
             switch (key){
                 case "doDelete":this.doDelete();break;
+                case "doDeleteForce":this.doDelete(true);break;
                 case "doBreach":this.doBreach();break;
                 case "doCopy":this.$emit('replace',`/apps/def/doc/create?fromType=${this.def.docType}&fromVersion=${this.def.version}`);break;
                 case "doRandom":this.visibleCreateRandom = true;break;

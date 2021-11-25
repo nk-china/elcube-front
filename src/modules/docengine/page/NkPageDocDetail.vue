@@ -1,6 +1,6 @@
 <template>
     <nk-page-layout class="mini"
-                      :title="doc.docName||'单据详情'"
+                      :title="doc.docName||'未命名单据'"
                       ref="nav"
                       sub-title="单据详情"
                       :spinning="loading"
@@ -322,7 +322,7 @@ export default {
                 this.$http.post("/api/doc/pre/create",qs.stringify(req))
                     .then(response=>{
                         this.doc = response.data;
-                        this.$emit('setTab',"NEW:"+this.doc.docName);
+                        this.$emit('setTab',"NEW:"+(this.doc.docName||this.doc.def.docName));
                         this.nkEditModeChanged(true);
                         this.$emit("setTab",{confirm:"单据尚未保存，确认关闭吗？"});
                         this.loading = false;
@@ -336,7 +336,7 @@ export default {
                     .then(response=>{
                         this.doc = response.data;
                         this.nkEditModeChanged(false);
-                        this.$emit('setTab',this.doc.docName);
+                        this.$emit('setTab',this.doc.docName||'未命名单据');
                         this.loading = false
                     }).catch(res=>{
                         if(res.response.status===403){
@@ -350,7 +350,7 @@ export default {
                 this.$http.get("/api/doc/detail/snapshot/"+this.contextParams.docId)
                     .then(response=>{
                         this.doc=response.data;
-                        this.$emit('setTab','Snapshot:'+this.doc.docName);
+                        this.$emit('setTab','Snapshot:'+(this.doc.docName||'未命名单据'));
                         this.loading = false
                     });
             }

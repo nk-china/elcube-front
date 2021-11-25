@@ -37,7 +37,7 @@
                               :align="column.align"
                               :formatter="column.formatter">
             </vxe-table-column>
-            <vxe-table-column  title="ACTION" width="12%" >
+            <vxe-table-column  title="ACTION" >
                 <template v-slot="{ row }">
                     <a @click="selected(row)">选择</a>
                 </template>

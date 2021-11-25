@@ -111,6 +111,10 @@ export default {
 
                 if(this.required || v){
 
+                    if(typeof v === 'string'){
+                        v = v.trim();
+                    }
+
                     if ((this.required || this.len || typeof this.max === 'number' || typeof this.min === 'number')
                         && (v === undefined || v === null || v === '' || v.length===0 )) {
                         console.debug(v)
