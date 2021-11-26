@@ -73,7 +73,6 @@
                     </nk-search-item>
                 </nk-search-box>
             </a-form>
-
             <vxe-grid
                 ref="grid"
                 auto-resize
@@ -92,6 +91,12 @@
                 @sort-change="vxeSortChanged"
                 :sort-config="sortConfig"
             >
+                <template #tags="e">
+                    <a-tag v-for="(item,index) in getRowValue(e)"
+                           :key="index"
+                           :color="item.color||'blue'"
+                    >{{item.value}}</a-tag>
+                </template>
             </vxe-grid>
             <vxe-pager
                 v-if="page.page"
@@ -197,6 +202,24 @@ export default {
         }
     },
     methods:{
+        getRowValue(scope){
+            let property = scope.column.property.split(".");
+            let value = scope.row;
+            property.forEach(p=>{
+                value = value[p];
+            })
+
+            if(value){
+                if(!(typeof value === 'object' && value[0])){
+                    value = [value];
+                }
+
+                let slotsProps = this.dataTableColumns[scope.columnIndex].slotsProps || {};
+                return value.map(v=>{
+                    return Object.assign({value:v},slotsProps)
+                });
+            }
+        },
         init(){
             this.page.rows = this.initRows;
             this.params.rows = this.initRows;

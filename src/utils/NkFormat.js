@@ -30,7 +30,12 @@ export default {
   },
   nkDatetimeFriendly(value) {
     if(!value)return '';
-    value = moment(value * 1000);
+
+    if(typeof value==='number'){
+      value = moment(value * 1000);
+    }else{
+      value = moment(value);
+    }
     let now = moment();
     now.hour(23);
     now.second(59);
