@@ -26,7 +26,9 @@
                                :is="item.component"
                                :config="item"
                                :option="item.options || aggs[item.field]"
+                               :suggest="suggest"
                                @changed="formItemChanged"
+                               @suggest="formItemSuggest"
                     ></component>
                     <component v-for="(item) in searchItemsMoreSelected"
                                ref="searchMoreItems"
@@ -34,8 +36,10 @@
                                :is="item.component"
                                :config="item"
                                :option="aggs[item.field]"
+                               :suggest="suggest"
                                :closeable="true"
                                @changed="formItemChanged"
+                               @suggest="formItemSuggest"
                                @close="searchMoreItemClosed"
                     ></component>
                     <nk-search-item v-if="availableSearchItemsMoreDef && availableSearchItemsMoreDef.length" :min="0">
@@ -177,7 +181,9 @@ export default {
                 name: undefined,
                 confirmLoading: false,
                 list: []
-            }
+            },
+
+            suggest: []
         }
     },
     mounted(){
@@ -267,6 +273,9 @@ export default {
             this.page = page;
             this.loading = false;
         },
+        setSuggest(suggest){
+            this.suggest = suggest;
+        },
         /**
          * 表单提交
          */
@@ -278,6 +287,10 @@ export default {
             this.params.from = 0;
             this.emitChange();
             return false;
+        },
+
+        formItemSuggest(e){
+            this.$emit("suggest",Object.assign({suggest:e},this.params))
         },
         /**
          * 【选项组件】值更新后触发

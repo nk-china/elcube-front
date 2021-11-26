@@ -11,6 +11,7 @@
             :default-value="config.defaultValue"
             @change="change"
             @blur="blur"
+            @focus="focus"
             @select="valueChanged=true"
             @deselect="valueChanged=true"
             allowClear>
@@ -36,21 +37,26 @@ export default {
     data(){
         return {
             value: undefined,
-            valueChanged:false
+            valueChanged:false,
+            isFocus:false,
         }
     },
     methods:{
         setValue(values){
             this.value = values&&values[this.config.field]&&values[this.config.field].terms[this.config.field]
         },
+        focus(){
+            this.isFocus = true;
+        },
         blur(e){
+            this.isFocus = false;
             if(this.valueChanged){
                 const terms = {};
                 terms[this.config.field]=e;
                 this.$emit("changed",{
                     field:this.config.field,
                     trigger:true,
-                    condition:e&&{terms}
+                    condition:e&&e.length&&{terms}
                 })
                 this.valueChanged=false;
             }
@@ -60,8 +66,8 @@ export default {
             terms[this.config.field]=e;
             this.$emit("changed",{
                 field:this.config.field,
-                trigger:e.length===0,
-                condition:e&&{terms}
+                trigger: !this.isFocus || e.length===0,
+                condition:e&&e.length&&{terms}
             })
         },
         close(){

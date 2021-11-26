@@ -9,6 +9,7 @@
         :keyword-field="['docName','partnerName']"
         save-as-source="$docs"
         @change="search"
+        @suggest="suggest"
         @click="selected"
     >
         <a-button-group slot="action">
@@ -85,7 +86,7 @@ export default {
                 },
                 {
                     name:'关键字',
-                    field:['keyword','docName','partnerName'],
+                    field:['docName','partnerName','keyword'],
                     component:'nk-search-options-text',
                     placeholder:'请输入关键字'
                 },
@@ -124,6 +125,13 @@ export default {
             });
     },
     methods:{
+        suggest(params){
+            this.$http.postJSON(`/api/doc/suggest/document`,params).then((res)=>{
+                if(this.$refs.layout){
+                    console.log(res.data)
+                }
+            });
+        },
         search(params){
             this.$http.postJSON("/api/doc/list/document",params)
                 .then((res)=>{

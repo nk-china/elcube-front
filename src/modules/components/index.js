@@ -16,6 +16,7 @@ import NkSearchOptionsMultiple from "./NkSearchOptionsMultiple";
 import NkSearchOptionsNumberRange from "./NkSearchOptionsNumberRange";
 import NkSearchOptionsSingle from "./NkSearchOptionsSingle";
 import NkSearchOptionsText from "./NkSearchOptionsText";
+import NkSearchOptionsSuggest from "./NkSearchOptionsSuggest";
 import NkVxeInput from "./NkVxeInput";
 import NkVxeSelect from "./NkVxeSelect";
 import NkDocLink from "./NkDocLink";
@@ -50,6 +51,7 @@ function install(Vue){
   Vue.component("nk-search-options-number-range", NkSearchOptionsNumberRange);
   Vue.component("nk-search-options-single", NkSearchOptionsSingle);
   Vue.component("nk-search-options-text", NkSearchOptionsText);
+  Vue.component("nk-search-options-suggest", NkSearchOptionsSuggest);
 
   Vue.component("nk-vxe-input",NkVxeInput);
   Vue.component("nk-vxe-select",NkVxeSelect);

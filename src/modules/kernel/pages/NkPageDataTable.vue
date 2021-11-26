@@ -13,6 +13,7 @@
         :lazy="true"
         :selectable="false"
         @change="search"
+        @suggest="suggest"
         @click="selected"
     >
         <a-button  slot="action"
@@ -114,6 +115,19 @@ export default {
                 }).catch((e)=>{
                     console.error(e);
                 });
+        },
+        suggest(params){
+            if(!this.postSql){
+                this.$http.postJSON(`/api/doc/suggest/${this.index}`,Object.assign({
+                        postCondition: this.postCondition,
+                        $debug: this.$debug,
+                    },params)
+                ).then((res)=>{
+                    if(this.$refs.layout){
+                        this.$refs.layout.setSuggest(res.data.suggests)
+                    }
+                });
+            }
         },
         search(params){
 
