@@ -77,13 +77,13 @@ export default {
     listLabel = listLabel||'label';
     listValue = listValue||'value';
 
-    if(typeof list==='object'&&list[0]){
-      return list.map(v=>{
-        const item = list.find(item => item[listValue]===v)
+    if(typeof value==='object'&&value[0]){
+      return value.map(v=>{
+        const item = list.find(i => i[listValue]===v)
         return item ? item[listLabel] : v;
-      }).join(',');
+      }).join(', ');
     }else{
-      const item = list.find(item => item[listValue]===value)
+      const item = list.find(i => i[listValue]===value)
       return item ? item[listLabel] : value;
     }
   }
