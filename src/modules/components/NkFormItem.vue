@@ -195,6 +195,10 @@ export default {
         width: 100%;
         padding: 0 32px 8px 0;
 
+        & > {
+            word-break:break-all;
+        }
+
         .ant-select {
             width: 90%;
         }

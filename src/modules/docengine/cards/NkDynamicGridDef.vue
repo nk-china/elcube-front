@@ -13,6 +13,7 @@
                 {{def.preSpEL}}
                 <nk-sp-el-template-editor slot="edit" size="small" v-model="def.preSpEL"></nk-sp-el-template-editor>
             </nk-form-item>
+            <slot name="header"></slot>
         </nk-form>
         <vxe-toolbar v-if="editMode">
             <template v-slot:buttons>

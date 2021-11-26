@@ -34,7 +34,14 @@ import NkDevOpsDataSync from "./page/NkDevOpsDataSync";
 const module = Object.create(null);
 module.stores = {NkDoc};
 
-module.sfc = {Mixin, MixinDef}
+module.sfc = {
+  Mixin,
+  MixinDef,
+  NkDynamicForm,
+  NkDynamicFormDef,
+  NkDynamicGrid,
+  NkDynamicGridDef
+}
 module.install = function (Vue) {
 
   /**

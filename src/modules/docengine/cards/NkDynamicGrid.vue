@@ -21,6 +21,7 @@
             :edit-rules="tableValidRules"
             :edit-config="{trigger: 'click', mode: 'row', showIcon: editMode, activeMethod: xTableActiveMethod, showStatus: true}"
             :sort-config="{trigger: 'cell', remote: false,showIcon: !editMode, orders: ['desc', 'asc', null]}"
+            :class="editMode&&'edit-table'"
             @edit-actived="xTableEditActived"
             @edit-closed="xTableEditClosed"
         >
@@ -180,17 +181,19 @@ export default {
 
 <style scoped lang="less">
     ::v-deep{
-        .xtable-col{
-            & > .vxe-cell{
-                overflow: hidden;
-            }
+        .edit-table{
+            .xtable-col{
+                & > .vxe-cell{
+                    overflow: hidden;
+                }
 
-            &.col--edit.vxe-body--column{
-                height: auto;
-
-                .vxe-cell{
+                &.col--edit.vxe-body--column{
                     height: auto;
-                    max-height: 100px;
+
+                    .vxe-cell{
+                        height: auto;
+                        max-height: 100px;
+                    }
                 }
             }
         }

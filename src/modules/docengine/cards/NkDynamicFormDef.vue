@@ -5,6 +5,7 @@
                 {{def.col}}
                 <a-input v-model="def.col" slot="edit" size="small" />
             </nk-form-item>
+            <slot name="header"></slot>
         </nk-form>
         <vxe-toolbar v-if="editMode">
             <template v-slot:buttons>
