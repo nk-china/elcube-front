@@ -73,9 +73,18 @@ export default {
   },
   nkFromList(value,list,listLabel,listValue){
     if(!list) return '';
+
     listLabel = listLabel||'label';
     listValue = listValue||'value';
-    const item = list.find(item => item[listValue]===value)
-    return item ? item[listLabel] : value;
+
+    if(typeof list==='object'&&list[0]){
+      return list.map(v=>{
+        const item = list.find(item => item[listValue]===v)
+        return item ? item[listLabel] : v;
+      }).join(',');
+    }else{
+      const item = list.find(item => item[listValue]===value)
+      return item ? item[listLabel] : value;
+    }
   }
 }
