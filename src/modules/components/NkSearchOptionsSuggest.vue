@@ -54,10 +54,12 @@ export default {
             this.change(true);
         },
         search(e){
-            this.$emit("suggest",{
-                field: this.config.field[0]||this.config.field,
-                text: e
-            });
+            if(e&&e.trim()){
+                this.$emit("suggest",{
+                    field: this.config.field[0]||this.config.field,
+                    text: e
+                });
+            }
         },
         change(trigger){
             const multi_match = {
