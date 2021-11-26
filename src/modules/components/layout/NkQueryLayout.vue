@@ -206,7 +206,7 @@ export default {
             let property = scope.column.property.split(".");
             let value = scope.row;
             property.forEach(p=>{
-                value = value[p];
+                value = value && value[p];
             })
 
             if(value){
