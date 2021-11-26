@@ -92,7 +92,7 @@
                 :sort-config="sortConfig"
             >
                 <template #tags="e">
-                    <a-tag v-for="(item,index) in getRowValue(e)"
+                    <a-tag v-for="(item,index) in getRowCustomValue(e)"
                            :key="index"
                            :color="item.color||'blue'"
                     >{{item.value}}</a-tag>
@@ -202,7 +202,7 @@ export default {
         }
     },
     methods:{
-        getRowValue(scope){
+        getRowCustomValue(scope){
             let property = scope.column.property.split(".");
             let value = scope.row;
             property.forEach(p=>{
