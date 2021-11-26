@@ -8,8 +8,7 @@
 export default {
     props:{
         config: Object,
-        closeable: Boolean,
-        suggest:Object,
+        closeable: Boolean
     },
     data(){
         return {
