@@ -6,7 +6,7 @@
   "files": [
     "dist"
   ],
-  "main": "dist/nk.umd.js",
+  "main": "dist/easis.umd.js",
   "scripts": {
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
