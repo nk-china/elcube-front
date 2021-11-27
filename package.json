@@ -1,6 +1,6 @@
 {
   "name": "easis",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "private": false,
   "author": "Bean / nkpro.cn <mailxbs@126.com>",
   "files": [
@@ -109,5 +109,5 @@
     "> 1%",
     "last 2 versions"
   ],
-  "license": "LGPL"
+  "license": "GPLv3"
 }
