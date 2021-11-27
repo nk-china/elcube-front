@@ -11,7 +11,7 @@ export default {
             helperVisible:false
         },
         helperConfig: {
-            markdown: '# hello [TS5](http://ts5.nkpro.cn)'
+            markdown: '# hello [Easis](http://easis.nkpro.cn)'
         }
     },
     mutations: {

@@ -1,8 +1,8 @@
 {
-  "name": "nk-ts5",
+  "name": "easis",
   "version": "2.1.1",
   "private": false,
-  "author": "Bean <mailxbs@126.com>",
+  "author": "Bean / nkpro.cn <mailxbs@126.com>",
   "files": [
     "dist"
   ],
@@ -13,7 +13,7 @@
     "dev": "vue-cli-service serve",
     "dev-sflc": "vue-cli-service serve --mode sflc",
     "dev-citic": "vue-cli-service serve --mode citic",
-    "package": "vue-cli-service build --target lib --name nk --dest dist src/apps/index.js",
+    "package": "vue-cli-service build --target lib --name easis --dest dist src/apps/index.js",
     "package-module-doc": "vue-cli-service build --no-clean --target lib --name index --dest dist/module-docengine src/modules/docengine/index.js",
     "package-module-task": "vue-cli-service build --no-clean --target lib --name index --dest dist/module-task src/modules/task/index.js",
     "package-module-dataengine": "vue-cli-service build --no-clean --target lib --name index --dest dist/module-dataengine src/modules/dataengine/index.js",
@@ -109,5 +109,5 @@
     "> 1%",
     "last 2 versions"
   ],
-  "license": "UNLICENSED"
+  "license": "LGPL"
 }

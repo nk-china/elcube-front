@@ -1,5 +1,5 @@
 <template>
-    <nk-dashboard-card :title="title||'欢迎使用TS5'">
+    <nk-dashboard-card :title="title||'欢迎使用Easis'">
         <a-menu-item slot="menu" key="0">
             <a-icon type="edit" /> 编辑
         </a-menu-item>

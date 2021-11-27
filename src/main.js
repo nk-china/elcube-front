@@ -3,13 +3,13 @@ import './apps/theme.less';
 import './apps/theme.scss';
 import "./apps/less/datav.theme.nk1.less";
 
-import ts5  from './apps'
+import Easis  from './apps'
 import Doc  from './modules/docengine'
 import Task from './modules/task'
 import Data from './modules/dataengine'
 
 
- ts5.use(Doc)
+ Easis.use(Doc)
     .use(Task)
     .use(Data,{
         themes:[{
@@ -19,7 +19,7 @@ import Data from './modules/dataengine'
         }]
     })
     .run({
-        appName: "TS5统一开发平台",
+        appName: "Easis企业级快速开发模型",
         logo:       undefined,
         loginPage:  undefined,
         defaultPage:undefined,

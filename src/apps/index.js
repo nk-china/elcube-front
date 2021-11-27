@@ -72,10 +72,10 @@ Vue.filter("nkCurrency",NkFormat.nkCurrency);
 Vue.filter("nkPercent", NkFormat.nkPercent);
 Vue.filter("nkFromList",NkFormat.nkFromList);
 
-// 开始初始化TS5
+// 开始初始化
 
 let globalOptions = {
-    appName:    "TS5统一开发平台",
+    appName:    "Easis企业级快速开发模型",
     logo:       'nk-logo',
     loginPage:  NkLogin,
     defaultPage:NkPageDefault,
@@ -139,6 +139,7 @@ const run = (options)=>{
         'nk-ts5-platform' : sfc,
         'nk-ts5-kernel'   : sfc,
         'nk'              : sfc,
+        'easis'           : sfc,
 
         ...sfc,
         ...globalOptions.sfc

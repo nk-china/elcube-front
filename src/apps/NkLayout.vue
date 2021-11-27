@@ -224,7 +224,7 @@ export default {
         openNotification() {
             const key = `open${Date.now()}`;
             this.$notification.open({
-                message: '欢迎使用TS5',
+                message: '欢迎使用Easis',
                 description:
                     '检测到你是初次使用系统，已自动为你打开文档中心，祝您工作愉快',
                 duration: 10,

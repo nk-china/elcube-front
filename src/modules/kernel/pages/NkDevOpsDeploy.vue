@@ -9,7 +9,7 @@
                 v-if="login"
                 name="file"
                 :multiple="false"
-                accept=".ts5"
+                accept=".ts5,.easis"
                 :before-upload="upload"
             >
                 <a-button v-if="login" :disabled="!!debugId"> <a-icon type="upload" /> Click to Upload </a-button>
@@ -132,7 +132,7 @@
 
                         let fileName = response.headers["content-disposition"].split(";")
                             .find(e=>e.trim().startsWith('filename='));
-                        fileName = (fileName&&fileName.split('=')[1].replace(/[\\"]/g,''))||'def111.ts5';
+                        fileName = (fileName&&fileName.split('=')[1].replace(/[\\"]/g,''))||'export.easis';
 
                         const blob = new Blob([response.data], { type: "csv/plain" });
                         const reader = new FileReader();
@@ -152,7 +152,7 @@
             upload(file){
                 let that = this;
                 const suffix = file.name.substr(file.name.lastIndexOf('.') + 1);
-                if (suffix === 'ts5') {
+                if (suffix === 'ts5' || suffix === 'easis') {
                     this.$confirm({
                         title: '确认导入？',
                         content: file.name,
@@ -183,7 +183,7 @@
                 const file = e.target.files[0];
                 e.target.value = "";
                 const suffix = file.name.substr(file.name.lastIndexOf('.') + 1);
-                if (suffix === 'ts5') {
+                if (suffix === 'ts5' || suffix === 'easis') {
                     this.$confirm({
                         title: '是否导入此配置内容？',
                         content: file.name,
