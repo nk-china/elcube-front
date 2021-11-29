@@ -197,6 +197,7 @@ export default {
 
         & > {
             word-break:break-all;
+            overflow: hidden;
         }
 
         .ant-select {
