@@ -5,7 +5,7 @@
             {{term || title}}
             <slot name="term"></slot>
         </div>
-        <div class="content" :class="termClass+(errorMsg?' has-error':'')">
+        <div class="content" :class="termClass+(errorMsg?' has-error':'')" :style="{'max-width': 'calc(100% - '+width+'px)'}">
             <slot v-if="!editMode"></slot>
             <slot v-if="editMode" name="edit"></slot>
             <div v-if="errorMsg" class="ant-form-explain">{{errorMsg}}</div>
