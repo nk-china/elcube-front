@@ -18,7 +18,7 @@
                     </a-button>
                 </a-tooltip>
                 <a-tooltip title="激活">
-                    <a-button type="danger"  @click="doActive"    :disabled="disabledOnlineEditing || isCreate || script.state!=='InActive'" >
+                    <a-button type="danger"  @click="doActive()"  :disabled="disabledOnlineEditing || isCreate || script.state!=='InActive'" >
                         <a-icon type="exclamation-circle" />
                     </a-button>
                 </a-tooltip>
@@ -44,6 +44,9 @@
                         </a-menu-item>
                         <a-menu-item key="doDelete" :disabled="disabledOnlineEditing || isCreate || script.state!=='InActive'">
                             <a-icon type="delete" /> 删除
+                        </a-menu-item>
+                        <a-menu-item key="doReActive" :disabled="isCreate || script.state!=='Active'">
+                            <a-icon type="exclamation-circle" /> 再激活
                         </a-menu-item>
                     </a-menu>
                     <a-button><a-icon type="ellipsis" /></a-button>
@@ -369,10 +372,10 @@ export default {
                     this.loading = false;
                 })
         },
-        doActive(){
+        doActive(force){
             this.valid().then(()=>{
                 this.loading = true;
-                this.$http.postJSON(`/api/def/script/active`,this.script)
+                this.$http.postJSON(`/api/def/script/active${force?'?force=true':''}`,this.script)
                     .then((res)=>{
                         this.regVueTemplate();
                         this.editMode = false;
@@ -443,6 +446,7 @@ export default {
             switch (key){
                 case "doDelete":this.doDelete();break;
                 case "doBreach":this.doBreach();break;
+                case "doReActive":this.doActive(true);break;
                 case "showHistory":break;
             }
         }
