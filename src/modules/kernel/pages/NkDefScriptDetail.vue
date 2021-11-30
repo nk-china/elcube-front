@@ -319,9 +319,9 @@ export default {
         regVueTemplate(){
             if(this.script.vueMain){
                 this.$sfc.loadVueTemplate(this.script.scriptName, this.script.vueMain)
-                    .catch(e=>{
-                        this.$message.error(e)
-                    })
+                    // .catch(e=>{
+                    //     this.$message.error(e)
+                    // })
             }
             if(this.vueDefs){
                 this.vueDefs.forEach(i=>{
@@ -329,9 +329,9 @@ export default {
                         let index = this.vueDefs.indexOf(i);
                         index = index ? index : '';
                         this.$sfc.loadVueTemplate(this.script.scriptName+'Def'+index, i.code)
-                            .catch(e=>{
-                                this.$message.error(e)
-                            })
+                        // .catch(e=>{
+                        //     this.$message.error(e)
+                        // })
                     }
                 })
             }
