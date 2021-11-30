@@ -371,8 +371,9 @@ export default {
         searchMoreDefUpdate(){
             this.availableSearchItemsMoreDef = [];
             this.searchItemsMoreDef.forEach(item=>{
-                if(!item.condition || item.condition(this.params))
+                if(!item.condition || item.condition(this.params.conditions||{})){
                     this.availableSearchItemsMoreDef.push(item);
+                }
             });
             for(let i=this.searchItemsMoreSelected.length-1;i>=0;i--){
                 let item = this.searchItemsMoreSelected[i];
