@@ -1,5 +1,5 @@
 <template>
-    <nk-page-layout sub-title="数据挖掘与分析" :title="custom.title">
+    <nk-page-layout :sub-title="custom.subTitle" :title="custom.title">
 
         <slot name="action" slot="action"></slot>
 
@@ -19,7 +19,7 @@
         <a-card>
             <a-form :label-col="{ span: 6 }" :wrapper-col="{ span: 17 }" @submit="formSubmit">
                 <nk-search-box>
-                    <component v-for="(item,index) in config.searchItemsDefault"
+                    <component v-for="(item,index) in custom.searchItemsDefault"
                                ref="searchItems"
                                :key="index"
                                :is="item.component"
@@ -79,14 +79,14 @@
                 show-overflow="tooltip"
                 size="mini"
                 :max-height="700"
-                :border="config.border"
+                :border="custom.border"
                 :columns="columns"
                 :data="imitateRow.$$data"
                 :loading="loading"
                 :expand-only="expandOnly"
                 @nk-sort-changed="vxeSortChanged"
                 @nk-row-drill="search"
-                :sort-config="config.sortConfig"
+                :sort-config="custom.sortConfig"
             ></nk-page-data-smart-table-grid>
 
             <vxe-pager
@@ -114,24 +114,7 @@ export default {
     components: {NkPageDataSmartTableGrid},
     data(){
         return {
-            custom:{},
-            config:{
-                $debug:false,
-                index:"document",
-                postSql:undefined,
-                postCondition:undefined,
-                searchItemsDefault:[],
-                searchItemsMoreDef:[],
-                defaultRows:10,
-                columns:[],
-                sortConfig:undefined,
-                border:undefined,
-                creatable:undefined,
-
-                preview:false,
-                previewParams: {},
-                previewVisible: false,
-            },
+            custom:{columns:[]},
 
             loading: true,
 
@@ -168,18 +151,41 @@ export default {
                 slots:{
                     content:"drillExpand"
                 }
-            },...this.config.columns];
+            },...this.custom.columns];
         },
         preSql(){
-            return (this.config.postSql instanceof Array) ? this.config.postSql : [this.config.postSql];
+            return (this.custom.postSql instanceof Array) ? this.custom.postSql : [this.custom.postSql];
         },
     },
     methods:{
         loadCustom(){
             this.$http.get(`/api/webapp/menu/${this.$route.params.id}`)
                 .then(res=>{
-                    this.custom = res.data;
-                    this.$emit("setTab",this.custom.title);
+                    this.custom = Object.assign({
+                            title:"数据报表",
+                            subTitle:"数据挖掘与分析",
+                            $debug:false,
+                            index:"document",
+                            postSql:undefined,
+                            postCondition:undefined,
+                            searchItemsDefault:[],
+                            searchItemsMoreDef:[],
+                            defaultRows:10,
+                            columns:[],
+                            sortConfig:undefined,
+                            border:undefined,
+                            creatable:undefined,
+
+                            preview:false,
+                            previewParams: {},
+                            previewVisible: false,
+                        },
+                        NkUtil.parseJSON(res.data)
+                    );
+
+                    this.$nextTick(()=>{
+                        this.init();
+                    })
 
                     const queryLength = Object.keys(this.$route.query).length;
                     if(queryLength){
@@ -188,24 +194,12 @@ export default {
                         this.$emit("setTab",this.custom.title);
                     }
 
-                    if(this.custom.menuOptions){
-                        let options = NkUtil.parseJSON(this.custom.menuOptions);
-                        for(let field in options){
-                            if(options.hasOwnProperty(field))
-                                this.config[field] = options[field];
-                        }
-                        this.$nextTick(()=>{
-                            this.init();
-                        })
-                    }else{
-                        this.$error({
-                            title: '初始化失败',
-                            content: '自定义的选项错误！',
-                        });
-                    }
-
                 }).catch((e)=>{
                     console.error(e);
+                    this.$error({
+                        title: '初始化失败',
+                        content: '自定义的选项错误！',
+                    });
                 });
         },
         init(){
@@ -214,11 +208,11 @@ export default {
             }
 
             if(this.imitateRow.$$data)
-                this.imitateRow.$$data.rows = this.config.defaultRows;
-            this.params.rows = this.config.defaultRows;
+                this.imitateRow.$$data.rows = this.custom.defaultRows;
+            this.params.rows = this.custom.defaultRows;
 
             this.searchMoreDefUpdate();
-            this.config.searchItemsDefault
+            this.custom.searchItemsDefault
                 .forEach(item=>{
                     if(item.defaultValue){
                         this.params[item.field]=item.defaultValue;
@@ -363,7 +357,7 @@ export default {
          */
         searchMoreDefUpdate(){
             this.availableSearchItemsMoreDef = [];
-            this.config.searchItemsMoreDef.forEach(item=>{
+            this.custom.searchItemsMoreDef.forEach(item=>{
                 if(!item.condition || item.condition(this.params))
                     this.availableSearchItemsMoreDef.push(item);
             });
@@ -409,7 +403,7 @@ export default {
         },
         // 排序跳转
         vxeSortChanged({column,property,order}){
-            if(this.config.sortConfig && this.config.sortConfig.remote){
+            if(this.custom.sortConfig && this.custom.sortConfig.remote){
                 this.params.orderField = order===null?null:((column.params&&column.params.orderField)||property);
                 this.params.order = order;
                 this.search();

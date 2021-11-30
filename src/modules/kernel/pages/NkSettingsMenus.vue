@@ -40,16 +40,16 @@
             </div>
         </a-card>
 
-        <a-modal :visible="modalVisible"
-                 @ok="modalSubmit"
-                 @cancel="modalVisible = false">
-            <label slot="title">
-                菜单扩展选项
-                <nk-help-link page="custom-query-options"/>
-            </label>
-            <a-textarea style="height: 300px;" v-model="menuOptions" placeholder="使用JSON来配置自定义搜索等高级选项"></a-textarea>
-            <div v-if="menuHasError" style="color: #f5222d;">{{menuHasError}}</div>
-        </a-modal>
+<!--        <a-modal :visible="modalVisible"-->
+<!--                 @ok="modalSubmit"-->
+<!--                 @cancel="modalVisible = false">-->
+<!--            <label slot="title">-->
+<!--                菜单扩展选项-->
+<!--                <nk-help-link page="custom-query-options"/>-->
+<!--            </label>-->
+<!--            <a-textarea style="height: 300px;" v-model="menuOptions" placeholder="使用JSON来配置自定义搜索等高级选项"></a-textarea>-->
+<!--            <div v-if="menuHasError" style="color: #f5222d;">{{menuHasError}}</div>-->
+<!--        </a-modal>-->
     </nk-page-layout>
 </template>
 
@@ -57,7 +57,7 @@
 
 import Sortable from "sortablejs";
 import XEUtils from "xe-utils";
-import NkUtil from "@/utils/NkUtil";
+// import NkUtil from "@/utils/NkUtil";
 
 export default {
 
@@ -65,7 +65,7 @@ export default {
         return {
             spinning: true,
             sortable: undefined,
-            modalVisible:false,
+            // modalVisible:false,
             menu:{},
             menuOptions:'',
             menuHasError:undefined,
@@ -92,56 +92,80 @@ export default {
                 }
             },
             columns:[
-                { title: 'KEY',  field: 'menuId',            width:"15%", editRender:{name:'$input'},treeNode: true},
-                { title: '菜单',  field: 'title',             width:"10%", editRender:{name:'$input'} },
+                { title: 'KEY',  field: 'menuId',            width:"15%", editRender:{name:'$input'},visible:false},
+                { title: '菜单',  field: 'title',             width:"15%", editRender:{name:'$input'},treeNode: true },
                 { title: '子标题', field: 'subTitle',         width:"15%", editRender:{name:'$input'} },
-                { title: '图标',  field: 'icon',              width:"10%", editRender:{name:'$input'} },
+                { title: '图标',  field: 'icon',              width:"20%", editRender:{name:'$input'} },
                 { title: '路径',  field: 'url',               width:"25%", editRender:{name:'$input'} },
-                { title: '权限',  field: 'authorityOptions',  width:"15%", editRender:{name:'$input'} },
-                { title: '#',                                width:"10%",
+                { title: '权限',  field: 'authorityOptions',  width:"20%", editRender:{name:'$input'} },
+                { title: '#',                                width:"5%",
                     slots:{
-                        default: ({row}, h) => {
+                        default: (e, h) => {
                             return [
-                                h(  'span',{
-                                    class:{"drag-btn":true},
-                                    style:{"margin-right":"10px"}
-                                },[h('i',{class:{'vxe-icon--menu':true}})]),
-                                h('a', {
-                                    style:{"color":"#606266"},
-                                    on: {
-                                        click: ()=>{this.showModal(row);}
-                                    }
-                                },[h('i',{class:{'vxe-icon--edit-outline':true}})]),
+                                h(  'span',
+                                    {
+                                        class:{"drag-btn":true},
+                                        style:{"margin-right":"10px"}
+                                    },
+                                    [
+                                        h('i',{class:{'vxe-icon--menu':true}})
+                                    ]
+                                ),
+                                // h('a',
+                                //     {
+                                //         style:{"color":"#606266"},
+                                //         on: {
+                                //             click: ()=>{this.showModal(row);}
+                                //         }
+                                //     },
+                                //     [h('i',{class:{'vxe-icon--edit-outline':true}})]
+                                // ),
                             ]
                         }
                     }
                 },
             ],
             xValidRules:{
-                menuId: [
-                    { required: true, message: 'KEY必须填写' },
+                // menuId: [
+                //     { required: true, message: 'KEY必须填写' },
+                //     { validator({$table,row}){
+                //         let error = undefined;
+                //         $table.data.forEach(menu=>{
+                //             if(menu!==row && menu.menuId === row.menuId){
+                //                 error = new Error('KEY 重复');
+                //             }
+                //             if(menu.children){
+                //                 menu.children.forEach(menu=> {
+                //                     if (menu !== row && menu.menuId === row.menuId) {
+                //                         error = new Error('KEY 重复');
+                //                     }
+                //                 });
+                //             }
+                //         });
+                //         return error;
+                //     }}
+                // ],
+                title: [
+                    { required: true, message: '标题必须填写' }
+                ],
+                url: [
+                    { required: true, message: 'URL必须填写' },
                     { validator({$table,row}){
                         let error = undefined;
                         $table.data.forEach(menu=>{
-                            if(menu!==row && menu.menuId === row.menuId){
-                                error = new Error('KEY 重复');
+                            if(menu!==row && menu.url === row.url){
+                                error = new Error('URL 重复');
                             }
                             if(menu.children){
                                 menu.children.forEach(menu=> {
-                                    if (menu !== row && menu.menuId === row.menuId) {
-                                        error = new Error('KEY 重复');
+                                    if (menu !== row && menu.url === row.url) {
+                                        error = new Error('URL 重复');
                                     }
                                 });
                             }
                         });
                         return error;
                     }}
-                ],
-                title: [
-                    { required: true, message: '标题必须填写' }
-                ],
-                url: [
-                    { required: true, message: 'URL必须填写' }
                 ],
                 age: [
                     { pattern: '^[0-9]{0,3}$', message: '格式不正确' }
@@ -238,38 +262,41 @@ export default {
                 })
             }
         },
-        showModal(menu){
-            this.menuHasError = undefined;
-            this.menu = menu;
-            if(this.menu.menuOptionsLoad){
-                this.menuOptions = this.menu.menuOptions;
-                this.modalVisible = true;
-            }else{
-                this.spinning = true;
-                this.$http.get(`/api/webapp/menu/${menu.menuId}`).then(res=>{
-                    this.menu.menuOptionsLoad=true;
-                    this.menu.menuOptions=res.data.menuOptions;
-                    this.menuOptions = this.menu.menuOptions;
-                    this.modalVisible = true;
-                    this.spinning = false;
-                });
-            }
-        },
-        modalSubmit(){
-            if(!this.menuOptions.startsWith('{')){
-                this.menuHasError = 'JSON 格式不合法';
-                return;
-            }
-            try{
-                NkUtil.parseJSON(this.menuOptions);
-                this.menu.menuOptions=this.menuOptions;
-                this.modalVisible = false;
-            }catch (e){
-                this.menuHasError = e.message;
-            }
-        },
+        // showModal(menu){
+        //     this.menuHasError = undefined;
+        //     this.menu = menu;
+        //     if(this.menu.menuOptionsLoad){
+        //         this.menuOptions = this.menu.menuOptions;
+        //         this.modalVisible = true;
+        //     }else{
+        //         this.spinning = true;
+        //         this.$http.get(`/api/webapp/menu/${menu.menuId}`).then(res=>{
+        //             this.menu.menuOptionsLoad=true;
+        //             this.menu.menuOptions=res.data.menuOptions;
+        //             this.menuOptions = this.menu.menuOptions;
+        //             this.modalVisible = true;
+        //             this.spinning = false;
+        //         });
+        //     }
+        // },
+        // modalSubmit(){
+        //     if(!this.menuOptions.startsWith('{')){
+        //         this.menuHasError = 'JSON 格式不合法';
+        //         return;
+        //     }
+        //     try{
+        //         NkUtil.parseJSON(this.menuOptions);
+        //         this.menu.menuOptions=this.menuOptions;
+        //         this.modalVisible = false;
+        //     }catch (e){
+        //         this.menuHasError = e.message;
+        //     }
+        // },
         submit(){
-            this.$refs.xTable.validate(true).then(()=>{
+            this.$refs.xTable.validate(true).then((res)=>{
+                if(res){
+                    return;
+                }
                 this.spinning = true;
                 this.$http.postJSON('/api/settings/menu/save',this.menus)
                     .then(()=>{

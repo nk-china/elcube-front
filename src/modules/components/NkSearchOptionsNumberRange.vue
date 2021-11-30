@@ -27,7 +27,7 @@ export default {
     },
     methods:{
         setValue(values){
-            this.value = values&&values[this.config.field]&&values[this.config.field].range[this.config.field]
+            this.value = (values&&values[this.config.field]&&values[this.config.field].range[this.config.field])||{}
         },
         keydown(e){
             if(e.key==='Enter'){

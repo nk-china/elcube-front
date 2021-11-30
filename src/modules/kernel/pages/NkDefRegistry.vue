@@ -46,7 +46,7 @@
                         <nk-form-item title="数据类型" v-if="!!selectedNode">
                             <a-select v-model="selectedNode.dataType"
                                       :options="selectedDataTypes"
-                                      @change="selectedNode.content=undefined"
+                                      @change="$set(selectedNode,'content',undefined)"
                                       style="width: 200px;">
                             </a-select>
                         </nk-form-item>
@@ -86,7 +86,7 @@
 import NkRegistryText from "../components/NkRegistryTextEdit";
 import NkRegistrySelectOptions from "../components/NkRegistryJSONEdit";
 import NkRegistryDataSetNote from "../components/NkRegistryJSONEdit";
-import NkRegistryCustomQuery from "../components/NkRegistryJSONEdit";
+import NkRegistryCustomQuery from "../components/NkRegistryTextAreaEdit";
 
 const dataType = {
     "@METER":[{
@@ -180,6 +180,7 @@ export default {
                     selectNode = selectNode.children.find(c=>c.key===loopKey.join("."));
                 })
                 this.selectedNode = selectNode;
+                this.$set(this.selectedNode,'content',this.selectedNode.content);
 
                 this.$http.get(`/api/platform/registry/def/value/${e[0]}`).then((res)=>{
                     if(res.data&&res.data.content){

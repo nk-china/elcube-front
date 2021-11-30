@@ -3,13 +3,13 @@
         ref="layout"
         :title="custom.title"
         :sub-title="custom.subTitle"
-        :search-items-default="searchItemsDefault"
-        :search-items-more-def="searchItemsMoreDef"
-        :dataTableColumns="columns"
-        :save-as-source="custom.menuId"
-        :init-rows="defaultRows"
-        :border="border"
-        :sortConfig="sortConfig"
+        :search-items-default="custom.searchItemsDefault"
+        :search-items-more-def="custom.searchItemsMoreDef"
+        :dataTableColumns="custom.columns"
+        :save-as-source="$route.params.id"
+        :init-rows="custom.defaultRows"
+        :border="custom.border"
+        :sortConfig="custom.sortConfig"
         :lazy="true"
         :selectable="false"
         @change="search"
@@ -44,17 +44,7 @@ export default {
     components: {NkPagePreview},
     data(){
         return {
-            $debug:false,
-            index:"document",
-            postSql:undefined,
-            postCondition:undefined,
-            searchItemsDefault:[],
-            searchItemsMoreDef:[],
-            defaultRows:10,
-            columns:[],
-            sortConfig:undefined,
-            border:undefined,
-            creatable:undefined,
+
             custom:{},
 
             preview:false,
@@ -72,7 +62,7 @@ export default {
             'user'
         ]),
         creatableFilter(){
-            return this.creatable && this.creatable.filter(item=>{
+            return this.custom.creatable && this.custom.creatable.filter(item=>{
                 return this.user.authorities
                     .find(authority=>
                         authority.authority==='@'+item.docType+':WRITE'||
@@ -86,8 +76,26 @@ export default {
         loadCustom(){
             this.$http.get(`/api/webapp/menu/${this.$route.params.id}`)
                 .then(res=>{
-                    this.custom = res.data;
+                    this.custom = Object.assign({
+                        title:"自定义查询报表",
+                        subTitle:"",
+                        $debug:false,
+                        index:"document",
+                        postSql:undefined,
+                        postCondition:undefined,
+                        searchItemsDefault:[],
+                        searchItemsMoreDef:[],
+                        defaultRows:10,
+                        columns:[],
+                        sortConfig:undefined,
+                        border:undefined,
+                        creatable:undefined
+                    },NkUtil.parseJSON(res.data));
                     this.$emit("setTab",this.custom.title);
+
+                    this.$nextTick(()=>{
+                        this.$refs.layout.init();
+                    })
 
                     const queryLength = Object.keys(this.$route.query).length;
                     if(queryLength){
@@ -96,31 +104,19 @@ export default {
                         this.$emit("setTab",this.custom.title);
                     }
 
-                    if(this.custom.menuOptions){
-                        let options = NkUtil.parseJSON(this.custom.menuOptions);
-                        for(let field in options){
-                            if(options.hasOwnProperty(field))
-                                this[field] = options[field];
-                        }
-                        this.$nextTick(()=>{
-                            this.$refs.layout.init();
-                        })
-                    }else{
-                        this.$error({
-                            title: '初始化失败',
-                            content: '自定义的选项错误！',
-                        });
-                    }
-
                 }).catch((e)=>{
                     console.error(e);
+                    this.$error({
+                        title: '初始化失败',
+                        content: '自定义的选项错误！',
+                    });
                 });
         },
         suggest(params){
-            if(!this.postSql){
-                this.$http.postJSON(`/api/doc/suggest/${this.index}`,Object.assign({
-                        postCondition: this.postCondition,
-                        $debug: this.$debug,
+            if(!this.custom.postSql){
+                this.$http.postJSON(`/api/doc/suggest/${this.custom.index}`,Object.assign({
+                        postCondition: this.custom.postCondition,
+                        $debug: this.custom.$debug,
                     },params)
                 ).then((res)=>{
                     if(this.$refs.layout){
@@ -145,21 +141,23 @@ export default {
             //     }
             // }
 
+            console.log(params)
+
             this.params = params;
 
-            if(this.postSql){
+            if(this.custom.postSql){
                 this.$http.postJSON(`/api/data/analyse/query`,Object.assign({
-                        sqlList: (this.postSql instanceof Array) ? this.postSql : [this.postSql],
-                        $debug: this.$debug,
+                        sqlList: (this.custom.postSql instanceof Array) ? this.custom.postSql : [this.custom.postSql],
+                        $debug: this.custom.$debug,
                     },params)
                 ).then((res)=>{
                     if(this.$refs.layout)
                         this.$refs.layout.setData(res.data)
                 });
             }else{
-                this.$http.postJSON(`/api/doc/list/${this.index}`,Object.assign({
-                            postCondition: this.postCondition,
-                            $debug: this.$debug,
+                this.$http.postJSON(`/api/doc/list/${this.custom.index}`,Object.assign({
+                            postCondition: this.custom.postCondition,
+                            $debug: this.custom.$debug,
                         },params)
                 ).then((res)=>{
                     if(this.$refs.layout)

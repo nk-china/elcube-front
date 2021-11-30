@@ -1,5 +1,5 @@
 <template>
-    <a-input v-model="text"></a-input>
+    <a-textarea v-model="text" :auto-size="{minRows:5,maxRows:20}"></a-textarea>
 </template>
 
 <script>
