@@ -67,7 +67,7 @@
                         <a-menu-item key="" disabled style="font-size: 8px;padding: 1px 30px 1px 8px;cursor: default;">保存为：</a-menu-item>
                         <a-menu-divider />
                         <a-menu-item v-for="item in availableStatus" :key="item.docState" @click="doSave(item.docState)">
-                            <a-icon type="step-forward" /> {{item.operatorName || docStateDesc}}
+                            <a-icon type="step-forward" /> {{item.operatorName || item.docStateDesc}}
                         </a-menu-item>
                     </a-menu>
                 </a-dropdown-button>
