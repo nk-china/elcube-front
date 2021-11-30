@@ -51,6 +51,7 @@
                 </a-form>
             </a-card>
         </a-spin>
+        <nk-error-modal />
     </div>
 </template>
 

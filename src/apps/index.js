@@ -25,6 +25,7 @@ import * as Stores from './stores';
 
 import App from "./NkApp";
 import NkLogin from "./NkLogin";
+import NkErrorModal from "./NkErrorModal";
 
 import LayoutComponent from '../modules/components';
 
@@ -54,6 +55,7 @@ Vue.use(mavonEditor);
 
 Vue.use(LayoutComponent);
 Vue.use(Kernel);
+Vue.component("nk-error-modal", NkErrorModal);
 
 Vue.mixin({
     beforeCreate: function () {
@@ -146,7 +148,7 @@ const run = (options)=>{
     }, globalOptions.enableSfc);
     Vue.prototype.$sfc = sfcLoader;
 
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve)=>{
         sfcLoader.reloadVueResources()
             .then(()=>{
                 resolve({
@@ -158,7 +160,17 @@ const run = (options)=>{
                         render  : h => h(App),
                     }
                 });
-            }).catch(reject);
+            }).catch(()=>{
+                resolve({
+                    Vue,
+                    options: {
+                        router,
+                        store,
+                        i18n,
+                        render  : h => h(App),
+                    }
+                });
+            });
     })
 }
 

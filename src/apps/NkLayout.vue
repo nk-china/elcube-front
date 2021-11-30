@@ -98,6 +98,7 @@
                 </a-form-item>
             </a-form>
         </a-modal>
+        <nk-error-modal />
     </a-spin>
 </template>
 
@@ -147,7 +148,7 @@ export default {
     },
     computed:{
         ...mapState('UI',[
-            'loading','logo'
+            'loading','logo','errors',
         ]),
         ...mapState('Debug',[
             'debugId'

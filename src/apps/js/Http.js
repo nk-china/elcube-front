@@ -71,11 +71,16 @@ export default (Vue) => {
       if(error.response.data.causeStackTrace)
         console.error(error.response.data.causeStackTrace.join('\n'))
 
-      Vue.prototype.$error({
-        centered: true,
-        title: '系统错误',
-        content: errorMsg,
-      });
+      // Vue.prototype.$error({
+      //   centered: true,
+      //   title: '系统错误',
+      //   content: errorMsg,
+      // });
+      if(UI.state.errorVisible===false){
+        UI.state.errorVisible = true;
+        UI.state.errors = []
+      }
+      UI.state.errors.push(errorMsg);
       return Promise.reject(error);
     }
     return Promise.reject(error);
