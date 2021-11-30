@@ -32,12 +32,13 @@ export default {
         columns(){
             return [
                 { type: 'seq',          title: '#',      width: '4%', },
-                { field: 'username',    title: '用户名',   width: '15%', sortable:true, params:{ orderField: 'USERNAME'}},
-                { field: 'realname',    title: '真实姓名', width: '22%', sortable:true, params:{ orderField: 'REALNAME'}},
+                { field: 'username',    title: '用户名',   width: '12%', sortable:true, params:{ orderField: 'USERNAME'}},
+                { field: 'realname',    title: '真实姓名', width: '18%', sortable:true, params:{ orderField: 'REALNAME'}},
                 { field: 'validFrom',   title: '有效期自', width: '10%', sortable:true, params:{ orderField: 'VALID_FROM'}},
                 { field: 'validTo',     title: '有效期至', width: '10%', sortable:true, params:{ orderField: 'VALID_TO'}},
                 { field: 'locked',      title: '锁定状态', width: '10%', sortable:true, params:{ orderField: 'LOCKED'}, formatter: this.locked },
-                { field: 'updatedTime', title: '更新时间', width: '15%', sortable:true, params:{ orderField: 'UPDATED_TIME'}, formatter: 'nkDatetimeFriendly' },
+                { field: 'createdTime', title: '注册时间', width: '12%', sortable:true, params:{ orderField: 'CREATED_TIME'}, formatter: 'nkDatetimeFriendly' },
+                { field: 'updatedTime', title: '更新时间', width: '12%', sortable:true, params:{ orderField: 'UPDATED_TIME'}, formatter: 'nkDatetimeFriendly' },
                 {                       title: 'ACTION',
                     slots: { default: ({row},h) => {
                             return [h(
