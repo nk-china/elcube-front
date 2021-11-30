@@ -24,11 +24,12 @@
                 <nk-form-item term="注册时间">
                     {{ user.createdTime | nkDatetime}}
                 </nk-form-item>
-                <div style="padding-left: 120px;">
-                    <a-button v-if="!editModeBase" size="small" type="primary" @click="editModeBase=true">编辑</a-button>
-                    <a-button v-else               size="small" type="primary" @click="changeBase">确定</a-button>
-                </div>
             </nk-form>
+            <div style="text-align: right;margin-right: 40px;" slot="actions">
+                <a-button v-if="!editModeBase" size="small" type="primary" @click="editModeBase=true">编辑</a-button>
+                <a-button v-else               size="small" type="primary" @click="changeBase">确定</a-button>
+                <a-button v-if="!editModeBase" size="small" type="default" @click="clearLoginLock" style="margin-left: 15px;">清除登陆锁定</a-button>
+            </div>
         </nk-card>
         <nk-card title="授权">
             <vxe-table
@@ -119,6 +120,12 @@ export default {
         }
     },
     methods:{
+        clearLoginLock(){
+            this.$http.postJSON("/api/settings/auth/accounts/clearLoginLock",this.user).then(()=>{
+                this.$message.info("已清除")
+            }).finally(()=>{
+            })
+        },
         changeBase(){
             if(!this.$refs.baseForm.hasError()){
                 this.$http.postJSON("/api/settings/auth/accounts/update",this.user).then((res)=>{
