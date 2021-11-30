@@ -1,7 +1,7 @@
 <template>
     <nk-query-layout
         ref="layout"
-        title="账号管理"
+        title="用户账号"
         :search-items-default="searchItemsDefault"
         :dataTableColumns="columns"
         :selectable="false"

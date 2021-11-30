@@ -94,7 +94,7 @@ const routes = [
             path: "accounts",
             component: NkSettingsAccounts,
             meta:{
-              title: "账号管理",
+              title: "用户账号",
             },
             children:[
               {
