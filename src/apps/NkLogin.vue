@@ -117,13 +117,15 @@ export default {
         },
         usernameBlur(){
             // 检查是否需要验证码
-            this.$http.instanceNone.get("/api/ver/has/"+this.form.getFieldValue("username"))
-                .then(res=>{
-                    if(res.data){
-                        this.retryTimes = res.data;
-                        this.verKey = this.verKey||NkUtil.uuid();
-                    }
-                });
+            if(this.form.getFieldValue("username")&&this.form.getFieldValue("username").trim()){
+                this.$http.instanceNone.get("/api/ver/has/"+this.form.getFieldValue("username"))
+                    .then(res=>{
+                        if(res.data){
+                            this.retryTimes = res.data;
+                            this.verKey = this.verKey||NkUtil.uuid();
+                        }
+                    });
+            }
         },
         handleSubmit(e) {
             e.preventDefault();
