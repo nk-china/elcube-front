@@ -11,6 +11,8 @@
                                   { rules: [{ required: true, message: 'Please input your username!' }] },
                                 ]"
                             :placeholder="$t('username')"
+                            v-model="username"
+                            @blur="usernameBlur"
                         >
                             <a-icon slot="prefix" type="user" style="color:rgba(0,0,0,.25)" />
                         </a-input>
@@ -23,6 +25,7 @@
                                 ]"
                             type="password"
                             :placeholder="$t('password')"
+                            v-model="password"
                         >
                             <a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" />
                         </a-input>
@@ -35,9 +38,10 @@
                                 ]"
                             type="text"
                             :placeholder="$t('verCode')"
+                            v-model="password"
                         >
                             <a-icon slot="prefix" type="safety-certificate" style="color:rgba(0,0,0,.25)" />
-                            <img slot="addonAfter" :src="`/api/ver/code?`+random" height="26" @click="random=new Date().getTime()">
+                            <img slot="addonAfter" :src="`/api/ver/code/${verKey}?${random}`" height="26" @click="random=new Date().getTime()">
                         </a-input>
                     </a-form-item>
                     <a-form-item>
@@ -57,6 +61,8 @@
 
 <script>
 
+import NkUtil from "../utils/NkUtil";
+
 function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
@@ -69,6 +75,7 @@ export default {
             error:undefined,
             username:undefined,
             password:undefined,
+            verKey:undefined,
             verCode:undefined,
             hasErrors,
             form: this.$form.createForm(this, { name: 'horizontal_login' }),
@@ -108,18 +115,38 @@ export default {
             const { getFieldError } = this.form;
             return getFieldError('verCode');
         },
+        usernameBlur(){
+            // 检查是否需要验证码
+            this.$http.instanceNone.get("/api/ver/has/"+this.form.getFieldValue("username"))
+                .then(res=>{
+                    if(res.data){
+                        this.retryTimes = res.data;
+                        this.verKey = this.verKey||NkUtil.uuid();
+                    }
+                });
+        },
         handleSubmit(e) {
             e.preventDefault();
             this.spinning = true;
             this.form.validateFields((err, values) => {
                 if (!err) {
-                    this.$http.login(values.username,values.password)
+                    this.$http.login(values.username,values.password,this.verKey,values.verCode)
                         .then(()=>{
                             this.$router.push("/apps/default")
                         }).catch((error)=>{
+
+                            this.form.setFieldsValue({
+                                password:undefined,
+                                verCode:undefined,
+                            });
+
                             this.error = error;
                             this.spinning = false;
+
+                            // 处理验证码
                             this.retryTimes++;
+                            this.verKey = this.verKey||NkUtil.uuid();
+                            this.random=new Date().getTime();
                         });
                 }else
                     this.spinning = false;
@@ -148,7 +175,7 @@ export default {
         "login": "登陆",
         "username": "用户名",
         "password": "密码",
-        "verCode": "验证码现在还是假的"
+        "verCode": "验证码"
     },
     "en": {
         "login": "Login",

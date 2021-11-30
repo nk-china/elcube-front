@@ -216,14 +216,16 @@ export default (Vue) => {
     })
   }
 
-  function login(username, password){
+  function login(username, password, verKey, verCode){
 
     return new Promise((resolve, reject)=>{
       axios.post("api/authentication/token",qs.stringify({
         systemId: "NK",
         os: "Browser",
         username: username,
-        password: sha1(password)
+        password: sha1(password),
+        verKey,
+        verCode,
       }),{
         headers: {
           'NK-App': 'easis',
