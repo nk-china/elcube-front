@@ -1,0 +1,75 @@
+<template>
+    <nk-query-layout
+        ref="layout"
+        title="账号管理"
+        :search-items-default="searchItemsDefault"
+        :dataTableColumns="columns"
+        :selectable="false"
+        :init-rows="10"
+        @change="search"
+    >
+        <a-button-group slot="action">
+            <a-button type="primary" @click="create">新建</a-button>
+        </a-button-group>
+    </nk-query-layout>
+</template>
+
+<script>
+import NkUtil from "@/utils/NkUtil";
+
+export default {
+    computed:{
+        searchItemsDefault(){
+            return [
+                {
+                    name:'搜索',
+                    field:'keyword',
+                    component:'nk-search-options-text',
+                    placeholder:'请输入关键字'
+                },
+            ]
+        },
+        columns(){
+            return [
+                { type: 'seq',          title: '#',      width: '4%', },
+                { field: 'username',    title: '用户名',   width: '15%', sortable:true, params:{ orderField: 'USERNAME'}},
+                { field: 'realname',    title: '真实姓名', width: '22%', sortable:true, params:{ orderField: 'REALNAME'}},
+                { field: 'validFrom',   title: '有效期自', width: '10%', sortable:true, params:{ orderField: 'VALID_FROM'}},
+                { field: 'validTo',     title: '有效期至', width: '10%', sortable:true, params:{ orderField: 'VALID_TO'}},
+                { field: 'locked',      title: '锁定状态', width: '10%', sortable:true, params:{ orderField: 'LOCKED'}, formatter: this.locked },
+                { field: 'updatedTime', title: '更新时间', width: '15%', sortable:true, params:{ orderField: 'UPDATED_TIME'}, formatter: 'nkDatetimeFriendly' },
+                {                       title: 'ACTION',
+                    slots: { default: ({row},h) => {
+                            return [h(
+                                'router-link',
+                                {
+                                    props:{to: `/apps/settings/auth/accounts/detail/${row.username}`}
+                                },
+                                "详情"
+                            )]
+                        }}
+                },
+            ];
+        }
+    },
+    methods:{
+        locked({row}){
+            return row.locked ? '锁定' : '';
+        },
+        search(params){
+            this.$http.post("/api/settings/auth/accounts/list",NkUtil.translateParamsToQueryString(params))
+                .then((res)=>{
+                    if(this.$refs.layout)
+                        this.$refs.layout.setData(res.data)
+                });
+        },
+        create(){
+            this.$router.push("/apps/settings/auth/accounts/create/@")
+        }
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

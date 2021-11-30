@@ -18,6 +18,9 @@ import NkSettingsAuthPerm from "./pages/NkSettingsAuthPerm";
 import NkSettingsAuthGroup from "./pages/NkSettingsAuthGroup";
 import NkSettingsMenus from "./pages/NkSettingsMenus";
 
+import NkSettingsAccounts from "./pages/NkSettingsAccounts";
+import NkSettingsAccountDetail from "./pages/NkSettingsAccountDetail";
+
 import NkPageDataTable from "./pages/NkPageDataTable";
 
 import {GridItem, GridLayout} from "vue-grid-layout";
@@ -85,6 +88,24 @@ const routes = [
             meta:{
               title: "用户组",
             }
+          },
+          {
+            name: "账号管理",
+            path: "accounts",
+            component: NkSettingsAccounts,
+            meta:{
+              title: "账号管理",
+            },
+            children:[
+              {
+                name: "账号详情",
+                path: ":mode/:username",
+                component: NkSettingsAccountDetail,
+                meta:{
+                  title: "账号详情",
+                }
+              }
+            ]
           }
         ]
       }
