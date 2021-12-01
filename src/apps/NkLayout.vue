@@ -9,11 +9,11 @@
                 <a-layout-header class="nk-layout-header">
                     <div>
                         <a-icon
-                            class="trigger"
+                            class="trigger nk-hover-primary-color"
                             :type="collapsed ? 'menu-unfold' : 'menu-fold'"
                             @click="() => (collapsed = !collapsed)"
                         ></a-icon>
-                        <span v-if="env" class="env trigger">{{env}}</span>
+                        <span v-if="env" class="env trigger nk-primary-color">{{env}}</span>
                     </div>
                     <div>
                     </div>
@@ -404,7 +404,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import './theme.less';
 
 ::v-deep.layout-spinning{
     & > div > .ant-spin{
@@ -441,12 +440,8 @@ export default {
         cursor: pointer;
         transition: color 0.3s;
     }
-    .trigger:hover {
-        color: #1890ff;
-    }
     .env{
         padding-left: 0;
-        color: @primary-color;
         user-select: none;
         cursor: default;
     }
