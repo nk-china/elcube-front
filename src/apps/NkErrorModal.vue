@@ -4,7 +4,7 @@
              :closable="false"
     >
         <span slot="title" class="title" style="display: flex;align-items: center;font-size: 16px;">
-            <a-icon type="close-circle" style="font-size: 22px;margin-right: 15px;"/>
+            <a-icon type="close-circle" class="nk-error-color" style="font-size: 22px;margin-right: 15px;"/>
             系统错误
         </span>
         <div v-for="(error,index) in errors" :key="index" class="line">
@@ -29,12 +29,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import "theme";
-.title{
-    i{
-        color: @error-color
-    }
-}
 .line + .line{
     margin-top: 15px;
 }
