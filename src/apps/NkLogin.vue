@@ -11,7 +11,6 @@
                                   { rules: [{ required: true, message: 'Please input your username!' }] },
                                 ]"
                             :placeholder="$t('username')"
-                            v-model="username"
                             @blur="usernameBlur"
                         >
                             <a-icon slot="prefix" type="user" style="color:rgba(0,0,0,.25)" />
@@ -25,7 +24,6 @@
                                 ]"
                             type="password"
                             :placeholder="$t('password')"
-                            v-model="password"
                         >
                             <a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" />
                         </a-input>
@@ -38,7 +36,6 @@
                                 ]"
                             type="text"
                             :placeholder="$t('verCode')"
-                            v-model="password"
                         >
                             <a-icon slot="prefix" type="safety-certificate" style="color:rgba(0,0,0,.25)" />
                             <img slot="addonAfter" :src="`/api/ver/code/${verKey}?${random}`" height="26" @click="random=new Date().getTime()">
@@ -73,10 +70,7 @@ export default {
             spinning:false,
             valid:false,
             error:undefined,
-            username:undefined,
-            password:undefined,
             verKey:undefined,
-            verCode:undefined,
             hasErrors,
             form: this.$form.createForm(this, { name: 'horizontal_login' }),
             random:'',
@@ -84,9 +78,6 @@ export default {
         }
     },
     mounted() {
-        this.$nextTick(() => {
-            this.form.validateFields();
-        });
         const l = document.getElementById("startup-loading");if(l)l.remove();
     },
     methods:{

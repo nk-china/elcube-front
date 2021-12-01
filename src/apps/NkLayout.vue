@@ -18,7 +18,7 @@
                     <div>
                     </div>
                     <div class="nk-user">
-                        <nk-debug-panel  style="margin-right: 20px;" />
+                        <nk-debug-panel v-if="hasAuthority('SYS:Debug')" style="margin-right: 20px;" />
                         <a-dropdown :trigger="['click']">
                             <div class="ant-dropdown-link" @click="e => e.preventDefault()" >
                                 <a-avatar class="a-avatar"  size="small">
@@ -188,7 +188,7 @@ export default {
     },
     methods:{
         ...mapMutations('User',[
-            'setUser','clearReLogin','submitLogin'
+            'setUser','clearReLogin','submitLogin','hasAuthority'
         ]),
         ...mapMutations('NkDoc',[
             'setLayoutConfig'
