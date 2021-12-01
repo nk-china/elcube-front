@@ -36,7 +36,7 @@
                 <vxe-table-column   title="权限" field="authority"                width="15%"/>
                 <!--                                <vxe-table-column   title="资源" field="permResource"             width="15%"/>-->
                 <!--                                <vxe-table-column   title="操作" field="permOperate"              width="15%"/>-->
-                <vxe-table-column   title="限制" field="limitIds"                 width="10%">
+                <vxe-table-column   title="数据限制" field="limitIds"                 width="10%">
                     <template v-slot="{ row }">
                         <span v-if="row.limits">
                             {{row.limits}}
@@ -46,7 +46,11 @@
                         </a>
                     </template>
                 </vxe-table-column>
-                <vxe-table-column   title="扩展属性" field="subResource"           width="50%"/>
+                <vxe-table-column   title="操作限制" field="subPerm"           width="30%">
+                    <template v-slot="{ row }">
+                        {{row.subPerm&&"有限制"}}
+                    </template>
+                </vxe-table-column>
                 <vxe-table-column   title="Level" field="level"                   width="10%">
                     <template v-slot="{ row }">
                         {{row.level.toString(16)}}
