@@ -19,7 +19,7 @@ import Data from './modules/dataengine'
         }]
     })
     .run({
-        appName: "Easis企业级快速开发模型",
+        appName: "EAsis企业级快速开发模型",
         logo:       undefined,
         loginPage:  undefined,
         defaultPage:undefined,
