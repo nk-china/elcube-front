@@ -38,7 +38,7 @@
 
 <script>
 import NkBpmnView from "./NkBpmnView";
-import {mapMutations} from "vuex";
+import {mapGetters} from "vuex";
 
 export default {
     components: {NkBpmnView},
@@ -55,14 +55,14 @@ export default {
         }
     },
     computed:{
+      ...mapGetters('User',[
+        'hasAuthority'
+      ]),
         buttonDisabled(){
             return this.editMode || !(this.completeTask.comment && this.completeTask.comment.replace(/\s/g,''));
         }
     },
     methods:{
-        ...mapMutations('User',[
-            'hasAuthority'
-        ]),
         completeTaskOk(transition){
             this.$emit("input",true);
             this.completeTask = Object.assign(this.completeTask,{taskId:this.task.id,transition});

@@ -183,7 +183,7 @@
 
 <script>
 import qs from 'qs'
-import {mapActions, mapMutations, mapState} from 'vuex';
+import {mapActions, mapGetters, mapState} from 'vuex';
 import NkCardBpmExecuter from "../../task/pages/NkCardBpmExecuter";
 
 export default {
@@ -218,6 +218,9 @@ export default {
         ...mapState('Debug',[
             'debugId'
         ]),
+      ...mapGetters('User',[
+        'hasAuthority'
+      ]),
         rightBar(){
             return !this.preview;
         },
@@ -305,9 +308,6 @@ export default {
         }
     },
     methods:{
-        ...mapMutations('User',[
-            'hasAuthority'
-        ]),
         ...mapActions('NkDoc',[
             'doSetDocumentPage'
         ]),

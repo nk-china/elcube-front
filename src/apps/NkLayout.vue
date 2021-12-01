@@ -160,7 +160,7 @@ export default {
             'reLoginMessage'
         ]),
         ...mapGetters('User',[
-            'user','reLogin','reLoginTime'
+            'user','reLogin','reLoginTime','hasAuthority'
         ]),
         logoutText(){
             if(this.reLoginTime)
@@ -188,7 +188,7 @@ export default {
     },
     methods:{
         ...mapMutations('User',[
-            'setUser','clearReLogin','submitLogin','hasAuthority'
+            'setUser','clearReLogin','submitLogin'
         ]),
         ...mapMutations('NkDoc',[
             'setLayoutConfig'
