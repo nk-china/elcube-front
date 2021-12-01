@@ -13,7 +13,7 @@
                             :type="collapsed ? 'menu-unfold' : 'menu-fold'"
                             @click="() => (collapsed = !collapsed)"
                         ></a-icon>
-                        <span v-if="env" class="trigger" style="padding-left: 0;color: #ff7e79;user-select: none;cursor: default;">{{env}}</span>
+                        <span v-if="env" class="env trigger">{{env}}</span>
                     </div>
                     <div>
                     </div>
@@ -404,6 +404,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import './theme.less';
 
 ::v-deep.layout-spinning{
     & > div > .ant-spin{
@@ -442,6 +443,12 @@ export default {
     }
     .trigger:hover {
         color: #1890ff;
+    }
+    .env{
+        padding-left: 0;
+        color: @primary-color;
+        user-select: none;
+        cursor: default;
     }
     /*菜单栏*/
     .nk-layout-sider{
@@ -489,6 +496,7 @@ export default {
         text-align: center;color:#999;
     }
 }
+
 </style>
 
 <docs>

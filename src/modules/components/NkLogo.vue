@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import logo from '../../assets/nk.logo.png'
+import logo from '../../assets/easis.logo.w.png'
 export default {
     data(){
         return {
@@ -25,7 +25,7 @@ export default {
     height: 48px;
 
     img{
-        width: 50px;
+        width: 94px;
         transition: 0.2s width;
     }
 }
