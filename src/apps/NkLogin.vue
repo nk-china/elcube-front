@@ -121,8 +121,13 @@ export default {
                 this.$http.instanceNone.get("/api/ver/has/"+this.form.getFieldValue("username"))
                     .then(res=>{
                         if(res.data){
-                            this.retryTimes = res.data;
-                            this.verKey = this.verKey||NkUtil.uuid();
+                            if(res.data.count){
+                                this.retryTimes = res.data.count;
+                                this.verKey = this.verKey||NkUtil.uuid();
+                                this.error = res.data.message && {data:res.data.message};
+                            }else{
+                                this.error = undefined;
+                            }
                         }
                     });
             }
