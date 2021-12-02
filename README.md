@@ -8,6 +8,9 @@ EAsis 名称是Easy Oasis两个单词的组合，表示着我们希望开发一�
 EAsis 遵照AGPL-3.0协议开放源代码，在遵照协议约束条件下，您可以自由传播和修改。
 协议原文见LICENSE文件，或查阅 http://www.gnu.org/licenses/agpl-3.0.html
 
+### 定制服务
+如果您有深度定制服务的需求，请联系 http://www.nkpro.cn/aboutUs?type=ContactUs
+
 ### 使用概要
 EAsis Front 为EAsis模型的WEB前端部分，需要配合EAsis的后端服务一起使用，相关参考内容随 EAsis后端 一起发布更新。
 
