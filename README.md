@@ -19,18 +19,26 @@ EAsis Front 为EAsis模型的WEB前端部分，需要配合EAsis的后端服务�
 
 [使用说明文档即将发布]
 
-### Project setup
+### 使用说明
 
 ```
-npm install
+yarn install
 ```
 
-#### Compiles and hot-reloads for development
+#### 编译本地运行
 ```
-npm run serve
+yarn run serve
 ```
 
-#### Compiles and minifies for production
+#### 编译发布生产
 ```
-npm run build
+yarn run build
 ```
+
+
+### 参与贡献
+
+1.  Fork 本仓库
+2.  新建 Feat_xxx 分支
+3.  提交代码
+4.  新建 Pull Request
