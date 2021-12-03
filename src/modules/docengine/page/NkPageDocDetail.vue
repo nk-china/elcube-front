@@ -37,6 +37,14 @@
         <div slot="top" v-else-if="this.debugId" class="alert">
             <a-alert message="请注意： 当前配置为调试模式，单据的保存操作不会持久化" type="warning" show-icon />
         </div>
+        <div v-if="this.editCheckFailed" slot="tips" class="alert" style="width:100%;margin-right: 10px;">
+            <a-alert :banner="true" type="error" show-icon >
+                <template slot="message">
+                    单据已于 {{this.editCheckState.updatedTime | nkDatetimeFriendly}} 被其他用户修改，
+                    <a @click="doEdit">点击这里</a> 重新加载单据
+                </template>
+            </a-alert>
+        </div>
 
         <div slot="content" style="min-height: 100px;">
             <template v-for="(c) in availableCards">
@@ -63,28 +71,39 @@
             <slot       v-if="!editMode" name="buttons"></slot>
 
             <!--编辑-->
-            <a-button   v-if="!editMode" :type="preview?'default':'primary'" :disabled="!docEditable" @click="nkEditModeChanged(true)">
+            <a-button   v-if="!editMode" :type="preview?'default':'primary'" :disabled="!docEditable" @click="doEdit">
                 <a-icon type="edit" />
             </a-button>
 
             <!--保存-->
             <template v-if="editMode">
-                <a-button type="primary" v-for="item in availablePrimaryStatus" :key="item.docState" @click="doSave(item.docState)">
+                <a-button type="primary"
+                          v-for="item in availablePrimaryStatus"
+                          :key="item.docState"
+                          @click="doSave(item.docState)"
+                          :disabled="editCheckFailed"
+                >
                     <a-icon type="step-forward" /> {{item.docStateDesc}}
                 </a-button>
-                <a-dropdown-button v-if="availableStatus.length" :type="availablePrimaryStatus.length?'default':'primary'" @click="doSave()" :trigger="['click']" :placement="placement">
+                <a-dropdown-button v-if="availableStatus.length"
+                                   :type="availablePrimaryStatus.length?'default':'primary'"
+                                   @click="doSave()"
+                                   :trigger="['click']"
+                                   :placement="placement"
+                                   :disabled="editCheckFailed">
                     <a-icon type="save" />
                     <a-icon slot="icon" type="step-forward" />
                     <a-icon slot="icon" type="ellipsis" />
                     <a-menu slot="overlay">
                         <a-menu-item key="" disabled style="font-size: 8px;padding: 1px 30px 1px 8px;cursor: default;">保存为：</a-menu-item>
                         <a-menu-divider />
-                        <a-menu-item v-for="item in availableStatus" :key="item.docState" @click="doSave(item.docState)">
+                        <a-menu-item v-for="item in availableStatus" :key="item.docState" @click="doSave(item.docState)"
+                                     :disabled="editCheckFailed">
                             <a-icon type="step-forward" /> {{item.operatorName || item.docStateDesc}}
                         </a-menu-item>
                     </a-menu>
                 </a-dropdown-button>
-                <a-button v-else @click="doSave()" :type="availablePrimaryStatus.length?'default':'primary'">
+                <a-button v-else @click="doSave()" :type="availablePrimaryStatus.length?'default':'primary'" :disabled="editCheckFailed">
                     <a-icon type="save" />
                 </a-button>
             </template>
@@ -221,6 +240,10 @@ export default {
             docStateTemp:undefined,
 
             histories : undefined,
+
+            editCheckTimer: undefined,
+            editCheckState: undefined,
+            editCheckFailed: false,
         }
     },
 
@@ -368,6 +391,28 @@ export default {
                     });
             }
         },
+        doEdit(){
+            this.clearCheckTimer();
+            this.loading = true;
+            this.$http.get("/api/doc/detail/"+this.contextParams.docId+"?edit=true")
+                .then(response=>{
+                    this.doc = response.data;
+                    this.nkEditModeChanged(true);
+                    this.$emit('setTab',this.doc.docName||'未命名单据');
+                    this.loading = false
+
+                    this.editCheckTimer = setInterval(()=>{
+                        this.$http.get("/api/doc/state/"+this.doc.docId)
+                            .then(res=>{
+                                this.editCheckState = res.data;
+                                this.editCheckFailed = this.editCheckState.identification !== this.doc.identification;
+                                if(this.editCheckFailed){
+                                    clearInterval(this.editCheckTimer)
+                                }
+                            });
+                    },10*1000);
+                });
+        },
         async doSave(state) {
 
             if (this.$refs.components) {
@@ -441,6 +486,7 @@ export default {
                         this.histories = undefined;
                         this.loading = false;
                     }
+                    this.clearCheckTimer()
                 })
                 .catch(() => {
                     this.loading = false;
@@ -512,6 +558,7 @@ export default {
                 this.initData();
             }
             this.histories=undefined;
+            this.clearCheckTimer()
         },
         toCreateDoc(defDoc){
             this.$router.push({
@@ -537,7 +584,18 @@ export default {
         },
         buildAnchorLink(component){
             return this.doc.docId + '-' + component;
+        },
+        clearCheckTimer(){
+            if(this.editCheckTimer){
+                clearInterval(this.editCheckTimer);
+                this.editCheckTimer = undefined;
+                this.editCheckState = undefined;
+                this.editCheckFailed = false;
+            }
         }
+    },
+    beforeDestroy() {
+        this.clearCheckTimer();
     }
 }
 </script>
@@ -574,6 +632,6 @@ export default {
     background-color: #fffbe6;
 }
 .alert{
-    padding: 10px 10px 0 10px;
+    //padding: 10px 22px 0;
 }
 </style>

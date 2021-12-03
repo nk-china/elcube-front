@@ -20,13 +20,15 @@
     <a-spin class="nk-page-layout" :spinning="spinning">
         <div class="nk-page-layout-header">
             <slot name="top"></slot>
+            <slot name="tips"></slot>
             <nk-sticky :stickyTop="-10" :z-index="11">
-                <div class="nk-page-layout-stick" :class="{'show-right':headerIndent && rightBar}" style="padding-top: 20px;">
-                    <div>
+                <div class="nk-page-layout-stick" :class="{'show-right':headerIndent && rightBar}" style="padding-top: 20px;align-items: center;">
+                    <div style="flex-shrink: 0">
                         <span class="ant-page-header-heading-title">{{title}}</span>
                         <span class="ant-page-header-heading-sub-title">{{subTitle}}</span>
                     </div>
-                    <slot name="action"></slot>
+                    <slot name="tips"></slot>
+                    <slot name="action" style="flex-shrink: 0;padding-left: 10px;"></slot>
                 </div>
             </nk-sticky>
             <slot name="custom"></slot>
