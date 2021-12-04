@@ -140,6 +140,9 @@ export default {
                 return JSON.stringify(JSON.parse(value));
             }catch (e){
                 if(typeof value==='string'){
+                    if(value.startsWith('{')&&value.endsWith('}')){
+                        return value;
+                    }
                     try{
                         JSON.stringify(JSON.parse(`"${value}"`));
                         return value;

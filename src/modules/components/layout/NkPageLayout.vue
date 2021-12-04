@@ -1,8 +1,3 @@
-
-<!-- 基本布局 -->
-
-
-
 <!--
 	This file is part of EAsis.
 	EAsis is free software: you can redistribute it and/or modify
