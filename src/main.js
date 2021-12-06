@@ -1,28 +1,28 @@
 /*
- * 	This file is part of EAsis.
- *	EAsis is free software: you can redistribute it and/or modify
+ * 	This file is part of ELCard.
+ *	ELCard is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU Affero General Public License as published by
  *	the Free Software Foundation, either version 3 of the License, or
  *	(at your option) any later version.
- *	EAsis is distributed in the hope that it will be useful,
+ *	ELCard is distributed in the hope that it will be useful,
  *	but WITHOUT ANY WARRANTY; without even the implied warranty of
  *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *	GNU Affero General Public License for more details.
  *	You should have received a copy of the GNU Affero General Public License
- *	along with EAsis.  If not, see <https://www.gnu.org/licenses/>.
+ *	along with ELCard.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import './apps/theme.less';
 import './apps/theme.scss';
 import "./apps/less/datav.theme.nk1.less";
 
-import Easis  from './apps'
+import ELCard  from './apps'
 import Doc  from './modules/docengine'
 import Task from './modules/task'
 import Data from './modules/dataengine'
 
 
- Easis.use(Doc)
+ELCard.use(Doc)
     .use(Task)
     .use(Data,{
         themes:[{
@@ -32,7 +32,7 @@ import Data from './modules/dataengine'
         }]
     })
     .run({
-        appName: "EAsis企业级快速开发模型",
+        appName: "ELCard企业级快速开发模型",
         logo:       undefined,
         loginPage:  undefined,
         defaultPage:undefined,

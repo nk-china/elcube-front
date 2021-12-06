@@ -1,6 +1,6 @@
 
 
-欢迎使用Easis
+欢迎使用ELCard
 
 [用户手册](nkdn://user)
 
