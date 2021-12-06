@@ -16,9 +16,9 @@ EAsis Front 为EAsis模型的WEB前端部分，需要配合EAsis的后端服务�
 
 相关链接：
 
-[EAsis Backend Gitee仓库](https://gitee.com/newcorenet/easis-backend)
+[EAsis Backend Gitee仓库](https://gitee.com/newcorenet/elcard-backend)
 
-[EAsis Backend Github仓库](https://github.com/nk-china/easis-backend)
+[EAsis Backend Github仓库](https://github.com/nk-china/elcard-backend)
 
 [使用说明文档即将发布]
 

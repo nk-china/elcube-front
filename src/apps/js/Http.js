@@ -32,7 +32,7 @@ export default (Vue) => {
   // 设置请求头
   let onRequestNoneToken = config => {
     if(StateDebug.state.debugId){ config.headers.common['NK-Debug'] = StateDebug.state.debugId; }
-    config.headers.common['NK-App']   = 'easis';
+    config.headers.common['NK-App']   = 'elcard';
     return Promise.resolve(config)
   };
   const onRequestFulfilled = config => {
@@ -58,7 +58,7 @@ export default (Vue) => {
       axios.post("/api/debug/log/"+logId,{},{
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
-          'NK-App': 'easis',
+          'NK-App': 'elcard',
           'NK-Token': AuthUtils.getToken()
         }
       }).then(log=>{
@@ -195,7 +195,7 @@ export default (Vue) => {
       axios.post("/api/authentication/refresh_token",{},{
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
-          'NK-App': 'easis',
+          'NK-App': 'elcard',
           'NK-Token': AuthUtils.getToken()
         }
       }).then(res=>{
@@ -241,7 +241,7 @@ export default (Vue) => {
         verCode,
       }),{
         headers: {
-          'NK-App': 'easis',
+          'NK-App': 'elcard',
         }
       }).then(res=>{
         User.state.reLogin=false;
@@ -260,7 +260,7 @@ export default (Vue) => {
       axios.post("/api/authentication/clear",{},{
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
-          'NK-App': 'easis',
+          'NK-App': 'elcard',
           'NK-Token': AuthUtils.getToken()
         }
       })

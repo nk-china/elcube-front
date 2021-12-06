@@ -22,7 +22,7 @@
                 v-if="login"
                 name="file"
                 :multiple="false"
-                accept=".ts5,.easis"
+                accept=".ts5,.easis,.elcard"
                 :before-upload="upload"
             >
                 <a-button v-if="login" :disabled="!!debugId"> <a-icon type="upload" /> Click to Upload </a-button>
@@ -145,7 +145,7 @@
 
                         let fileName = response.headers["content-disposition"].split(";")
                             .find(e=>e.trim().startsWith('filename='));
-                        fileName = (fileName&&fileName.split('=')[1].replace(/[\\"]/g,''))||'export.easis';
+                        fileName = (fileName&&fileName.split('=')[1].replace(/[\\"]/g,''))||'export.elcard';
 
                         const blob = new Blob([response.data], { type: "csv/plain" });
                         const reader = new FileReader();
@@ -165,7 +165,7 @@
             upload(file){
                 let that = this;
                 const suffix = file.name.substr(file.name.lastIndexOf('.') + 1);
-                if (suffix === 'ts5' || suffix === 'easis') {
+                if (suffix === 'ts5' || suffix === 'easis' || suffix === 'elcard') {
                     this.$confirm({
                         title: '确认导入？',
                         content: file.name,
@@ -196,7 +196,7 @@
                 const file = e.target.files[0];
                 e.target.value = "";
                 const suffix = file.name.substr(file.name.lastIndexOf('.') + 1);
-                if (suffix === 'ts5' || suffix === 'easis') {
+                if (suffix === 'ts5' || suffix === 'easis' || suffix === 'elcard') {
                     this.$confirm({
                         title: '是否导入此配置内容？',
                         content: file.name,

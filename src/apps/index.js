@@ -154,7 +154,7 @@ const run = (options)=>{
         'nk-ts5-platform' : sfc,
         'nk-ts5-kernel'   : sfc,
         'nk'              : sfc,
-        'easis'           : sfc,
+        'elcard'          : sfc,
 
         ...sfc,
         ...globalOptions.sfc

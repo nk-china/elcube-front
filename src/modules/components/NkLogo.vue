@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import logo from '../../assets/easis.logo.w.png'
+import logo from '../../assets/elcard.logo.w.png'
 export default {
     data(){
         return {

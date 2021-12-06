@@ -24,7 +24,7 @@ export default {
             helperVisible:false
         },
         helperConfig: {
-            markdown: '# hello [Easis](http://easis.nkpro.cn)'
+            markdown: '# hello [ELCard](http://elcard.nkpro.cn)'
         }
     },
     mutations: {
