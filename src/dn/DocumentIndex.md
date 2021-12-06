@@ -1,6 +1,6 @@
 
 
-欢迎使用ELCard
+欢迎使用ELCube
 
 [用户手册](nkdn://user)
 

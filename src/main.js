@@ -1,28 +1,28 @@
 /*
- * 	This file is part of ELCard.
- *	ELCard is free software: you can redistribute it and/or modify
+ * 	This file is part of ELCube.
+ *	ELCube is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU Affero General Public License as published by
  *	the Free Software Foundation, either version 3 of the License, or
  *	(at your option) any later version.
- *	ELCard is distributed in the hope that it will be useful,
+ *	ELCube is distributed in the hope that it will be useful,
  *	but WITHOUT ANY WARRANTY; without even the implied warranty of
  *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *	GNU Affero General Public License for more details.
  *	You should have received a copy of the GNU Affero General Public License
- *	along with ELCard.  If not, see <https://www.gnu.org/licenses/>.
+ *	along with ELCube.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 import './apps/theme.less';
 import './apps/theme.scss';
 import "./apps/less/datav.theme.nk1.less";
 
-import ELCard  from './apps'
+import ELCube  from './apps'
 import Doc  from './modules/docengine'
 import Task from './modules/task'
 import Data from './modules/dataengine'
 
 
-ELCard.use(Doc)
+ELCube.use(Doc)
     .use(Task)
     .use(Data,{
         themes:[{
@@ -32,7 +32,7 @@ ELCard.use(Doc)
         }]
     })
     .run({
-        appName: "ELCard企业级快速开发模型",
+        appName: "ELCube企业级快速开发模型",
         logo:       undefined,
         loginPage:  undefined,
         defaultPage:undefined,

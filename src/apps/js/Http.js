@@ -1,15 +1,15 @@
 /*
- * 	This file is part of ELCard.
- *	ELCard is free software: you can redistribute it and/or modify
+ * 	This file is part of ELCube.
+ *	ELCube is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU Affero General Public License as published by
  *	the Free Software Foundation, either version 3 of the License, or
  *	(at your option) any later version.
- *	ELCard is distributed in the hope that it will be useful,
+ *	ELCube is distributed in the hope that it will be useful,
  *	but WITHOUT ANY WARRANTY; without even the implied warranty of
  *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *	GNU Affero General Public License for more details.
  *	You should have received a copy of the GNU Affero General Public License
- *	along with ELCard.  If not, see <https://www.gnu.org/licenses/>.
+ *	along with ELCube.  If not, see <https://www.gnu.org/licenses/>.
  */
 import axios from 'axios'
 import qs from 'qs'
@@ -32,7 +32,7 @@ export default (Vue) => {
   // 设置请求头
   let onRequestNoneToken = config => {
     if(StateDebug.state.debugId){ config.headers.common['NK-Debug'] = StateDebug.state.debugId; }
-    config.headers.common['NK-App']   = 'elcard';
+    config.headers.common['NK-App']   = 'elcube';
     return Promise.resolve(config)
   };
   const onRequestFulfilled = config => {
@@ -58,7 +58,7 @@ export default (Vue) => {
       axios.post("/api/debug/log/"+logId,{},{
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
-          'NK-App': 'elcard',
+          'NK-App': 'elcube',
           'NK-Token': AuthUtils.getToken()
         }
       }).then(log=>{
@@ -195,7 +195,7 @@ export default (Vue) => {
       axios.post("/api/authentication/refresh_token",{},{
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
-          'NK-App': 'elcard',
+          'NK-App': 'elcube',
           'NK-Token': AuthUtils.getToken()
         }
       }).then(res=>{
@@ -241,7 +241,7 @@ export default (Vue) => {
         verCode,
       }),{
         headers: {
-          'NK-App': 'elcard',
+          'NK-App': 'elcube',
         }
       }).then(res=>{
         User.state.reLogin=false;
@@ -260,7 +260,7 @@ export default (Vue) => {
       axios.post("/api/authentication/clear",{},{
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
-          'NK-App': 'elcard',
+          'NK-App': 'elcube',
           'NK-Token': AuthUtils.getToken()
         }
       })

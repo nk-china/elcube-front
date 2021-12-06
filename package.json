@@ -1,19 +1,19 @@
 {
-  "name": "elcard",
+  "name": "clcube",
   "version": "2.1.4-1",
   "private": false,
   "author": "Bean / nkpro.cn <mailxbs@126.com>",
   "files": [
     "dist"
   ],
-  "main": "dist/elcard.umd.js",
+  "main": "dist/elcube.umd.js",
   "scripts": {
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "dev": "vue-cli-service serve",
     "dev-sflc": "vue-cli-service serve --mode sflc",
     "dev-citic": "vue-cli-service serve --mode citic",
-    "package": "vue-cli-service build --target lib --name elcard --dest dist src/apps/index.js",
+    "package": "vue-cli-service build --target lib --name elcube --dest dist src/apps/index.js",
     "package-module-doc": "vue-cli-service build --no-clean --target lib --name index --dest dist/module-docengine src/modules/docengine/index.js",
     "package-module-task": "vue-cli-service build --no-clean --target lib --name index --dest dist/module-task src/modules/task/index.js",
     "package-module-dataengine": "vue-cli-service build --no-clean --target lib --name index --dest dist/module-dataengine src/modules/dataengine/index.js",

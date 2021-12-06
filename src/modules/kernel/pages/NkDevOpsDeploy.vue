@@ -1,15 +1,15 @@
 <!--
-	This file is part of ELCard.
-	ELCard is free software: you can redistribute it and/or modify
+	This file is part of ELCube.
+	ELCube is free software: you can redistribute it and/or modify
 	it under the terms of the GNU Affero General Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
-	ELCard is distributed in the hope that it will be useful,
+	ELCube is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU Affero General Public License for more details.
 	You should have received a copy of the GNU Affero General Public License
-	along with ELCard.  If not, see <https://www.gnu.org/licenses/>.
+	along with ELCube.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <template>
     <nk-page-layout title="部署" sub-title="导入或导出配置文件" :spinning="loading">
@@ -22,7 +22,7 @@
                 v-if="login"
                 name="file"
                 :multiple="false"
-                accept=".ts5,.easis,.elcard"
+                accept=".ts5,.easis,.elcube"
                 :before-upload="upload"
             >
                 <a-button v-if="login" :disabled="!!debugId"> <a-icon type="upload" /> Click to Upload </a-button>
@@ -145,7 +145,7 @@
 
                         let fileName = response.headers["content-disposition"].split(";")
                             .find(e=>e.trim().startsWith('filename='));
-                        fileName = (fileName&&fileName.split('=')[1].replace(/[\\"]/g,''))||'export.elcard';
+                        fileName = (fileName&&fileName.split('=')[1].replace(/[\\"]/g,''))||'export.elcube';
 
                         const blob = new Blob([response.data], { type: "csv/plain" });
                         const reader = new FileReader();
@@ -165,7 +165,7 @@
             upload(file){
                 let that = this;
                 const suffix = file.name.substr(file.name.lastIndexOf('.') + 1);
-                if (suffix === 'ts5' || suffix === 'easis' || suffix === 'elcard') {
+                if (suffix === 'ts5' || suffix === 'easis' || suffix === 'elcube') {
                     this.$confirm({
                         title: '确认导入？',
                         content: file.name,
@@ -196,7 +196,7 @@
                 const file = e.target.files[0];
                 e.target.value = "";
                 const suffix = file.name.substr(file.name.lastIndexOf('.') + 1);
-                if (suffix === 'ts5' || suffix === 'easis' || suffix === 'elcard') {
+                if (suffix === 'ts5' || suffix === 'easis' || suffix === 'elcube') {
                     this.$confirm({
                         title: '是否导入此配置内容？',
                         content: file.name,
