@@ -1,24 +1,24 @@
-# EAsis 企业级快速开发模型
+# ELCube 企业级快速开发模型
 
-EAsis 名称是Easy Oasis两个单词的组合，表示着我们希望开发一套快速、
+ELCube 名称是Easy Oasis两个单词的组合，表示着我们希望开发一套快速、
 容易的企业级模型方案，让所有企业级信息化实施的程序员可以走出困境，
 享受绿洲下的新鲜空气
 
 ### 权利声明
-EAsis 遵照AGPL-3.0协议开放源代码，在遵照协议约束条件下，您可以自由传播和修改。
+ELCube 遵照AGPL-3.0协议开放源代码，在遵照协议约束条件下，您可以自由传播和修改。
 协议原文见LICENSE文件，或查阅 http://www.gnu.org/licenses/agpl-3.0.html
 
 ### 定制服务
 如果您有深度定制服务的需求，请联系 http://www.nkpro.cn/aboutUs?type=ContactUs
 
 ### 使用概要
-EAsis Front 为EAsis模型的WEB前端部分，需要配合EAsis的后端服务一起使用，相关参考内容随 EAsis后端 一起发布更新。
+ELCube Front 为ELCube模型的WEB前端部分，需要配合ELCube的后端服务一起使用，相关参考内容随 ELCube后端 一起发布更新。
 
 相关链接：
 
-[EAsis Backend Gitee仓库](https://gitee.com/newcorenet/elcube-backend)
+[ELCube Backend Gitee仓库](https://gitee.com/newcorenet/elcube-backend)
 
-[EAsis Backend Github仓库](https://github.com/nk-china/elcube-backend)
+[ELCube Backend Github仓库](https://github.com/nk-china/elcube-backend)
 
 [使用说明文档即将发布]
 
