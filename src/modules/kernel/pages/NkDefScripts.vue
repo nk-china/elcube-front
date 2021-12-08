@@ -110,7 +110,7 @@ export default {
                 });
         },
         create(){
-            this.$router.push("/apps/def/script/create")
+            this.$router.push("/apps/def/component/create")
         }
     }
 }
