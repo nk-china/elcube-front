@@ -540,14 +540,16 @@ export default {
             this.$refs.components&&this.$refs.components.forEach(c=>c.docUpdate&&c.docUpdate(e));
         },
         nkEditModeChanged(editMode){
-            this.editMode = editMode;
-            this.$emit("editModeChanged",this.editMode);
-            this.$nextTick(()=>{
-                this.$refs.components&&this.$refs.components.forEach(c=> {
-                    c.docEditModeChanged && c.docEditModeChanged(this.editMode);
-                    c.nk$editModeChanged && c.nk$editModeChanged(this.editMode);
+            if(this.editMode!==editMode){
+                this.editMode = editMode;
+                this.$emit("editModeChanged",this.editMode);
+                this.$nextTick(()=>{
+                    this.$refs.components&&this.$refs.components.forEach(c=> {
+                        c.docEditModeChanged && c.docEditModeChanged(this.editMode);
+                        c.nk$editModeChanged && c.nk$editModeChanged(this.editMode);
+                    });
                 });
-            });
+            }
         },
         cancel(){
             if(this.contextParams.mode==='create') {
