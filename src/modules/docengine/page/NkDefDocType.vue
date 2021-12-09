@@ -363,7 +363,7 @@ export default {
         },
         doDelete(force){
             this.loading = true;
-            this.$http.postJSON(`/api/def/doc/type/delete${force&&'?force=true'}`,this.def)
+            this.$http.postJSON(`/api/def/doc/type/delete${force&&'?force=true'||''}`,this.def)
                 .then(()=>{
                     this.$emit("close");
                 })
