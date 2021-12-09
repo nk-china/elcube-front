@@ -111,10 +111,6 @@
                             {{row.spELContent}}
                             <nk-sp-el-editor slot="edit" v-model="row.spELContent"></nk-sp-el-editor>
                         </nk-form-item>
-                        <nk-form-item title="写入索引">
-                            {{row.indexName}}
-                            <a-input slot="edit" size="small" v-model="row.indexName"></a-input>
-                        </nk-form-item>
                     </nk-form>
                     <component v-if="row===activeRow && fieldDefComponent"
                                :is="fieldDefComponent"
