@@ -48,7 +48,7 @@ export default {
         }else if(this.processDefinitionId){
             this.$http.get("/api/def/bpm/process/definition/detail?definitionId="+this.processDefinitionId)
                 .then(response=>{
-                    this.bpmnXml = response.data.bpmnXml;
+                    this.bpmnXml = response.data.bpmnXml||response.data.xml;
                     this.$nextTick().then(this.render);
                 });
         }
