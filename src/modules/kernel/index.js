@@ -15,6 +15,7 @@
 
 import NkSpELEditor from "./components/NkSpELEditor";
 import NkSpELTemplateEditor from "./components/NkSpELTemplateEditor";
+import NkSpELView from "./components/NkSpELView";
 
 import NkDashboardHello from "./components/NkDashboardHello";
 import NkDashboardLost from "./components/NkDashboardLost";
@@ -46,8 +47,9 @@ const install = function (Vue) {
   Vue.component("nk-dashboard-hello",         NkDashboardHello);
   Vue.component("nk-dashboard-lost",          NkDashboardLost);
 
-  Vue.component('nk-sp-el-editor',NkSpELEditor);
-  Vue.component('nk-sp-el-template-editor',NkSpELTemplateEditor);
+  Vue.component('nk-sp-el-editor',            NkSpELEditor);
+  Vue.component('nk-sp-el-template-editor',   NkSpELTemplateEditor);
+  Vue.component('nk-sp-el-view',              NkSpELView);
 };
 
 const routes = [
