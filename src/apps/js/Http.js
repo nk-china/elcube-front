@@ -111,6 +111,18 @@ export default (Vue) => {
     },1000)
   }
 
+  const onDebugContextNotFound = () => {
+    StateDebug.mutations.suspendDebug(StateDebug.state);
+    Vue.prototype.$error({
+      centered: true,
+      title: '系统错误',
+      content: '当前调试上下文不存在，系统将以普通模式重新载入',
+      onOk() {
+        location.reload();
+      },
+    });
+  }
+
   // 没有权限，拒绝访问
   const onForbiddenError = error => {
     Vue.prototype.$error({
@@ -133,6 +145,7 @@ export default (Vue) => {
   let onResponseError = error => {
     if(      error.response.status >=  500 &&
              error.response.status <   600) { return onSystemError(error);
+    }else if(error.response.status === 701) { return onDebugContextNotFound(error);
     }else if(error.response.status === 401) { return onUnauthorizedError(error);
     }else if(error.response.status === 403) { return onForbiddenError(error);
     }else if(error.response.status === 400) { return onCaution(error);
