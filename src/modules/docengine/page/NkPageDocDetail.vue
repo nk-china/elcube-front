@@ -509,7 +509,9 @@ export default {
                 this.$http.get(`/api/doc/exists/${this.doc.docId}`)
                     .then((res)=>{
                         if(res.data===true){
-                            this.$emit('replace', `/apps/docs/detail/${this.doc.docId}`);
+                            setTimeout(() => {
+                                this.$emit('replace', `/apps/docs/detail/${this.doc.docId}`);
+                            },100);
                         }else{
                             this.waitDocIndexed(++retry);
                         }
