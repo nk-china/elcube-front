@@ -15,12 +15,13 @@
     <div class="nk-application-logo">
         <a href="http://www.nkpro.cn" target="_blank">
             <img :src="logo" alt=""/>
+            <span>ELCube</span>
         </a>
     </div>
 </template>
 
 <script>
-import logo from '../../assets/elcube.logo.w.png'
+import logo from '../../assets/elcube_logo_100x100.png'
 export default {
     data(){
         return {
@@ -37,9 +38,21 @@ export default {
     text-align: center;
     height: 48px;
 
+    a{
+        display: flex;
+        justify-content: center;
+    }
+
     img{
-        width: 94px;
+        width: 36px;
+        height: 36px;
         transition: 0.2s width;
+    }
+    span{
+        color: white;
+        font-size: 26px;
+        transition: 0.2s width;
+        padding-left: 5px;
     }
 }
 .ant-layout-sider-collapsed{
@@ -47,6 +60,10 @@ export default {
         height: 30px;
         img{
             width: 30px;
+            height: 30px;
+        }
+        span{
+            display: none;
         }
     }
 }
