@@ -31,7 +31,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .nk-application-logo {
     user-select: none;
     margin: 16px;
