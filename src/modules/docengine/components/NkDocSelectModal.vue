@@ -12,7 +12,7 @@
 	along with ELCube.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <template>
-    <a-modal v-model="visible" :title="modal.title" :width="modal.width" centered>
+    <a-modal v-model="visible" :title="modal.title" :width="modal.width" centered :getContainer="getContainer">
         <div slot="footer">
             <a-button @click="visible=false">取消</a-button>
         </div>
@@ -66,6 +66,7 @@ export default {
     name: "NkModalSelector",
     props:{
         value:Boolean,
+        getContainer:Function,
         modal:{
             type:Object,
             default(){
