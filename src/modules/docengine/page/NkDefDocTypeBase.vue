@@ -58,9 +58,24 @@
                 {{docDef.businessKeySpEL}}
                 <nk-sp-el-editor slot="edit" v-model="docDef.businessKeySpEL" style="width: 280px;"></nk-sp-el-editor>
             </nk-form-item>
-            <nk-form-item term="开发">Bean</nk-form-item>
-            <nk-form-item term="修订">Bean</nk-form-item>
-            <nk-form-item term="更新时间">{{docDef.updatedTime | nkDatetimeFriendly}}</nk-form-item>
+            <nk-form-item term="版本描述">
+                {{docDef.versionDesc}}
+                <a-textarea slot="edit" v-model="docDef.versionDesc" style="width: 280px;"></a-textarea>
+            </nk-form-item>
+            <nk-form-item term="创建">
+                {{docDef.createdTime | nkDatetimeFriendly}}
+                {{docDef.createdAccount && '|'}}
+                <router-link :to="`/apps/settings/auth/accounts/detail/${docDef.createdAccount}`">
+                    {{docDef.createdAccount}}
+                </router-link>
+            </nk-form-item>
+            <nk-form-item term="更新">
+                {{docDef.updatedTime | nkDatetimeFriendly}}
+                {{docDef.updatedAccount && '|'}}
+                <router-link :to="`/apps/settings/auth/accounts/detail/${docDef.updatedAccount}`">
+                    {{docDef.updatedAccount}}
+                </router-link>
+            </nk-form-item>
             <nk-form-item term="版本">{{docDef.version}}</nk-form-item>
             <nk-form-item term="状态">{{docDef.state}}</nk-form-item>
         </nk-form>
