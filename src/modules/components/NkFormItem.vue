@@ -21,7 +21,7 @@
         <div class="content" :class="termClass+(errorMsg?' has-error':'')" :style="{'max-width': 'calc(100% - '+width+'px)'}">
             <slot v-if="!editMode"></slot>
             <slot v-if="editMode" name="edit"></slot>
-            <div v-if="errorMsg" class="ant-form-explain">{{errorMsg}}</div>
+            <div v-if="editMode && errorMsg" class="ant-form-explain">{{errorMsg}}</div>
         </div>
     </div>
 </template>
@@ -115,6 +115,8 @@ export default {
         }
     },
     methods:{
+
+
 
         checkError(){
 
