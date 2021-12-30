@@ -13,7 +13,7 @@
 -->
 <template>
     <div class="nk-application-logo">
-        <a href="http://www.nkpro.cn" target="_blank">
+        <a href="http://elcube.cn" target="_blank">
             <img :src="logo" alt=""/>
             <span>ELCube</span>
         </a>
