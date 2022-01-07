@@ -75,16 +75,20 @@
                 <a-icon type="edit" />
             </a-button>
 
-            <!--保存-->
-            <template v-if="editMode">
-                <a-button type="primary"
-                          v-for="item in availablePrimaryStatus"
+            <a-popconfirm v-for="item in availablePrimaryStatus"
                           :key="item.docState"
-                          @click="doSave(item.docState)"
+                          :title="`确定${item.docStateDesc}?`"
+                          @confirm="doSave(item.docState)"
+                >
+                <a-button type="primary"
                           :disabled="editCheckFailed"
                 >
                     <a-icon type="step-forward" /> {{item.docStateDesc}}
                 </a-button>
+            </a-popconfirm>
+
+            <!--保存-->
+            <template v-if="editMode">
                 <a-dropdown-button v-if="availableStatus.length"
                                    :type="availablePrimaryStatus.length?'default':'primary'"
                                    @click="doSave()"
@@ -324,14 +328,14 @@ export default {
         },
         availableStatus(){
             return this.doc.def && this.doc.def.status.filter(
-                state => (state.preDocState === this.doc.docState)
+                state => state.visible && (state.preDocState === this.doc.docState)
                     && !state.displayPrimary
             );
         },
         availablePrimaryStatus(){
             return this.doc.def && this.doc.def.status.filter(
-                state => (state.preDocState === this.doc.docState)
-                    && state.displayPrimary
+                state => state.visible && (state.preDocState === this.doc.docState)
+                    && ((state.displayPrimary && this.statusEditable) || this.statusEditOnly)
             );
         },
         contextParams(){

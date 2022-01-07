@@ -1,6 +1,6 @@
 {
   "name": "elcube",
-  "version": "2.1.4-1",
+  "version": "2.1.6",
   "private": false,
   "author": "Bean / nkpro.cn <mailxbs@126.com>",
   "files": [
@@ -8,11 +8,10 @@
   ],
   "main": "dist/elcube.umd.js",
   "scripts": {
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --mode build",
     "lint": "vue-cli-service lint",
     "dev": "vue-cli-service serve",
-    "dev-sflc": "vue-cli-service serve --mode sflc",
-    "dev-citic": "vue-cli-service serve --mode citic",
+    "dev-remote": "vue-cli-service serve --mode remote",
     "package": "vue-cli-service build --target lib --name elcube --dest dist src/apps/index.js",
     "package-module-doc": "vue-cli-service build --no-clean --target lib --name index --dest dist/module-docengine src/modules/docengine/index.js",
     "package-module-task": "vue-cli-service build --no-clean --target lib --name index --dest dist/module-task src/modules/task/index.js",

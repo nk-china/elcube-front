@@ -89,12 +89,18 @@
                     <div slot="header">
                         版本记录
                     </div>
+                    <div v-if="historiesMore" slot="footer" style="text-align: center;color: #999;cursor: pointer;" @click="loadHistories">
+                        加载更多...
+                    </div>
                     <a-list-item slot="renderItem"
                                  slot-scope="i"
-                                 :class="{active:i.version===def.version}"
+                                 :class="{'history-item':true,active:i.version===def.version}"
                                  @click="toVersion(i)">
-                            <span>{{i.version | formatVersion}}</span>
-                            <a-tag>{{i.state}}</a-tag>
+                            <div>
+                                <span>{{i.version | formatVersion}}</span>
+                                <a-tag>{{i.state}}</a-tag>
+                            </div>
+                            <p v-if="i.versionDesc">{{i.versionDesc}}</p>
                     </a-list-item>
                 </a-list>
             </a-layout-sider>
@@ -250,6 +256,7 @@ export default {
             routeParams: {},
             routeQueries:{},
             histories:[],
+            historiesMore:true,
             options:{},
             selected: {},
             cards:[{
@@ -322,6 +329,7 @@ export default {
                 }else{
                     this.def = res[1].data;
                     this.histories = res[2].data;
+                    this.historiesMore = res[2].data.length === 10;
                     this.editMode = this.def.state === 'InActive' || this.editMode;
                     this.$emit('setTab',`单据类型:${this.def.docType}`);
                 }
@@ -459,6 +467,14 @@ export default {
                     this.createRandomLoading = false;
                 });
         },
+        loadHistories(){
+            let page = Math.ceil(this.histories.length / 10);
+            this.$http.get(`/api/def/doc/type/list/${this.routeParams.type}/${page + 1}`)
+                .then(res=>{
+                    this.histories.push.apply(this.histories, res.data)
+                    this.historiesMore = res.data.length === 10;
+                });
+        },
         handleMenuClick({key}){
             switch (key){
                 case "doDelete":this.doDelete();break;
@@ -485,8 +501,25 @@ export default {
             padding: 1px;
         }
     }
-    .active{
-        color: #1890ff;
+    .history-item{
+        display: block;
+        cursor: pointer;
+        & > div{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        &.active{
+            div{
+                color: #1890ff;
+            }
+        }
+        p{
+            margin: 5px 0 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 
 </style>
