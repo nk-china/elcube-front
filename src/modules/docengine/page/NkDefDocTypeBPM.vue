@@ -13,7 +13,7 @@
 -->
 <template>
     <nk-card :title="`审批流配置`">
-        <nk-form ref="formBPM" size="small" :col="1" :edit="editMode" style="width:500px;">
+<!--        <nk-form ref="formBPM" size="small" :col="1" :edit="editMode" style="width:500px;">
 
             <nk-form-item term="流程定义" :validateFor="bpm.processKey">
                 {{bpm.processKey}}
@@ -27,13 +27,51 @@
                 {{bpm.rollbackTo}}
                 <a-input size="small" v-model="bpm.rollbackTo" slot="edit" allowClear></a-input>
             </nk-form-item>
-        </nk-form>
+        </nk-form>-->
+
+        <vxe-toolbar v-if="editMode">
+          <template v-slot:buttons>
+            <vxe-button icon="fa fa-plus" status="perfect" size="mini" @click="addRow()">新增</vxe-button>
+          </template>
+        </vxe-toolbar>
+        <vxe-table
+            ref="xTableComponent"
+            row-key
+            auto-resize
+            size="mini"
+            border=inner
+            resizable
+            highlight-hover-row
+            show-header-overflow="tooltip"
+            show-overflow="tooltip"
+            header-cell-class-name="headerCellClassName"
+            :edit-config="{trigger: 'click', mode: 'row', showIcon: editMode, activeMethod: ()=>{return editMode}}"
+            :data="docDef.bpms">
+          <vxe-table-column   title="流程定义"         field="processKey"  width="40%"
+                              :edit-render="{name:'input'}"/>
+          <vxe-table-column   title="启动状态"         field="startBy"     width="25%"
+                              :edit-render="{name:'input'}"/>
+          <vxe-table-column   title="终止时回退状态"      field="rollbackTo"         width="25%"
+                              :edit-render="{name:'$input',props:{type:'integer',min:0}}"/>
+          <vxe-table-column   title=""            field=""                   width="10%">
+            <template v-slot="{seq,row}">
+                      <span v-if="editMode" class="drag-btn" style="margin-right: 10px;">
+                              <i class="vxe-icon--menu"></i>
+                          </span>
+              <span v-if="editMode" style="margin-right: 10px;" @click="$nkSortableRemove(docDef.bpms,seq)">
+                              <i class="vxe-icon--remove"></i>
+                          </span>
+            </template>
+          </vxe-table-column>
+        </vxe-table>
     </nk-card>
 </template>
 
 <script>
+import MixinSortable from "../../../utils/MixinSortable";
 
 export default {
+    mixins:[MixinSortable()],
     props:{
         editMode:Boolean,
         docDef:Object,
@@ -49,13 +87,22 @@ export default {
         }
     },
     created() {
+        this.$nkSortableVxeTable(true);
         if(!this.docDef.bpms){
             this.$set(this.docDef,'bpms',[]);
         }
-        if(!this.docDef.bpms[0]){
-            this.$set(this.docDef.bpms,0, {});
-        }
-    }
+    },
+    methods:{
+      addRow(){
+        let row = {
+          processKey:'',
+          startBy:'',
+          rollbackTo:'',
+        };
+        this.docDef.bpms.push(row)
+        this.$refs.xTableComponent.setActiveRow(row);
+      },
+    },
 }
 </script>
 
