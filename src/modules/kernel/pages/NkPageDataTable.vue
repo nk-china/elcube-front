@@ -194,7 +194,7 @@ export default {
         createDoc(def){
             switch (def.classify){
                 case "PROJECT":
-                    this.$router.push(`/apps/projects/create/`+def.docType);
+                    this.$router.push(`/apps/docs/create/`+def.docType);
                     break;
                 case "PARTNER":
                     this.$router.push('/apps/partners/new-partner/'+def.docType);
