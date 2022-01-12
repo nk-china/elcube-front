@@ -192,16 +192,7 @@ export default {
             this.$refs.layout.grid().clearCurrentRow();
         },
         createDoc(def){
-            switch (def.classify){
-                case "PROJECT":
-                    this.$router.push(`/apps/docs/create/`+def.docType);
-                    break;
-                case "PARTNER":
-                    this.$router.push('/apps/partners/new-partner/'+def.docType);
-                    break;
-                default:
-                    this.$router.push("/apps/docs/create/"+def.docType);
-            }
+            this.$router.push(`/apps/docs/create/`+def.docType);
         }
     }
 }
