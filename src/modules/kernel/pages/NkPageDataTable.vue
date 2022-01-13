@@ -44,7 +44,7 @@
             </a-dropdown>
         </a-button-group>
 
-        <nk-page-preview v-if="preview" :params="previewParams" v-model="previewVisible" @close="previewClose"></nk-page-preview>
+        <nk-page-preview v-if="custom.preview" :params="previewParams" v-model="previewVisible" @close="previewClose"></nk-page-preview>
     </nk-query-layout>
 </template>
 
@@ -60,7 +60,6 @@ export default {
 
             custom:{},
 
-            preview:false,
             previewParams: {},
             previewVisible: false,
 
