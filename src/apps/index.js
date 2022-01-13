@@ -72,7 +72,7 @@ Vue.component("nk-error-modal", NkErrorModal);
 
 Vue.mixin({
     beforeCreate: function () {
-        const docs = this.$options.__docs
+        const docs = this.$options.__docs;
         if (docs) {
             this.$docs = docs;
         }
@@ -107,29 +107,35 @@ let routes      = Kernel.routes,
         NkUtil
     };
 
+export {
+    MixinSortable,
+    NkFormat,
+    NkUtil
+}
+
 
 const use = (module, options)=>{
 
     if(module.install)
-        module.install(Vue, options)
+        module.install(Vue, options);
 
     if(module.routes)
-        routes = [...routes,...module.routes]
+        routes = [...routes,...module.routes];
 
     if(module.stores)
-        stores = {...stores,...module.stores}
+        stores = {...stores,...module.stores};
 
     if(module.sfc)
-        sfc    = {...sfc,    ...module.sfc}
+        sfc    = {...sfc,    ...module.sfc};
 
     return o;
-}
+};
 
 
 
 const run = (options)=>{
 
-    Object.keys(options).forEach(key=>{if(options[key]===undefined)delete options[key];})
+    Object.keys(options).forEach(key=>{if(options[key]===undefined)delete options[key];});
 
     globalOptions = Object.assign(globalOptions,options);
 
@@ -137,7 +143,7 @@ const run = (options)=>{
     Stores.UI.state.appName = globalOptions.appName;
 
     const router = new Router(VueRouter,routes,globalOptions.loginPage,globalOptions.defaultPage);
-    const store = new Vuex.Store({ modules:stores })
+    const store = new Vuex.Store({ modules:stores });
     const i18n = new VueI18n({
         locale: 'zh_CN', // 设置语言环境
     });
@@ -185,12 +191,12 @@ const run = (options)=>{
                 });
             });
     })
-}
+};
 
 const o = {
     use,
     run,
     ...sfc
-}
+};
 
 export default o

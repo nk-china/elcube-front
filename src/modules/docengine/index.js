@@ -54,7 +54,13 @@ module.sfc = {
   NkDynamicFormDef,
   NkDynamicGrid,
   NkDynamicGridDef
+};
+
+export {
+  Mixin,
+  MixinDef
 }
+
 module.install = function (Vue) {
 
   /**
