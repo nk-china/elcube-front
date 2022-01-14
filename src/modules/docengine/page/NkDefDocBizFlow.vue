@@ -95,8 +95,8 @@ export default {
             container: this.$refs.container,
             width: "100%",
             height: 600,
-            autoResize: true,
-            interacting: false,
+            //autoResize: true,
+            // interacting: false,
             mousewheel: {
                 enabled: true,
                 modifiers: ['ctrl', 'meta'],
@@ -106,6 +106,15 @@ export default {
                 eventTypes: ['leftMouseDown']
             },
         });
+
+        this.graph.on('node:click', ({cell}) => {
+
+            let docType = cell.store.data.nk
+
+            this.$router.push(`/apps/def/doc/detail/${docType.docType}/${docType.version}`)
+
+        })
+
         const gridLayout = new DagreLayout({
             type: 'dagre',
             rankdir: 'LR',
@@ -122,6 +131,7 @@ export default {
                         width: 130,   // Number，可选，节点大小的 width 值
                         height: 40,  // Number，可选，节点大小的 height 值
                         shape: 'html',
+                        nk: i,
                         html: () => {
                             const wrap = document.createElement('div')
                             wrap.style.width = '100%'
@@ -142,6 +152,8 @@ export default {
                             label.style.flexShrink = '0'
                             label.style.background = '#efdbff'
                             label.style.borderBottom = '1px solid #9254de'
+                            label.style.cursor = 'move'
+
                             const span = document.createElement('span')
                             span.innerText = i.docName
                             span.style.display = 'block'
@@ -150,6 +162,7 @@ export default {
                             span.style.whiteSpace = 'nowrap'
                             span.style.padding = '0 2px'
                             span.style.height = '20px'
+                            span.style.cursor = 'pointer'
 
                             wrap.appendChild(label);
                             wrap.appendChild(span);
@@ -159,17 +172,36 @@ export default {
                     }
                 });
 
+                const routerManhattan = {
+                    name: 'manhattan',
+                    args: {
+                        maxDirectionChange:180
+                    },
+                }
+                const routerOneSide = {
+                    name: 'er',
+                    args: {
+                        offset: 'center',
+                        direction: 'H',
+                    },
+                }
+
                 let edges = res.data.filter(i=>i.preDocType!=='@')
                     .map(i=>{
                         return {
                             source: i.preDocType, // String，必须，目标节点 id
                             target: i.docType, // String，必须，起始节点 id
-                            router: {
-                                name: 'manhattan',
-                                args: {
-                                    maxDirectionChange:180
+                            router: i.preDocType === i.docType ? routerManhattan : routerOneSide,
+                            connector: {
+                                name: 'rounded',
+                            },
+                            attrs: {
+                                line: {
+                                    stroke: '#1890ff',
+                                    targetMarker: 'classic',
                                 },
                             },
+
                         }
                     });
 
