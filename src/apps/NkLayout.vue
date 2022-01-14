@@ -439,6 +439,9 @@ export default {
     }
 }
 .nk-layout-full{
+
+    min-width: 800px;
+
     .ant-spin.abc{
         height: calc( 100vh ) !important;
         max-height: initial !important;
