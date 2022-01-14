@@ -38,6 +38,8 @@ import NkPageDocDetailDiff from "./page/NkPageDocDetailDiff";
 import NkDefDocs from "./page/NkDefDocs";
 import NkDefDocType from "./page/NkDefDocType";
 
+import NkDefDocBizFlow from "./page/NkDefDocBizFlow";
+
 import NkDevOpsDataSync from "./page/NkDevOpsDataSync";
 
 /**
@@ -122,6 +124,14 @@ module.routes = [
         }
       }
     ]
+  },
+  {
+    name: "业务流",
+    path: 'def/bizFlow',
+    component: NkDefDocBizFlow,
+    meta:{
+      title: "业务流全览",
+    }
   },
   {
     name: "数据同步",
