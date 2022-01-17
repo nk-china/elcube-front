@@ -43,6 +43,10 @@
                     </a-button-group>
 
                     <nk-form :col="1" :edit="item.groupDesc !== undefined && (!item.groupId || !item.groupId.startsWith('nk-default-'))">
+                        <nk-form-item term="用户组id">
+                            {{item.groupKey}}
+                            <a-input slot="edit" v-model="item.groupKey" placeholder="用户组id"></a-input>
+                        </nk-form-item>
                         <nk-form-item term="描述">
                             {{item.groupDesc}}
                             <a-input slot="edit" v-model="item.groupDesc" placeholder="权限描述"></a-input>
@@ -173,12 +177,20 @@ export default {
         },
         itemUpdate(){
             this.spinning=true;
-            this.$http.postJSON("/api/settings/auth/group/update",this.item)
+            this.$http.postJSON("/api/settings/auth/group/check",this.item)
                 .then(res=>{
-                    this.item = res.data;
-                    this.reload();
-                    this.$message.success('保存成功', 2.5)
-                    this.spinning=false;
+                    if(res.data){
+                        this.$http.postJSON("/api/settings/auth/group/update",this.item)
+                            .then(res=>{
+                                this.item = res.data;
+                                this.reload();
+                                this.$message.success('保存成功', 2.5)
+                                this.spinning=false;
+                            });
+                    }else{
+                        this.$message.warning('用户组id重复，请重新填写', 1.5);
+                        this.spinning=false;
+                    }
                 });
         },
         itemRemove(){
