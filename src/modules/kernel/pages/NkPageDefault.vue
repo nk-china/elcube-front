@@ -217,6 +217,12 @@ export default {
                 this.$http.get("/api/meter/card/list")
                     .then((res)=>{
                         this.modalAvailableCards.cards = res.data;
+                        this.modalAvailableCards.cards.splice(0,0,{
+                            "component": "nk-dashboard-hello",
+                            "w": 8,
+                            "h": 6,
+                            "name": "欢迎使用ELCube"
+                        })
                         this.modalAvailableCards.visible=true;
                     });
                 //this.addCard(8,5,"nk-dashboard-bar1","客户统计123");
