@@ -18,10 +18,10 @@
             {{term || title}}
             <slot name="term"></slot>
         </div>
-        <div class="content" :class="termClass+(errorMsg?' has-error':'')" :style="{'max-width': 'calc(100% - '+width+'px)'}">
+        <div class="content" :class="termClass+(error?' has-error':'')" :style="{'max-width': 'calc(100% - '+width+'px)'}">
             <slot v-if="!editMode"></slot>
             <slot v-if="editMode" name="edit"></slot>
-            <div v-if="editMode && errorMsg" class="ant-form-explain">{{errorMsg}}</div>
+            <div v-if="editMode && error" class="ant-form-explain" style="color: #ff6068">{{error}}</div>
         </div>
     </div>
 </template>
@@ -112,6 +112,9 @@ export default {
                 this.align,
                 this.term || this.title ? ' hasContent':''
             ]
+        },
+        error(){
+            return this.checkError()
         }
     },
     methods:{
@@ -175,7 +178,7 @@ export default {
 
 ::v-deep.nk-form-item{
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: center;
 
     .term {

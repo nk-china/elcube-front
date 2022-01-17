@@ -26,6 +26,7 @@
                                :default-if-edit-lost="false"
                                :col="item.col"
                                :edit="editMode && item.control > 0"
+                               :width="def.titleWidth"
 
                                :validate-for="data[item.key]"
                                :required="item.required"

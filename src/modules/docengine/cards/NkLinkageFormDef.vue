@@ -18,6 +18,10 @@
                 {{def.col}}
                 <a-input v-model="def.col" slot="edit" size="small" />
             </nk-form-item>
+            <nk-form-item title="标题宽">
+                {{def.titleWidth}}
+                <a-input-number v-model="def.titleWidth" slot="edit" size="small" :min="20" :max="300" />
+            </nk-form-item>
         </nk-form>
         <vxe-toolbar v-if="editMode">
             <template v-slot:buttons>

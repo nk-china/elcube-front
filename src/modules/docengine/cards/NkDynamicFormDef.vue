@@ -16,7 +16,11 @@
         <nk-form :col="1" :edit="editMode" style="width:300px;">
             <nk-form-item title="列">
                 {{def.col}}
-                <a-input v-model="def.col" slot="edit" size="small" />
+                <a-input-number v-model="def.col" slot="edit" size="small" :min="1" :max="4" />
+            </nk-form-item>
+            <nk-form-item title="标题宽">
+                {{def.titleWidth}}
+                <a-input-number v-model="def.titleWidth" slot="edit" size="small" :min="20" :max="300" />
             </nk-form-item>
             <slot name="header"></slot>
         </nk-form>
