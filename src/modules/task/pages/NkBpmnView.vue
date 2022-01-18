@@ -46,7 +46,7 @@ export default {
             this.bpmnXml = this.bpmn;
             this.$nextTick().then(this.render);
         }else if(this.processDefinitionId){
-            this.$http.get("/api/def/bpm/process/definition/detail?definitionId="+this.processDefinitionId)
+            this.$http.get("/api/task/process/definition/detail?definitionId="+this.processDefinitionId)
                 .then(response=>{
                     this.bpmnXml = response.data.bpmnXml||response.data.xml;
                     this.$nextTick().then(this.render);
