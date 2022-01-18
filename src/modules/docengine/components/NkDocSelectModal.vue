@@ -56,6 +56,15 @@
                 </template>
             </vxe-table-column>
         </vxe-table>
+        <vxe-pager
+            v-if="page.page"
+            perfect
+            size="mini"
+            :current-page="page.page"
+            :page-size="page.rows"
+            :total="page.total"
+            :layouts="['PrevPage', 'JumpNumber', 'NextPage', 'Total']"
+            @page-change="vxePageChanged" />
 
     </a-modal>
 </template>
@@ -155,6 +164,7 @@ export default {
         },
         formSubmit(e){
             e.preventDefault();
+            this.params.from = 0;
             this.query();
         },
         formItemChanged(e){
@@ -171,7 +181,23 @@ export default {
                     this.query();
                 }
             }
-        }
+        },
+        // 页码跳转
+        vxePageChanged(e){
+            const from = (e.currentPage-1) * e.pageSize;
+            const rows = e.pageSize;
+
+            if(from + rows > 10000){
+                this.$message.error("查询记录数不能超过10000条");
+                this.$emit("error","查询记录数不能超过10000条");
+                this.page.page = this.params.from / this.params.rows + 1;
+            }else{
+                this.params.from = from;
+                this.params.rows = e.pageSize;
+
+                this.query();
+            }
+        },
     }
 }
 </script>
