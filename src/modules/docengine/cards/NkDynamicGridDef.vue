@@ -158,11 +158,6 @@ export default {
             isCheck:true
         }
     },
-
-created(){
-    
-console.log(this.def);
-},
     mounted() {
         this.nk$callDef()
             .then(res=>{
