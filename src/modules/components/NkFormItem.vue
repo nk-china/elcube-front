@@ -178,7 +178,7 @@ export default {
 
 ::v-deep.nk-form-item{
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
     justify-content: center;
 
     .term {
@@ -223,7 +223,7 @@ export default {
         }
     }
     .edit{
-        line-height: 32px;
+        //line-height: 32px;
     }
     .ant-form-explain{
         margin-top: 1px;
