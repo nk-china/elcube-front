@@ -13,12 +13,12 @@
 -->
 <template>
     <nk-page-layout class="mini"
-                      :title="doc.docName||'未命名单据'"
-                      ref="nav"
-                      sub-title="单据详情"
-                      :spinning="loading"
-                      :right-bar="rightBar"
-                      :header-indent="headerIndent"
+                    :title="doc.docName||'未命名单据'"
+                    ref="nav"
+                    sub-title="单据详情"
+                    :spinning="loading"
+                    :right-bar="rightBar"
+                    :header-indent="headerIndent"
     >
 
         <div v-if="doc.historyVersion" slot="top" class="alert">
@@ -79,7 +79,7 @@
                           :key="item.docState"
                           :title="`确定${item.docStateDesc}?`"
                           @confirm="doSave(item.docState)"
-                >
+            >
                 <a-button type="primary"
                           :disabled="editCheckFailed"
                 >
@@ -129,7 +129,7 @@
 
             <!--历史-->
             <a-button v-if="!editMode" :type="histories?'primary':'default'"
-                      @click="$emit('nk-show-history')">
+                      @click="histories = !histories">
                 <a-icon type="clock-circle" />
             </a-button>
 
@@ -148,11 +148,23 @@
 
         </a-button-group>
 
+        <a-button-group v-if="groups && groups.length" style="margin-bottom: 24px;">
+            <a-button value="large"
+                      :type="selectedGroup===index?'primary':'dashed'"
+                      v-for="(item,index) in groups"
+                      :key="index"
+                      @click="selectedGroup = index"
+            >
+                {{ item.name }}
+            </a-button>
+        </a-button-group>
+
         <!--异常信息-->
         <nk-doc-exception v-if="doc.exception" :exception="doc.exception" />
 
         <!--todo 历史记录 需迁移到右边栏-->
-        <nk-card-historys v-if="histories" class="nk-page-layout-card" :doc="doc" />
+        <!--        <nk-card-historys class="nk-page-layout-card" :doc="doc" />-->
+        <nk-doc-snapshots v-if="histories" :doc="doc"></nk-doc-snapshots>
 
         <nk-card-bpm-executer v-if="doc.bpmTask" :task="doc.bpmTask" :editMode="editMode" v-model="loading" @complete="initData" />
 
@@ -169,6 +181,7 @@
                        :doc="doc"
                        :editMode="editMode && c.writeable"
                        :createMode="createMode"
+                       v-show="!groupIncludes||groupIncludes.indexOf(c.cardKey)>=0"
                        @nk-reload="reload"
                        @nk-save="doSave"
                        @nk-submit="doSave"
@@ -192,8 +205,9 @@
                                    :class="`${historyClass(c.component)}`"
                                    :title="c.cardName"
                                    :href="'#'+buildAnchorLink(c.cardKey)"
+                                   v-show="!groupIncludes||groupIncludes.indexOf(c.cardKey)>=0"
                     >
-                </a-anchor-link>
+                    </a-anchor-link>
                 </template>
             </a-anchor>
 
@@ -207,6 +221,7 @@
                         :doc="doc"
                         :editMode="editMode && c.writeable"
                         :createMode="createMode"
+                        v-show="groupIncludes.indexOf(c.cardKey)>=0"
                         @nk-reload="reload"
                         @nk-save="doSave"
                         @nk-calc="nkCalc(c,$event)"
@@ -248,6 +263,8 @@ export default {
             editCheckTimer: undefined,
             editCheckState: undefined,
             editCheckFailed: false,
+
+            selectedGroup: 0
         }
     },
 
@@ -258,9 +275,38 @@ export default {
         ...mapState('Debug',[
             'debugId'
         ]),
-      ...mapGetters('User',[
-        'hasAuthority'
-      ]),
+        ...mapGetters('User',[
+            'hasAuthority'
+        ]),
+        groups(){
+            if(this.doc.def){
+                const group = [];
+                this.doc.def.cards
+                    .filter(card=>card.groupName)
+                    .forEach(card=>{
+                        card.groupName.split('|')
+                            .forEach(name=>{
+                                let exists = group.find(g=>g.name===name);
+                                if(!exists){
+                                    exists = {name,includes:[]};
+                                    group.push(exists);
+                                }
+                                exists.includes.push(card.cardKey);
+                            })
+                    });
+
+                if(group.length){
+                    group.splice(0,0,{
+                        name:"全部"
+                    })
+                    return group;
+                }
+            }
+            return null;
+        },
+        groupIncludes(){
+            return this.groups && this.groups[this.selectedGroup].includes;
+        },
         rightBar(){
             return !this.preview;
         },
@@ -367,10 +413,10 @@ export default {
                         this.$emit("setTab",{confirm:"单据尚未保存，确认关闭吗？"});
                         this.loading = false;
                     }).catch(res=>{
-                        if(res.response.status===403){
-                            this.$emit("close")
-                        }
-                    });
+                    if(res.response.status===403){
+                        this.$emit("close")
+                    }
+                });
             }else if(this.contextParams.mode==='detail'){
                 this.$http.get("/api/doc/detail/"+this.contextParams.docId)
                     .then(response=>{
@@ -379,13 +425,13 @@ export default {
                         this.$emit('setTab',this.doc.docName||'未命名单据');
                         this.loading = false
                     }).catch(res=>{
-                        if(res.response.status===403){
-                            this.$emit("close")
-                        }
-                        if(res.response.data.msg==="单据不存在"){
-                            this.$emit("close")
-                        }
-                    });
+                    if(res.response.status===403){
+                        this.$emit("close")
+                    }
+                    if(res.response.data.msg==="单据不存在"){
+                        this.$emit("close")
+                    }
+                });
             }else if(this.contextParams.mode==='snapshot'){
                 this.$http.get("/api/doc/detail/snapshot/"+this.contextParams.docId)
                     .then(response=>{

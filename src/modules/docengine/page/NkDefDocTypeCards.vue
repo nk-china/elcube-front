@@ -38,9 +38,11 @@
                         optionProps: {value: 'key', label: 'name'},
                         events: {change: componentChange},
                 }" />
-            <vxe-table-column   title="KEY"         field="cardKey"  width="13%"
+            <vxe-table-column   title="KEY"         field="cardKey"  width="8%"
                                 :edit-render="{name:'input'}"/>
-            <vxe-table-column   title="描述"         field="cardName"     width="11%"
+            <vxe-table-column   title="描述"         field="cardName"     width="8%"
+                                :edit-render="{name:'input'}"/>
+            <vxe-table-column   title="分组"         field="groupName"     width="8%"
                                 :edit-render="{name:'input'}"/>
             <vxe-table-column   title="计算顺序"      field="calcOrder"         width="10%"
                                 :edit-render="{name:'$input',props:{type:'integer',min:0}}"/>
@@ -54,7 +56,7 @@
                                 :formatter="boolFormat"
                                 :edit-render="{name:'$switch',props: {'open-value':1,'close-value':0}}"
             />
-            <vxe-table-column   title=""            field=""                   width="10%">
+            <vxe-table-column   title=""            field=""               >
                 <template v-slot="{seq,row}">
                     <span v-if="editMode" class="drag-btn" style="margin-right: 10px;">
                             <i class="vxe-icon--menu"></i>

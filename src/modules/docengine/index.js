@@ -42,6 +42,8 @@ import NkDefDocBizFlow from "./page/NkDefDocBizFlow";
 
 import NkDevOpsDataSync from "./page/NkDevOpsDataSync";
 
+import NkDocSnapshots from "./components/NkDocSnapshots";
+
 /**
  * Vue 模块对象
  * @type {null}
@@ -81,6 +83,8 @@ module.install = function (Vue) {
   Vue.component('nk-doc-select-modal',NkDocSelectModal);
   Vue.component('nk-standard-card-def-table',NkStandardCardDefTable);
   Vue.component('nk-component-lost',NkCardLost);
+  Vue.component('NkDocSnapshots',NkDocSnapshots);
+
 };
 
 module.routes = [

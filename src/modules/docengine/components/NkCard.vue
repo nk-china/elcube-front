@@ -149,9 +149,12 @@ export default {
 </script>
 
 <style scoped lang="less">
-::v-deep.nk-page-layout-card.no-expand{
-    .ant-card-body{
-        padding: 2px;
+::v-deep.nk-page-layout-card{
+    margin-bottom: 24px;
+    .no-expand{
+        .ant-card-body{
+            padding: 2px;
+        }
     }
 }
 ::v-deep.ant-tabs .ant-tabs-large-bar {

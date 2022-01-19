@@ -48,6 +48,7 @@
                         <slot name="extra"></slot>
                     </a-col>
                 </a-row>
+                <slot name="bottom"></slot>
             </a-page-header>
         </div>
         <a-spin :spinning="loading">
