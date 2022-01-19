@@ -26,13 +26,13 @@
                 {{def.preSpEL}}
                 <nk-sp-el-template-editor slot="edit" size="small" v-model="def.preSpEL"></nk-sp-el-template-editor>
             </nk-form-item>
-            <nk-form-item title="是否允许新增">
-                {{def.isEdit| boolFormat}}
-                <a-switch slot="edit" size="small" v-model="def.isEdit" />
+            <nk-form-item title="是否禁用新增">
+                {{def.disabledEdit| boolFormat}}
+                <a-switch  slot="edit" size="small"  v-model="def.disabledEdit" />
             </nk-form-item>
-            <nk-form-item title="是否允许删除">
-                {{def.isDelete| boolFormat}}
-                <a-switch slot="edit" size="small" v-model="def.isDelete" />
+            <nk-form-item title="是否禁用删除">
+                {{def.disabledRemove| boolFormat}}
+                <a-switch  slot="edit" size="small" v-model="def.disabledRemove" />
             </nk-form-item>
             <slot name="header"></slot>
         </nk-form>
@@ -155,8 +155,14 @@ export default {
     mixins:[new MixinDef({}),MixinSortable(),MixinDynamicDef],
     data(){
         return {
+            isCheck:true
         }
     },
+
+created(){
+    
+console.log(this.def);
+},
     mounted() {
         this.nk$callDef()
             .then(res=>{
@@ -183,7 +189,8 @@ export default {
             this.def.items.push(newItem);
             this.$refs.xTable.loadData(this.def.items).then(() => this.$refs.xTable.setActiveRow(newItem));
         },
-    }
+    },
+
 }
 </script>
 
