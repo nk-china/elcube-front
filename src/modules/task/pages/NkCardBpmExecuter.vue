@@ -79,7 +79,7 @@ export default {
         completeTaskOk(transition){
             this.$emit("input",true);
             this.completeTask = Object.assign(this.completeTask,{taskId:this.task.id,transition});
-            this.$http.postJSON(`/api/task/instance/complete`,this.completeTask)
+            this.$http.postJSON(`/api/task/complete`,this.completeTask)
                 .then(()=>{
                     this.$emit("complete",true);
                     this.completeTask = {};
