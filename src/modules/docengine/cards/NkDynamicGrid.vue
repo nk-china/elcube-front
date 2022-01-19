@@ -14,7 +14,7 @@
 <template>
     <nk-card @expand="$nkSortableVxeTable">
 
-        <vxe-toolbar v-if="editMode&&def.isEdit">
+        <vxe-toolbar v-if="editMode&&!def.disabledEdit">
             <template v-slot:buttons>
                 <vxe-button icon="fa fa-plus" status="perfect" size="mini" @click="xTableAdd()">新增</vxe-button>
             </template>
@@ -69,7 +69,7 @@
                     <span v-if="editMode && def.sortable" class="drag-btn" style="margin-left: 10px;">
                         <i class="vxe-icon--menu"></i>
                     </span>
-                    <span v-if="editMode&&def.isDelete" style="margin-left: 10px;" @click="$nkSortableRemove(data,seq)">
+                    <span v-if="editMode&&!def.disabledRemove" style="margin-left: 10px;" @click="$nkSortableRemove(data,seq)">
                         <i class="vxe-icon--remove"></i>
                     </span>
                 </template>
