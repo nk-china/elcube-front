@@ -134,8 +134,8 @@
             </a-button>
 
             <!--文档-->
-            <a-button :type="'default'">
-                <nk-help-link ref="helpLink" :doc="doc" />
+            <a-button :type="'default'" @click="autoShowDocHelper">
+                <nk-help-link/>
             </a-button>
 
             <!-- 配置 -->
@@ -232,8 +232,9 @@
 
 <script>
 import qs from 'qs'
-import { mapGetters, mapState} from 'vuex';
+import {mapGetters, mapMutations, mapState} from 'vuex';
 import NkCardBpmExecuter from "../../task/pages/NkCardBpmExecuter";
+import docMarkdown from "../components/docMarkdown";
 
 export default {
     components:{
@@ -394,10 +395,13 @@ export default {
         nk$show(){
             this.autoShowDocHelper();
         },
+        ...mapMutations('NkDoc',[
+            'setMarkdown'
+        ]),
         autoShowDocHelper(){
             this.$nextTick(()=>{
                 if(this.layoutConfig.helperVisible){
-                    this.$refs.helpLink.$el.click();
+                    this.setMarkdown({markdown:docMarkdown(this.doc)})
                 }
             })
         },

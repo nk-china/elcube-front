@@ -41,7 +41,7 @@
         <div slot="extra">
             <slot name="extra" v-if="expand"></slot>
             <nk-script-label v-if="card.debug" :value="card.beanName"></nk-script-label>
-            <nk-help-link v-if="card.markdown" :doc="doc" />
+            <nk-help-link v-if="card.markdown" @click="autoShowDocHelper" />
             <a-icon v-if="card.cardKey && !tabList" v-show="!expand" class="expand" type="caret-up"    @click="switchExpand"></a-icon>
             <a-icon v-if="card.cardKey && !tabList" v-show=" expand" class="expand" type="caret-down"  @click="switchExpand"></a-icon>
         </div>
@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import docMarkdown from "./docMarkdown";
+import {mapMutations} from "vuex";
 let parse = ()=>{
     try{
         return (JSON.parse(localStorage.getItem("$NkCard"))||[]);
@@ -136,20 +138,6 @@ export default {
         doc(){
             const parent = getParent(this);
             return parent && parent.doc;
-        },
-        docMarkdown(){
-            const parent = getParent(this);
-            if(parent && parent.doc.def.cards){
-                let markdown = '# '+parent.doc.def.docName+'\n';
-                parent.doc.def.cards.forEach(card=>{
-                    if(card.markdown){
-                        markdown += '## '+card.cardName+'\n';
-                        markdown += card.markdown+'\n';
-                    }
-                })
-                return markdown;
-            }
-            return this.card.markdown
         }
     },
     data(){
@@ -161,6 +149,9 @@ export default {
         this.$emit("expand",this.expand);
     },
     methods:{
+        ...mapMutations('NkDoc',[
+            'setMarkdown'
+        ]),
         tabChange(e){
             this.$emit("tabChange",e);
         },
@@ -168,6 +159,9 @@ export default {
             this.expand = !this.expand;
             setExpand(this,this.expand);
             this.$emit("expand",this.expand);
+        },
+        autoShowDocHelper(){
+            this.setMarkdown({markdown:docMarkdown(getParent(this))})
         }
     }
 }

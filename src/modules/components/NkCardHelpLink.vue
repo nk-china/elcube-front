@@ -12,15 +12,15 @@
 	along with ELCube.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <template>
-    <a v-if="doc" class="helper-link" target="_blank" @click="openDocHelper">
-        <a-icon type="question-circle"/>
-        <slot v-if="false"></slot>
-    </a>
-    <a v-else-if="markdown" class="helper-link" target="_blank" @click="setMarkdown({markdown})">
+    <a v-if="markdown" class="helper-link" target="_blank" @click="setMarkdown({markdown})">
         <a-icon type="question-circle"/>
         <slot v-if="false"></slot>
     </a>
     <a v-else-if="url" class="helper-link" target="_blank" :href="url">
+        <a-icon type="question-circle"/>
+        <slot v-if="false"></slot>
+    </a>
+    <a v-else class="helper-link" target="_blank" @click="setLayoutConfig({helperVisible:true})">
         <a-icon type="question-circle"/>
         <slot v-if="false"></slot>
     </a>
@@ -37,22 +37,9 @@ export default {
     },
     methods:{
         ...mapMutations('NkDoc',[
-            'setMarkdown'
-        ]),
-        openDocHelper(){
-            if(this.doc && this.doc.def.cards){
-                let docName = '# '+this.doc.def.docName+'\n';
-                let docBody = (this.doc.def.markdown||'');
-                let items   = this.doc.def.cards.filter(card=>card.markdown).map(card=>{
-                    return  '## '+card.cardName+ '\n' + (card.markdown||'')+ '\n';
-                }).join('\n');
-
-                let defaults= docBody || items ? '' : '`文档待完善`';
-                let markdown = docName + docBody + '\n' + items + defaults;
-
-                this.setMarkdown({markdown})
-            }
-        }
+            'setMarkdown',
+            'setLayoutConfig'
+        ])
     }
 }
 </script>
