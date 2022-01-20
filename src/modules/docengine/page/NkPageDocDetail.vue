@@ -476,6 +476,50 @@ export default {
         },
         async doSave(state) {
 
+            state = state||this.docState;
+            console.log(this.doc.def.status)
+
+            const targetState = this.doc.def.status.find(s=>s.docState===state);
+
+            console.log(this.doc.def.status)
+            console.log(targetState)
+
+            // 忽略校验
+            if(!targetState.ignoreVerify){
+
+                let error = this.$refs.header && this.$refs.header.hasError&&this.$refs.header.hasError();
+                if (error) {
+                    this.$message.error(error);
+                    return;
+                }
+                if (this.$refs.components) {
+                    for (let i in this.$refs.components) {
+                        let component = this.$refs.components[i];
+                        if (component.hasError) {
+                            let error = component.hasError();
+                            if(error) {
+                                error = error===true?'校验错误':error;
+                                if (error.then && typeof error.then === 'function') {
+                                    try{
+                                        error = await error
+                                    }catch (e){
+                                        this.$message.error(e);
+                                        return;
+                                    }
+                                    if (error) {
+                                        this.$message.error(error);
+                                        return;
+                                    }
+                                } else {
+                                    this.$message.error(error);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             if (this.$refs.components) {
                 for (let i in this.$refs.components) {
                     let component = this.$refs.components[i];
@@ -497,41 +541,9 @@ export default {
                 }
             }
 
-            let error = this.$refs.header && this.$refs.header.hasError&&this.$refs.header.hasError();
-            if (error) {
-                this.$message.error(error);
-                return;
-            }
-            if (this.$refs.components) {
-                for (let i in this.$refs.components) {
-                    let component = this.$refs.components[i];
-                    if (component.hasError) {
-                        let error = component.hasError();
-                        if(error) {
-                            error = error===true?'校验错误':error;
-                            if (error.then && typeof error.then === 'function') {
-                                try{
-                                    error = await error
-                                }catch (e){
-                                    this.$message.error(e);
-                                    return;
-                                }
-                                if (error) {
-                                    this.$message.error(error);
-                                    return;
-                                }
-                            } else {
-                                this.$message.error(error);
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-
             const originalState = this.doc.docState
             this.loading = true;
-            this.docState = state||this.docState;
+            this.docState = state;
             this.doc.docState = this.docState;
             this.$http.postJSON(`/api/doc/update`, this.doc)
                 .then((response) => {

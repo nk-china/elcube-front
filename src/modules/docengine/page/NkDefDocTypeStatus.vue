@@ -63,7 +63,7 @@
                     <nk-help-link slot="extra" url="http://docs.elcube.cn/guide/def-doc-type.html#%E7%8A%B6%E6%80%81" />
                 </template>
             </vxe-table-column>
-            <vxe-table-column   title="扩展程序"   field="refObjectType"     width="17%" :edit-render="{
+            <vxe-table-column   title="扩展程序"   field="refObjectType"     width="14%" :edit-render="{
                     name:'$select',
                     options: docOptions.docStateInterceptors,
                     optionProps: {value: 'key', label: 'name'},
@@ -74,6 +74,10 @@
                 </template>
             </vxe-table-column>
             <vxe-table-column   title="显示"   field="displayPrimary" width="8%" :formatter="({cellValue})=>cellValue?'是':''" :edit-render="{
+                name: '$switch',
+                props: {'open-value':1,'close-value':0},
+            }"/>
+            <vxe-table-column   title="忽略校验"   field="ignoreVerify" width="8%" :formatter="({cellValue})=>cellValue?'是':''" :edit-render="{
                 name: '$switch',
                 props: {'open-value':1,'close-value':0},
             }"/>
