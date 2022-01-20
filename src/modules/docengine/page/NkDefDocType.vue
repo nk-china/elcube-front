@@ -116,8 +116,8 @@
                 <a-card v-if="selected.beanName" title="文档"
                         :key="'document-'+selected.cardKey"
                         class="doc">
-                    <a slot="extra" @click="mavonEdit = true" style="font-size: 12px;">编辑</a>
-                    <div @click="mavonEdit = true">
+                    <a slot="extra" v-if="editMode" @click="mavonEdit = true" style="font-size: 12px;">编辑</a>
+                    <div @click="mavonEdit = editMode">
                         <nk-empty v-if="!mavonEdit && !selected.markdown" :data="selected.markdown" style="margin: 40px 0;"></nk-empty>
                         <mavon-editor v-else
                                       v-model="selected.markdown"
