@@ -40,10 +40,16 @@ export default {
             if(config && config.markdown){
                 state.helperConfig = {
                     prev:'nkdn://',
-                    markdown:c.render(config.markdown)
+                    markdown: undefined,
                 };
-                state.layoutConfig = Object.assign(state.layoutConfig,{helperVisible:true});
-                if(window)setTimeout(()=>{window.dispatchEvent(new Event('resize'));},1);
+                setTimeout(()=>{
+                    state.helperConfig = {
+                        prev:'nkdn://',
+                        markdown:c.render(config.markdown)
+                    };
+                    state.layoutConfig = Object.assign(state.layoutConfig,{helperVisible:true});
+                },10)
+                if(window)setTimeout(()=>{window.dispatchEvent(new Event('resize'));},11);
             }
         }
     },
