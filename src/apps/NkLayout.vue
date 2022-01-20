@@ -31,7 +31,7 @@
                     <div>
                     </div>
                     <div class="nk-user">
-                        <nk-debug-panel v-if="hasAuthority('SYS:Debug')" style="margin-right: 20px;" />
+                        <nk-debug-panel class="nk-debug-panel" v-if="!layoutConfig.helperVisible && hasAuthority('SYS:Debug')" style="margin-right: 20px;" />
                         <a-dropdown :trigger="['click']">
                             <div class="ant-dropdown-link" @click="e => e.preventDefault()" >
                                 <a-avatar class="a-avatar"  size="small">
@@ -79,7 +79,7 @@
                 </a-layout-content>
             </a-layout>
             <a-layout-sider v-if="layoutConfig.helperVisible" width="25%">
-                <nk-helper />
+                <nk-doc-center />
             </a-layout-sider>
         </a-layout>
 
@@ -120,7 +120,7 @@
 import {mapState, mapActions, mapGetters, mapMutations} from 'vuex';
 import NkTabs from "./NkLayoutTabs";
 import NkNav from "./NkNav";
-import NkHelper from "./components/NkHelper";
+import NkDocCenter from "./NkDocCenter";
 import NkDebugPanel from "./NkDebugPanel";
 import AuthUtils from "./js/AuthUtils";
 
@@ -128,7 +128,7 @@ export default {
     components:{
         NkTabs,
         NkNav,
-        NkHelper,
+        NkDocCenter,
         NkDebugPanel
     },
     directives:{
@@ -504,6 +504,16 @@ export default {
     /* 页脚 */
     .copyright{
         text-align: center;color:#999;
+    }
+}
+
+@media screen and ( max-width: 1366px ){
+    .nk-debug-panel{
+        position: absolute;
+        top: 0;
+        right: 160px;
+        background-color: white;
+        z-index: 99999999;
     }
 }
 

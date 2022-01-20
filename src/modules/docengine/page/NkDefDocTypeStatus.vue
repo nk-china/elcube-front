@@ -13,7 +13,7 @@
 -->
 <template>
     <nk-card card-key="nk-card-doc-type-state" class="nk-page-layout-card" title="状态">
-        <nk-help-link slot="extra" url="http://cwiki.nkpro.cn/pages/viewpage.action?pageId=23789596" />
+        <nk-help-link slot="extra" url="http://docs.elcube.cn/guide/def-doc-type.html#%E7%8A%B6%E6%80%81" />
         <vxe-toolbar v-if="editMode">
             <template v-slot:buttons>
                 <vxe-button icon="fa fa-plus" status="perfect" size="mini" @click="addStatus()">新增</vxe-button>
@@ -60,7 +60,7 @@
             <vxe-table-column         field="sysState"      width="13%" :edit-render="{name: 'input', attrs: {type: 'text'}}">
                 <template v-slot:header="{column}">
                     系统状态
-                    <nk-help-link page="doc-sys-state" />
+                    <nk-help-link slot="extra" url="http://docs.elcube.cn/guide/def-doc-type.html#%E7%8A%B6%E6%80%81" />
                 </template>
             </vxe-table-column>
             <vxe-table-column   title="扩展程序"   field="refObjectType"     width="17%" :edit-render="{

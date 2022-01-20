@@ -17,7 +17,7 @@
             <slot name="top"></slot>
             <slot name="tips"></slot>
             <nk-sticky :stickyTop="-10" :z-index="11">
-                <div class="nk-page-layout-stick" :class="{'show-right':headerIndent && rightBar}" style="padding-top: 20px;align-items: center;">
+                <div class="nk-page-layout-stick" :class="{'show-right':headerIndent && rightBar && !layoutConfig.helperVisible}" style="padding-top: 20px;align-items: center;">
                     <div style="flex-shrink: 0">
                         <span class="ant-page-header-heading-title">{{title}}</span>
                         <span class="ant-page-header-heading-sub-title">{{subTitle}}</span>
@@ -31,7 +31,7 @@
                 v-if="!$slots.custom"
                 :title="title"
                 :sub-title="subTitle"
-                :class="{'show-right':headerIndent && rightBar}"
+                :class="{'show-right':headerIndent && rightBar && !layoutConfig.helperVisible}"
             >
                 <slot name="title"      slot="title"></slot>
                 <slot name="tags"       slot="tags"></slot>
@@ -56,7 +56,7 @@
                 <div :class="{'content':true}">
                     <slot></slot>
                 </div>
-                <div v-if="rightBar" class="right">
+                <div v-if="rightBar && !layoutConfig.helperVisible" class="right">
                     <slot name="nav" />
                 </div>
             </div>
@@ -67,6 +67,7 @@
 <script>
 
 import NkSticky from "../NkSticky";
+import {mapState} from "vuex";
 export default {
     name: "NkPageLayout",
     components: {
@@ -87,6 +88,11 @@ export default {
             type:Boolean,
             default:true
         }
+    },
+    computed:{
+        ...mapState('NkDoc',[
+            'layoutConfig'
+        ]),
     }
 }
 </script>
@@ -213,6 +219,14 @@ export default {
             .ant-statistic-content-value{
                 font-size: 18px;
             }
+        }
+    }
+}
+
+::v-deep .nk-layout-helper-visible{
+    .nk-page-layout-content {
+        .right {
+            display: none;
         }
     }
 }

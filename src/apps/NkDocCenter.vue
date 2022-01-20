@@ -86,7 +86,7 @@ export default {
 }
 ::v-deep.markdown{
     h1 {
-        font-size: 2.2em;
+        font-size: 1.6em;
         font-weight: 700;
         line-height: 1.1;
         padding-top: 16px;

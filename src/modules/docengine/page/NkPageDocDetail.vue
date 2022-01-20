@@ -134,10 +134,8 @@
             </a-button>
 
             <!--文档-->
-            <a-button v-if="doc.def&&doc.def.markdownFlag"
-                      :type="'default'"
-                      @click="doSetDocumentPage('nkdn://user/'+doc.definedDoc.docType+'/'+doc.definedDoc.version)">
-                <a-icon type="question-circle" />
+            <a-button :type="'default'">
+                <nk-help-link ref="helpLink" :doc="doc" />
             </a-button>
 
             <!-- 配置 -->
@@ -234,7 +232,7 @@
 
 <script>
 import qs from 'qs'
-import {mapActions, mapGetters, mapState} from 'vuex';
+import { mapGetters, mapState} from 'vuex';
 import NkCardBpmExecuter from "../../task/pages/NkCardBpmExecuter";
 
 export default {
@@ -270,12 +268,17 @@ export default {
     created() {
         this.initData();
     },
+    mounted() {
+    },
     computed:{
         ...mapState('Debug',[
             'debugId'
         ]),
         ...mapGetters('User',[
             'hasAuthority'
+        ]),
+        ...mapState('NkDoc',[
+            'layoutConfig'
         ]),
         groups(){
             if(this.doc.def){
@@ -388,9 +391,16 @@ export default {
         }
     },
     methods:{
-        ...mapActions('NkDoc',[
-            'doSetDocumentPage'
-        ]),
+        nk$show(){
+            this.autoShowDocHelper();
+        },
+        autoShowDocHelper(){
+            this.$nextTick(()=>{
+                if(this.layoutConfig.helperVisible){
+                    this.$refs.helpLink.$el.click();
+                }
+            })
+        },
         initData(){
             if(this.contextParams.mode==='create'){
                 this.createMode = true;
@@ -406,6 +416,7 @@ export default {
                         this.nkEditModeChanged(true);
                         this.$emit("setTab",{confirm:"单据尚未保存，确认关闭吗？"});
                         this.loading = false;
+                        this.autoShowDocHelper();
                     }).catch(res=>{
                     if(res.response.status===403){
                         this.$emit("close")
@@ -418,6 +429,7 @@ export default {
                         this.nkEditModeChanged(false);
                         this.$emit('setTab',this.doc.docName||'未命名单据');
                         this.loading = false
+                        this.autoShowDocHelper();
                     }).catch(res=>{
                     if(res.response.status===403){
                         this.$emit("close")
@@ -432,6 +444,7 @@ export default {
                         this.doc=response.data;
                         this.$emit('setTab','Snapshot:'+(this.doc.docName||'未命名单据'));
                         this.loading = false
+                        this.autoShowDocHelper();
                     });
             }
         },

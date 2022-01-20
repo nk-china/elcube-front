@@ -41,8 +41,7 @@
         <div slot="extra">
             <slot name="extra" v-if="expand"></slot>
             <nk-script-label v-if="card.debug" :value="card.beanName"></nk-script-label>
-            <nk-help-link v-if="cardComponent.$docs" />
-            <nk-help-link v-if="card.markdown" />
+            <nk-help-link v-if="card.markdown" :doc="doc" />
             <a-icon v-if="card.cardKey && !tabList" v-show="!expand" class="expand" type="caret-up"    @click="switchExpand"></a-icon>
             <a-icon v-if="card.cardKey && !tabList" v-show=" expand" class="expand" type="caret-down"  @click="switchExpand"></a-icon>
         </div>
@@ -60,6 +59,14 @@ let parse = ()=>{
         return [];
     }
 };
+let getParent = (component)=>{
+    let parent = component;
+    do{
+        parent = parent.$parent;
+    }while(parent && !parent.doc);
+    return parent;
+};
+
 let getKey = (component)=>{
     let parent = component;
     do{
@@ -125,6 +132,24 @@ export default {
         },
         docEditMode(){
             return this.editMode || this.$parent.editMode;
+        },
+        doc(){
+            const parent = getParent(this);
+            return parent && parent.doc;
+        },
+        docMarkdown(){
+            const parent = getParent(this);
+            if(parent && parent.doc.def.cards){
+                let markdown = '# '+parent.doc.def.docName+'\n';
+                parent.doc.def.cards.forEach(card=>{
+                    if(card.markdown){
+                        markdown += '## '+card.cardName+'\n';
+                        markdown += card.markdown+'\n';
+                    }
+                })
+                return markdown;
+            }
+            return this.card.markdown
         }
     },
     data(){

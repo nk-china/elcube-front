@@ -11,7 +11,6 @@
  *	You should have received a copy of the GNU Affero General Public License
  *	along with ELCube.  If not, see <https://www.gnu.org/licenses/>.
  */
-import NkDoc from "./StateNkDoc";
 
 
 import Mixin from "./cards/Mixin";
@@ -49,7 +48,6 @@ import NkDocSnapshots from "./components/NkDocSnapshots";
  * @type {null}
  */
 const module = Object.create(null);
-module.stores = {NkDoc};
 
 module.sfc = {
   Mixin,

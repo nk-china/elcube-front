@@ -36,6 +36,14 @@ export default {
             state.helperConfig = config;
             state.layoutConfig = Object.assign(state.layoutConfig,{helperVisible:true});
             if(window)setTimeout(()=>{window.dispatchEvent(new Event('resize'));},1);
+        },
+        setMarkdown(state,config){
+            state.helperConfig = {
+                prev:'nkdn://',
+                markdown:c.render(config.markdown)
+            };
+            state.layoutConfig = Object.assign(state.layoutConfig,{helperVisible:true});
+            if(window)setTimeout(()=>{window.dispatchEvent(new Event('resize'));},1);
         }
     },
     actions: {

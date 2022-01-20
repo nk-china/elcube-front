@@ -12,32 +12,55 @@
 	along with ELCube.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <template>
-    <a v-if="page" class="helper-link" target="_blank" @click="doSetDocumentPage('nkdn://define'+page)">
+    <a v-if="doc" class="helper-link" target="_blank" @click="openDocHelper">
         <a-icon type="question-circle"/>
         <slot v-if="false"></slot>
     </a>
-    <a v-else-if="nkOptions" class="helper-link" target="_blank" @click="doSetDocumentPage('nkdn://user/'+nkOptions.docType+'/'+nkOptions.component+'/'+nkOptions.version)">
+    <a v-else-if="markdown" class="helper-link" target="_blank" @click="setMarkdown({markdown})">
         <a-icon type="question-circle"/>
         <slot v-if="false"></slot>
     </a>
-    <a v-else class="helper-link">
+    <a v-else-if="url" class="helper-link" target="_blank" :href="url">
+        <a-icon type="question-circle"/>
+        <slot v-if="false"></slot>
+    </a>
+    <a v-else-if="component" class="helper-link" target="_blank" @click="setMarkdown({markdown:component.$docs})">
         <a-icon type="question-circle"/>
         <slot v-if="false"></slot>
     </a>
 </template>
 
 <script>
-import { mapActions} from 'vuex';
+import { mapMutations} from 'vuex';
 export default {
     props:{
-        page:String,
-        nkOptions:Object,
-        markdown:String
+        doc:Object,
+        component:Object,
+        markdown:String,
+        url:String
     },
     methods:{
-        ...mapActions('NkDoc',[
-            'doSetDocumentPage'
-        ])
+        ...mapMutations('NkDoc',[
+            'setMarkdown'
+        ]),
+        openDocHelper(){
+            if(this.doc && this.doc.def.cards){
+                let markdown = '# '+this.doc.def.docName+'\n';
+                this.doc.def.cards.forEach(card=>{
+                    if(card.markdown){
+                        markdown += '## '+card.cardName+'\n';
+                        markdown += card.markdown+'\n';
+                    }
+                })
+                this.setMarkdown({markdown})
+            }
+        },
+        openVueHelper(){
+            console.log(this.$parent)
+            if(this.$parent.$docs){
+                this.setMarkdown({markdown:this.$parent.$docs})
+            }
+        }
     }
 }
 </script>
