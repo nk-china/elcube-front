@@ -71,78 +71,106 @@
             <slot       v-if="!editMode" name="buttons"></slot>
 
             <!--编辑-->
-            <a-button   v-if="!editMode" :type="preview?'default':'primary'" :disabled="!docEditable" @click="doEdit">
-                <a-icon type="edit" />
-            </a-button>
-
-            <a-popconfirm v-for="item in availablePrimaryStatus"
-                          :key="item.docState"
-                          :title="`确定${item.docStateDesc}?`"
-                          @confirm="doSave(item.docState)"
-            >
-                <a-button type="primary"
-                          :disabled="editCheckFailed"
-                >
-                    <a-icon type="step-forward" /> {{item.docStateDesc}}
+            <a-tooltip   v-if="!editMode" title="编辑">
+                <a-button :type="preview?'default':'primary'" :disabled="!docEditable" @click="doEdit">
+                    <a-icon type="edit" />
                 </a-button>
-            </a-popconfirm>
+            </a-tooltip>
+
+            <a-tooltip v-if="availablePrimaryStatus.length" title="保存为">
+                <a-popconfirm v-for="item in availablePrimaryStatus"
+                              :key="item.docState"
+                              :title="`确定${item.docStateDesc}?`"
+                              @confirm="doSave(item.docState)"
+                >
+                    <a-button type="primary"
+                              :disabled="editCheckFailed"
+                    >
+                        <a-icon type="step-forward" /> {{item.docStateDesc}}
+                    </a-button>
+                </a-popconfirm>
+            </a-tooltip>
 
             <!--保存-->
             <template v-if="editMode">
-                <a-dropdown-button v-if="statusEditable && availableStatus.length"
-                                   :type="availablePrimaryStatus.length?'default':'primary'"
-                                   @click="doSave()"
-                                   :trigger="['click']"
-                                   :placement="placement"
-                                   :disabled="editCheckFailed">
-                    <a-icon type="save" />
-                    <a-icon slot="icon" type="step-forward" />
-                    <a-icon slot="icon" type="ellipsis" />
-                    <a-menu slot="overlay">
-                        <a-menu-item key="" disabled style="font-size: 8px;padding: 1px 30px 1px 8px;cursor: default;">保存为：</a-menu-item>
-                        <a-menu-divider />
-                        <a-menu-item v-for="item in availableStatus" :key="item.docState" @click="doSave(item.docState)"
-                                     :disabled="editCheckFailed">
-                            <a-icon type="step-forward" /> {{item.operatorName || item.docStateDesc}}
-                        </a-menu-item>
-                    </a-menu>
-                </a-dropdown-button>
-                <a-button v-else @click="doSave()" :type="availablePrimaryStatus.length?'default':'primary'" :disabled="editCheckFailed">
-                    <a-icon type="save" />
-                </a-button>
+
+                <a-tooltip v-if="statusEditable && availableStatus.length"
+                           title="保存为...">
+                    <a-dropdown-button :type="availablePrimaryStatus.length?'default':'primary'"
+                                       @click="doSave()"
+                                       :trigger="['click']"
+                                       :placement="placement"
+                                       :disabled="editCheckFailed">
+                        <a-tooltip title="保存">
+                            <a-icon type="save" />
+                        </a-tooltip>
+                        <a-icon slot="icon" type="step-forward" />
+                        <a-icon slot="icon" type="ellipsis" />
+                        <a-menu slot="overlay">
+                            <a-menu-item key="" disabled style="font-size: 8px;padding: 1px 30px 1px 8px;cursor: default;">保存为：</a-menu-item>
+                            <a-menu-divider />
+                            <a-menu-item v-for="item in availableStatus" :key="item.docState" @click="doSave(item.docState)"
+                                         :disabled="editCheckFailed">
+                                <a-icon type="step-forward" /> {{item.operatorName || item.docStateDesc}}
+                            </a-menu-item>
+                        </a-menu>
+                    </a-dropdown-button>
+                </a-tooltip>
+                <a-tooltip v-else title="保存">
+                    <a-button @click="doSave()" :type="availablePrimaryStatus.length?'default':'primary'" :disabled="editCheckFailed">
+                        <a-icon type="save" />
+                    </a-button>
+                </a-tooltip>
             </template>
 
             <!--取消-->
-            <a-button   v-if=" editMode" type="default" @click="cancel()">
-                <a-icon type="rollback" />
-            </a-button>
+            <a-tooltip   v-if=" editMode" title="取消">
+                <a-button type="default" @click="cancel()">
+                    <a-icon type="rollback" />
+                </a-button>
+            </a-tooltip>
 
             <!--创建-->
-            <a-dropdown v-if="!preview && !editMode && docTypes.length" :trigger="['click']" :placement="placement">
-                <a-button type="primary"><a-icon type="file-add" /> </a-button>
-                <a-menu slot="overlay">
-                    <a-menu-item v-for="item in docTypes" :key="item.docType" @click="toCreateDoc(item)" :disabled="!item.visible">
-                        {{item.docType}} | {{item.docName || item.docType}}
-                    </a-menu-item>
-                </a-menu>
-            </a-dropdown>
+            <a-tooltip v-if="!preview && !editMode && docTypes.length" title="创建">
+                <a-dropdown :trigger="['click']" :placement="placement">
+                    <a-button type="primary"><a-icon type="file-add" /> </a-button>
+                    <a-menu slot="overlay">
+                        <a-menu-item v-for="item in docTypes" :key="item.docType" @click="toCreateDoc(item)" :disabled="!item.visible">
+                            {{item.docType}} | {{item.docName || item.docType}}
+                        </a-menu-item>
+                    </a-menu>
+                </a-dropdown>
+            </a-tooltip>
 
             <!--历史-->
-            <a-button v-if="!editMode" :type="histories?'primary':'default'"
-                      @click="histories = !histories">
-                <a-icon type="clock-circle" />
-            </a-button>
+            <a-tooltip v-if="!editMode" title="变更历史">
+                <a-button :type="histories?'primary':'default'"
+                          @click="histories = !histories">
+                    <a-icon type="clock-circle" />
+                </a-button>
+            </a-tooltip>
 
             <!--文档-->
-            <a-button :type="'default'" @click="autoShowDocHelper">
-                <nk-help-link/>
-            </a-button>
+            <a-tooltip title="查看文档">
+                <a-button :type="'default'" @click="autoShowDocHelper">
+                    <nk-help-link/>
+                </a-button>
+            </a-tooltip>
+
+            <!-- 源码修改 -->
+            <a-tooltip v-if="!doc.newCreate && hasAuthority(['DEVOPS:*','DEVOPS:DOC'])" title="编辑源数据">
+                <a-button
+                          @click="sourceVisible = true">
+                    <a-icon type="code" />
+                </a-button>
+            </a-tooltip>
 
             <!-- 配置 -->
-            <a-button v-if="hasAuthority(['DEF:*','DEF:*'])"
-                      @click="$router.push(`/apps/def/doc/detail/${doc.docType}/${doc.def.version}`)">
-                <a-icon type="deployment-unit" />
-            </a-button>
+            <a-tooltip  v-if="hasAuthority(['DEF:*','DEF:*'])" title="查看配置">
+                <a-button @click="$router.push(`/apps/def/doc/detail/${doc.docType}/${doc.def.version}`)">
+                    <a-icon type="deployment-unit" />
+                </a-button>
+            </a-tooltip>
 
         </a-button-group>
 
@@ -227,6 +255,8 @@
             />
         </div>
 
+        <nk-doc-source-editor v-model="sourceVisible" v-if="doc.docId" :doc="doc" @change="onSourceChanged"></nk-doc-source-editor>
+
     </nk-page-layout>
 </template>
 
@@ -235,10 +265,12 @@ import qs from 'qs'
 import {mapGetters, mapMutations, mapState} from 'vuex';
 import NkCardBpmExecuter from "../../task/pages/NkCardBpmExecuter";
 import docMarkdown from "../components/docMarkdown";
+import NkDocSourceEditor from "../components/NkDocSourceEditor";
 
 export default {
     components:{
         NkCardBpmExecuter,
+        NkDocSourceEditor
     },
     props:{
         params: Object,
@@ -262,7 +294,9 @@ export default {
             editCheckState: undefined,
             editCheckFailed: false,
 
-            selectedGroup: 0
+            selectedGroup: 0,
+
+            sourceVisible: false
         }
     },
 
@@ -562,6 +596,12 @@ export default {
                     this.docState = originalState;
                     this.doc.docState = this.docState;
                 });
+        },
+        onSourceChanged(doc){
+            this.doc = doc;
+            this.$emit('setTab', this.doc.docName);
+            this.nkEditModeChanged(false);
+            this.histories = undefined;
         },
         waitDocIndexed(retry){
 

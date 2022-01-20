@@ -513,7 +513,7 @@ export default {
         top: 0;
         right: 160px;
         background-color: white;
-        z-index: 99999999;
+        z-index: 1;
     }
 }
 
