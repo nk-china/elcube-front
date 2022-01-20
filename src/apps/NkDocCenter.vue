@@ -44,17 +44,17 @@ export default {
         ...mapActions('NkDoc',[
             'doSetDocumentPage'
         ]),
-        click(e){
-            if(e.target.nodeName==='A'){
-                if(e.target.href.startsWith('nkdn://')){
-                    this.doSetDocumentPage(e.target.href);
-                    e.preventDefault();
-                }else if(e.target.href.startsWith(`${location.href.split('#')[0]}#`)){
-                    //
-                }else{
-                    e.target.setAttribute("target","_blank");
-                }
-            }
+        click(){
+            // if(e.target.nodeName==='A'){
+            //     if(e.target.href.startsWith('nkdn://')){
+            //         this.doSetDocumentPage(e.target.href);
+            //         e.preventDefault();
+            //     }else if(e.target.href.startsWith(`${location.href.split('#')[0]}#`)){
+            //         //
+            //     }else{
+            //         e.target.setAttribute("target","_blank");
+            //     }
+            // }
         }
     }
 }
