@@ -477,12 +477,8 @@ export default {
         async doSave(state) {
 
             state = state||this.docState;
-            console.log(this.doc.def.status)
 
             const targetState = this.doc.def.status.find(s=>s.docState===state);
-
-            console.log(this.doc.def.status)
-            console.log(targetState)
 
             // 忽略校验
             if(!targetState.ignoreVerify){
