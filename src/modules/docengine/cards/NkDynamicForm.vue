@@ -30,7 +30,7 @@
 
                                :validate-for="data[item.key]"
                                :required="item.required"
-                               :len="item.inputOptions&&((!!item.maxLength)||(!!item.minLength))"
+                               :len="item.inputOptions&&((!!item.inputOptions.maxLength)||(!!item.inputOptions.minLength))"
                                :min="item.inputOptions&&(item.inputOptions.min||item.inputOptions.minLength)"
                                :max="item.inputOptions&&(item.inputOptions.max||item.inputOptions.maxLength)"
                                :pattern="item.inputOptions&&item.inputOptions.pattern"
