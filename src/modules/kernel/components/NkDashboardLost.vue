@@ -13,7 +13,7 @@
 -->
 <template>
     <nk-dashboard-card :title="title">
-        <div style="color: darkred;font-size: 18px;">组建缺失</div>
+        <div style="color: darkred;font-size: 18px;">组件缺失</div>
     </nk-dashboard-card>
 </template>
 
