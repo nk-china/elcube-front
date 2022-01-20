@@ -89,7 +89,7 @@
 
             <!--保存-->
             <template v-if="editMode">
-                <a-dropdown-button v-if="availableStatus.length"
+                <a-dropdown-button v-if="statusEditable && availableStatus.length"
                                    :type="availablePrimaryStatus.length?'default':'primary'"
                                    @click="doSave()"
                                    :trigger="['click']"
@@ -242,7 +242,6 @@ export default {
         NkCardBpmExecuter,
     },
     props:{
-        bpmTask: Object,
         params: Object,
         preview: {
             type:Boolean,
@@ -357,7 +356,7 @@ export default {
                         return 1;
                     if(defState.editPerm===3)
                         return 3;
-                    else if(defState.editPerm === 2 && this.bpmTask)
+                    else if(defState.editPerm === 2 && this.doc.bpmTask)
                         return 2;
                 }
             }
@@ -385,12 +384,7 @@ export default {
             );
         },
         contextParams(){
-            const params = this.params || this.$route.params;
-            if(this.bpmTask){
-                params.mode = 'detail';
-                params.docId = this.bpmTask.businessKey;
-            }
-            return params;
+            return this.params || this.$route.params;
         }
     },
     methods:{
