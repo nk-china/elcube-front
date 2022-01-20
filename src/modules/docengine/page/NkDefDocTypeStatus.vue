@@ -76,7 +76,7 @@
             <vxe-table-column   title="显示"   field="displayPrimary" width="8%" :formatter="({cellValue})=>cellValue?'是':''" :edit-render="{
                 name: '$switch',
                 props: {'open-value':1,'close-value':0},
-            }" v-if="docDef.docClassify==='TRANSACTION'||docDef.docClassify==='PROJECT'"/>
+            }"/>
             <vxe-table-column   title=""    field=""     width="10%">
                 <template v-slot="{seq,items}">
                         <span v-if="editMode" class="drag-btn" style="margin-right: 10px;">
