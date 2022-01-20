@@ -88,9 +88,11 @@ export default {
     h1 {
         font-size: 1.6em;
         font-weight: 700;
-        line-height: 1.1;
-        padding-top: 16px;
-        margin-bottom: 4px;
+        line-height: 1.6;
+        margin: 20px 0 20px 0;
+        padding-top: 0;
+        padding-left: 9px;
+        border-left: 6px solid #ff7e79;
     }
     h2, h3, h4, h5, h6 {
         line-height: 1.5em;
@@ -99,7 +101,7 @@ export default {
     }
     h2 {
         font-size: 1.4em;
-        margin: 40px 10px 20px 0;
+        margin: 30px 10px 20px 0;
         padding-left: 9px;
         border-left: 6px solid #ff7e79;
         font-weight: 700;
@@ -109,7 +111,7 @@ export default {
         font-weight: 700;
         font-size: 1.2em;
         line-height: 1.4;
-        margin: 10px 0 5px;
+        margin: 10px 0 10px;
         padding-top: 10px;
     }
     h4 {
@@ -343,6 +345,9 @@ export default {
             border-bottom: solid 1px #ccc;
             border-right: solid 1px #ccc;
         }
+    }
+    img{
+        width: auto;
     }
 }
 </style>

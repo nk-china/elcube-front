@@ -24,10 +24,6 @@
         <a-icon type="question-circle"/>
         <slot v-if="false"></slot>
     </a>
-    <a v-else-if="component" class="helper-link" target="_blank" @click="setMarkdown({markdown:component.$docs})">
-        <a-icon type="question-circle"/>
-        <slot v-if="false"></slot>
-    </a>
 </template>
 
 <script>
@@ -45,20 +41,16 @@ export default {
         ]),
         openDocHelper(){
             if(this.doc && this.doc.def.cards){
-                let markdown = '# '+this.doc.def.docName+'\n';
-                this.doc.def.cards.forEach(card=>{
-                    if(card.markdown){
-                        markdown += '## '+card.cardName+'\n';
-                        markdown += card.markdown+'\n';
-                    }
-                })
+                let docName = '# '+this.doc.def.docName+'\n';
+                let docBody = (this.doc.def.markdown||'');
+                let items   = this.doc.def.cards.filter(card=>card.markdown).map(card=>{
+                    return  '## '+card.cardName+ '\n' + (card.markdown||'')+ '\n';
+                }).join('\n');
+
+                let defaults= docBody || items ? '' : '`文档待完善`';
+                let markdown = docName + docBody + '\n' + items + defaults;
+
                 this.setMarkdown({markdown})
-            }
-        },
-        openVueHelper(){
-            console.log(this.$parent)
-            if(this.$parent.$docs){
-                this.setMarkdown({markdown:this.$parent.$docs})
             }
         }
     }

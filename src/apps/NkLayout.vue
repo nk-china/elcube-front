@@ -229,9 +229,9 @@ export default {
                 })
 
             if(!localStorage.getItem("$NK-document-flag")){
-                this.openNotification();
+                //this.openNotification();
                 this.doSetDocumentPage("nkdn://");
-                //localStorage.setItem("$NK-document-flag","1");
+                localStorage.setItem("$NK-document-flag","1");
             }
 
         },
