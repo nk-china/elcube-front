@@ -77,7 +77,7 @@
                 name: '$switch',
                 props: {'open-value':1,'close-value':0},
             }"/>
-            <vxe-table-column   title=""    field=""     width="10%">
+            <vxe-table-column   title=""    field="">
                 <template v-slot="{seq,items}">
                         <span v-if="editMode" class="drag-btn" style="margin-right: 10px;">
                             <i class="vxe-icon--menu"></i>
