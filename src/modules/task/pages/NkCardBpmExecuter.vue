@@ -42,8 +42,8 @@
                           @click="completeTaskOk(transition)">
                     {{ transition.name }}
                 </a-button>
-                <a-button type="default" @click="toForward" >转办</a-button>
-                <a-button type="default" @click="toDelegate" >委派</a-button>
+                <a-button :disabled="!task || task.delegationState === 'PENDING'" type="default" @click="toForward" >转办</a-button>
+                <a-button :disabled="!task || task.delegationState === 'PENDING'" type="default" @click="toDelegate" >委派</a-button>
             </a-button-group>
         </div>
         <a-button v-if="hasAuthority(['DEF:*','OPS:*'])"
