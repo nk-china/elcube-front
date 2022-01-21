@@ -77,7 +77,7 @@
                         <template v-if="row.deleteReason && row.deleteReason!=='completed'">
                             'TERMINATED | ' {{row.deleteReason}}
                         </template>
-                        <template v-for="(comment) in row.comments">{{comment}}</template>
+<!--                        <template v-for="(comment) in row.comments">{{comment}}</template>-->
                         <a-button-group size="small">
                             <a-button v-for="transition in row.transitions"
                                       :key="transition.id"

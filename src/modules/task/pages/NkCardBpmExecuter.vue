@@ -19,18 +19,30 @@
                       :task-definition-key="task.taskDefinitionKey"
                       style="margin-bottom: 10px;" />
 
-        <a-comment v-for="item in task.instanceComments" :key="item.id">
-            <span slot="author" style="display: flex;align-items: center;">
-                <a-avatar size="small" style="margin-right: 5px;color: #f56a00; backgroundColor: #fde3cf">
-                    {{ item.user && item.user.length > 2 ? item.user.substring(0,1) : item.user }}
-                </a-avatar>
-                {{item.user || '匿名'}}
-            </span>
-            <span slot="datetime" style="line-height: 24px;">{{ item.time | nkDatetimeFriendly}}</span>
-            <p slot="content">
-                {{ item.comment }}
-            </p>
-        </a-comment>
+        <a-timeline>
+            <span slot="pending" style="padding-left: 20px;">{{task.name}} 流转中...</span>
+            <a-timeline-item v-for="t in task.historicalTasks" :key="t.id">
+                <p style="margin: 5px 0 20px;padding: 2px 0 0 15px;">
+                    {{t.name}}
+                    <span style="color: #ccc;padding-left: 10px;">{{ t.createTime | nkDatetimeFriendly}} </span>
+                </p>
+
+                <a-comment v-for="item in t.comments" :key="item.id">
+                    <span slot="author" style="display: flex;align-items: center;">
+                        <a-avatar size="small" style="margin-right: 5px;color: #f56a00; backgroundColor: #fde3cf">
+                            {{ item.user && item.user.length > 2 ? item.user.substring(0,1) : item.user }}
+                        </a-avatar>
+                        {{item.user || '匿名'}}
+                    </span>
+                    <span slot="datetime" style="line-height: 24px;">{{ item.time | nkDatetimeFriendly}}</span>
+                    <p slot="content">
+                        {{item.taskName}}
+                        {{ item.comment }}
+                    </p>
+                </a-comment>
+            </a-timeline-item>
+        </a-timeline>
+
 
         <a-input type="textarea" v-model="completeTask.comment" :auto-size="{ minRows: 4, maxRows: 6 }" placeholder="请输入办理意见"></a-input>
         <div slot="actions" style="padding: 0 20px 0;text-align: right">
