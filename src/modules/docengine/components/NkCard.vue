@@ -161,7 +161,10 @@ export default {
             this.$emit("expand",this.expand);
         },
         autoShowDocHelper(){
-            this.setMarkdown({markdown:docMarkdown(getParent(this))})
+            const component = getParent(this);
+            if(component && component.doc){
+                this.setMarkdown({markdown:docMarkdown(component.doc)})
+            }
         }
     }
 }

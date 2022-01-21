@@ -20,7 +20,7 @@
         <a-icon type="question-circle"/>
         <slot v-if="false"></slot>
     </a>
-    <a v-else class="helper-link" target="_blank" @click="setLayoutConfig({helperVisible:true})">
+    <a v-else class="helper-link" target="_blank" @click="click">
         <a-icon type="question-circle"/>
         <slot v-if="false"></slot>
     </a>
@@ -39,7 +39,11 @@ export default {
         ...mapMutations('NkDoc',[
             'setMarkdown',
             'setLayoutConfig'
-        ])
+        ]),
+        click(){
+            this.$emit("click")
+            this.setLayoutConfig({helperVisible:true});
+        }
     }
 }
 </script>
