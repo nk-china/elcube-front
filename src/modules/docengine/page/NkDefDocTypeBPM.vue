@@ -52,7 +52,7 @@
           <vxe-table-column   title="启动状态"         field="startBy"     width="25%"
                               :edit-render="{name:'input'}"/>
           <vxe-table-column   title="终止时回退状态"      field="rollbackTo"         width="25%"
-                              :edit-render="{name:'$input',props:{type:'integer',min:0}}"/>
+                              :edit-render="{name:'input'}"/>
           <vxe-table-column   title=""            field=""                   width="10%">
             <template v-slot="{seq,row}">
                       <span v-if="editMode" class="drag-btn" style="margin-right: 10px;">
