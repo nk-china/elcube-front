@@ -80,13 +80,13 @@
             <a-tooltip v-if="availablePrimaryStatus.length" title="保存为">
                 <a-popconfirm v-for="item in availablePrimaryStatus"
                               :key="item.docState"
-                              :title="`确定${item.docStateDesc}?`"
+                              :title="`确定${item.operatorName || item.docStateDesc}?`"
                               @confirm="doSave(item.docState)"
                 >
                     <a-button type="primary"
                               :disabled="editCheckFailed"
                     >
-                        <a-icon type="step-forward" /> {{item.docStateDesc}}
+                        <a-icon type="step-forward" /> {{item.operatorName || item.docStateDesc}}
                     </a-button>
                 </a-popconfirm>
             </a-tooltip>
