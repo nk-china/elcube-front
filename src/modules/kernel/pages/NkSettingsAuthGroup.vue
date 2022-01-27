@@ -43,9 +43,9 @@
                     </a-button-group>
 
                     <nk-form :col="1" :edit="item.groupDesc !== undefined && (!item.groupId || !item.groupId.startsWith('nk-default-'))">
-                        <nk-form-item term="用户组id">
+                        <nk-form-item term="用户组Key">
                             {{item.groupKey}}
-                            <a-input slot="edit" v-model="item.groupKey" placeholder="用户组id"></a-input>
+                            <a-input slot="edit" v-model="item.groupKey" placeholder="用户组Key"></a-input>
                         </nk-form-item>
                         <nk-form-item term="描述">
                             {{item.groupDesc}}
