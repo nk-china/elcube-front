@@ -16,10 +16,25 @@
 
         <nk-card class="card" title="数据同步">
 
-            <a-row type="flex" justify="center" :align="'middle'">
-                <a-col :span="4"><a-button @click="reindex">立即同步</a-button></a-col>
-                <a-col :span="20">{{message}}</a-col>
-            </a-row>
+            <nk-form :col="1">
+                <nk-form-item title="清空数据">
+                    <a-switch v-model="dropFirst"></a-switch>
+                </nk-form-item>
+                <nk-form-item title="过滤条件">
+                    <a-input v-model="where" placeholder="EQL WHERE"  addon-before="SELECT * FROM doc WHERE"></a-input>
+                </nk-form-item>
+                <nk-form-item title="">
+                    <a-button @click="reindex">立即同步</a-button>
+                </nk-form-item>
+                <nk-form-item title="" v-if="message">
+                    {{message}}
+                </nk-form-item>
+            </nk-form>
+
+        </nk-card>
+
+        <nk-card class="card" title="测试数据">
+
             <a-row type="flex" justify="center" :align="'middle'" style="margin-top: 12px;">
                 <a-col :span="4"><a-button @click="random" :disabled="messageRandom">创建一亿条测试数据</a-button></a-col>
                 <a-col :span="20">{{messageRandom}}</a-col>
@@ -36,13 +51,15 @@
             return {
                 message:undefined,
                 messageRandom:undefined,
+                dropFirst:false,
+                where:''
             }
         },
         created() {
         },
         methods: {
             reindex(){
-                this.$http.post('/api/ops/datasync/redo','dropFirst=true&docType=')
+                this.$http.post('/api/ops/datasync/redo',`dropFirst=${this.dropFirst}&where=${this.where}`)
                     .then(res=>{
                         this.reindexInfo(res.data);
                     })
