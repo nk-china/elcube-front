@@ -191,7 +191,7 @@ export default {
                         this.data.activeDashboard = {name:"默认",config:[]};
                         this.data.refs.push(this.data.activeDashboard);
                         this.layout=[];
-                        this.addCard(8,5,"nk-dashboard-hello","欢迎使用");
+                        // this.addCard(8,5,"nk-dashboard-hello","欢迎使用");
                     }
                     this.editable = this.data.activeDashboard.accountId === this.user.id;
                     this.loading = false;
@@ -217,12 +217,12 @@ export default {
                 this.$http.get("/api/meter/card/list")
                     .then((res)=>{
                         this.modalAvailableCards.cards = res.data;
-                        this.modalAvailableCards.cards.splice(0,0,{
-                            "component": "nk-dashboard-hello",
-                            "w": 8,
-                            "h": 6,
-                            "name": "欢迎使用ELCube"
-                        })
+                        // this.modalAvailableCards.cards.splice(0,0,{
+                        //     "component": "nk-dashboard-hello",
+                        //     "w": 8,
+                        //     "h": 6,
+                        //     "name": "欢迎使用ELCube"
+                        // })
                         this.modalAvailableCards.visible=true;
                     });
                 //this.addCard(8,5,"nk-dashboard-bar1","客户统计123");
