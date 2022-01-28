@@ -118,7 +118,7 @@ export default {
                     if(item[0]){
                         const first = item[0];
                         columns = Object.keys(first).sort(this.keySort).map(key=>{
-                            const width = Math.max(first[key]?(first[key].toString().length * 7 + 40):0,key.length * 7 + 40);
+                            const width = Math.min(Math.max(first[key]?(first[key].toString().length * 7 + 40):0,key.length * 7 + 40),300);
                             return {
                                 field: key,
                                 title: key,
