@@ -54,6 +54,20 @@ import NkFormat from "../utils/NkFormat";
 import NkUtil from "../utils/NkUtil";
 import MixinSortable from "../utils/MixinSortable";
 
+import { codemirror } from 'vue-codemirror';
+import 'codemirror/lib/codemirror.css';
+import "codemirror/addon/hint/show-hint.css";
+import "codemirror/theme/ambiance.css";
+
+require("codemirror/mode/sql/sql.js");
+require("codemirror/mode/vue/vue.js");
+require("codemirror/mode/groovy/groovy.js");
+require("codemirror/mode/javascript/javascript.js");
+
+require("codemirror/addon/edit/matchbrackets");
+require("codemirror/addon/selection/active-line");
+require("codemirror/addon/hint/show-hint");
+require("codemirror/addon/hint/anyword-hint");
 
 Vue.config.productionTip = false;
 Vue.prototype.$http = new Http(Vue);
@@ -69,6 +83,7 @@ Vue.use(mavonEditor);
 Vue.use(LayoutComponent);
 Vue.use(Kernel);
 Vue.component("nk-error-modal", NkErrorModal);
+Vue.component("codemirror",codemirror);
 
 Vue.mixin({
     beforeCreate: function () {

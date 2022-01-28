@@ -20,21 +20,8 @@
 </template>
 
 <script>
-import { codemirror } from 'vue-codemirror';
-import 'codemirror/lib/codemirror.css';
-import "codemirror/theme/panda-syntax.css";
-import "codemirror/addon/hint/show-hint.css";
-
-require("codemirror/mode/javascript/javascript.js");
-require("codemirror/addon/edit/matchbrackets");
-require("codemirror/addon/selection/active-line");
-require("codemirror/addon/hint/show-hint");
-require("codemirror/addon/hint/anyword-hint");
 
 export default {
-    components:{
-        codemirror
-    },
     props:{
         value:Boolean,
         doc:Object,
@@ -43,7 +30,7 @@ export default {
         return {
             codemirrorOptions: {
                 mode: "javascript",
-                theme: "panda-syntax",
+                theme: "ambiance",
                 lineWrapping: false,
                 indentUnit: 4,
                 tabSize: 4,

@@ -40,6 +40,7 @@ import NkDefDocType from "./page/NkDefDocType";
 import NkDefDocBizFlow from "./page/NkDefDocBizFlow";
 
 import NkDevOpsDataSync from "./page/NkDevOpsDataSync";
+import NkDevOpsEqlCli from "./page/NkDevOpsEqlCli";
 
 import NkDocSnapshots from "./components/NkDocSnapshots";
 
@@ -141,6 +142,14 @@ module.routes = [
     component: NkDevOpsDataSync,
     meta:{
       title: "数据同步",
+    }
+  },
+  {
+    name: "EQL CLI",
+    path: 'devops/eql-cli',
+    component: NkDevOpsEqlCli,
+    meta:{
+      title: "EQL CLI",
     }
   },
 ];
