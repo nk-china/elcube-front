@@ -29,7 +29,7 @@
                 <a-tab-pane v-for="(res,index) in results" :key="index" :tab="'结果'+(index+1)">
                     <vxe-grid
                         ref="grid"
-                        max-height="400"
+                        max-height="300"
                         auto-resize
                         resizable
                         highlight-hover-row
@@ -227,10 +227,12 @@ export default {
 <style scoped lang="less">
 ::v-deep.vue-codemirror{
     width: 100%;
-    height: calc(100vh - 729px);
+    height: calc(100vh - 629px);
+    min-height: 200px;
 
     .CodeMirror{
-        height: calc(100vh - 729px);
+        height: calc(100vh - 629px);
+        min-height: 200px;
     }
     .CodeMirror-vscrollbar::-webkit-scrollbar {
         /*滚动条整体样式*/
