@@ -34,6 +34,21 @@
                 </a>
             </div>
         </div>
+
+        <div v-if="doc.debug" slot="top" class="alert">
+            <div class="ant-alert ant-alert-warning ant-alert-closable">
+                <a-icon class="ant-alert-icon" type="info-circle" theme="filled"/>
+                <span class="ant-alert-message">
+                    EQL预览 ：
+                    当前单据是EQL修改后的镜像
+                    <a type="button" tabindex="0" class="ant-alert-close-icon" @click="$emit('replace','/apps/docs/detail/'+doc.docId)">
+                        <span class="ant-alert-close-text">返回原始单据</span>
+                    </a>
+                </span>
+            </div>
+        </div>
+
+
         <div slot="top" v-else-if="this.debugId" class="alert">
             <a-alert message="请注意： 当前配置为调试模式，单据的保存操作不会持久化" type="warning" show-icon />
         </div>
@@ -309,6 +324,9 @@ export default {
         ...mapState('Debug',[
             'debugId'
         ]),
+        ...mapState('EQL',[
+            'cachedDocs'
+        ]),
         ...mapGetters('User',[
             'hasAuthority'
         ]),
@@ -484,6 +502,23 @@ export default {
                         this.loading = false
                         this.autoShowDocHelper();
                     });
+            }else if(this.contextParams.mode==='eql-cache'){
+                const doc = this.cachedDocs[this.contextParams.docId];
+
+                if(doc){
+                    this.doc = doc;
+                    this.doc.writeable = false;
+                    this.$emit('setTab','EQL预览 :'+(this.doc.docName||'未命名单据'));
+                    this.loading = false
+                    this.autoShowDocHelper();
+                }else{
+                    this.$emit("close")
+                    this.$notification.warning({
+                        message: '提示',
+                        description:
+                            'EQL-CLI 已关闭',
+                    });
+                }
             }
         },
         doEdit(){

@@ -44,6 +44,8 @@ import NkDevOpsEqlCli from "./page/NkDevOpsEqlCli";
 
 import NkDocSnapshots from "./components/NkDocSnapshots";
 
+import StateEQL from "./StateEQL";
+
 /**
  * Vue 模块对象
  * @type {null}
@@ -63,6 +65,8 @@ export {
   Mixin,
   MixinDef
 }
+
+module.stores = {EQL : StateEQL}
 
 module.install = function (Vue) {
 

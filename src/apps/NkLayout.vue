@@ -336,7 +336,8 @@ export default {
             if(this.oldRoute) {
                 location.replace(`${location.href.toString().replace(location.hash, '')}#${this.oldRoute.fullPath}`);
             }else{
-                history.go(-1);
+                //history.go(-1);
+                location.replace(`${location.href.toString().replace(location.hash, '')}#/apps/default`);
             }
         },
         tabReplace(item, path){

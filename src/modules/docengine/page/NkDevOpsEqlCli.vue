@@ -15,8 +15,8 @@
     <nk-page-layout title="EQL CLI" sub-title="通过通用查询语言管理单据">
 
         <a-button-group slot="action">
-            <a-button type="primary" @click="run">Run</a-button>
-            <a-button type="default" @click="updateConfirm">Update</a-button>
+            <a-button type="primary" :loading="executeLoading" :disabled="updateLoading" @click="run">Run</a-button>
+            <a-button type="default" :loading="updateLoading" :disabled="executeLoading" @click="updateConfirm">Update</a-button>
         </a-button-group>
 
         <a-card class="card">
@@ -41,6 +41,10 @@
                         :columns="res.columns"
                         :data="res.data"
                     >
+                        <template #docId="{ row }">
+                            <a v-if="row.debug" @click="toCacheDoc(row)">{{row.docId}}</a>
+                            <nk-doc-link v-else :doc="{docId:row.docId, docName:row.docId}" />
+                        </template>
                     </vxe-grid>
                 </a-tab-pane>
             </a-tabs>
@@ -62,6 +66,7 @@
 <script>
 
 import qs from 'qs';
+import {mapMutations} from "vuex";
 
 const fieldOrders = [
     "docId",
@@ -103,6 +108,8 @@ export default {
             updateVisible:false,
             updateLoading:false,
             updateSource:undefined,
+
+            executeLoading:false
         }
     },
     computed:{
@@ -119,10 +126,12 @@ export default {
                         const first = item[0];
                         columns = Object.keys(first).sort(this.keySort).map(key=>{
                             const width = Math.min(Math.max(first[key]?(first[key].toString().length * 7 + 40):0,key.length * 7 + 40),300);
+                            const slots = key==='docId' ? {default:'docId'}: undefined
                             return {
                                 field: key,
                                 title: key,
-                                width: width + 'px'
+                                width: width + 'px',
+                                slots
                             };
                         });
                     }
@@ -139,6 +148,11 @@ export default {
     created() {
     },
     methods: {
+        ...mapMutations('EQL',['setDoc','clear']),
+        toCacheDoc(doc){
+            this.setDoc(doc);
+            this.$router.push('/apps/docs/eql-cache/'+doc.docId);
+        },
         keySort(a,b){
             const aIndex = fieldOrders.indexOf(a);
             const bIndex = fieldOrders.indexOf(b);
@@ -161,13 +175,17 @@ export default {
         run(){
             let eql = this.parseEql();
             if(eql){
+                this.executeLoading = true;
                 this.response = {};
                 for(let i=0;i<eql.length;i++){
                     this.$http
                         .post('/api/ops/doc/eql/execute',qs.stringify({eql:eql[i]}))
                         .then(res=>{
                             this.$set(this.response,i,res.data);
-                        });
+                        })
+                        .finally(()=>{
+                            this.executeLoading = false;
+                        })
                 }
             }
         },
@@ -191,6 +209,7 @@ export default {
                         .finally(()=>{
                             this.updateVisible = false;
                             this.updateLoading = false;
+                            this.executeLoading = false;
                         });
                 }
             }
@@ -220,6 +239,9 @@ export default {
 
             return undefined;
         }
+    },
+    destroyed() {
+        this.clear();
     }
 }
 </script>
