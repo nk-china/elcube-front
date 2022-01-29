@@ -153,8 +153,6 @@ export default {
             //     }
             // }
 
-            console.log(params)
-
             this.params = params;
 
             if(this.custom.postSql){
