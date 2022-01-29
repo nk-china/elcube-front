@@ -94,21 +94,21 @@ export default {
         userNameError() {
             const { getFieldError,isFieldTouched } = this.form;
             const error = isFieldTouched('username') && getFieldError('username');
-            this.change({error});
+            this.change({error:this.formError||error});
             return error;
         },
         // Only show error after a field is touched.
         passwordError() {
             const { getFieldError,isFieldTouched } = this.form;
             const error = isFieldTouched('password') && getFieldError('password');
-            this.change({error});
+            this.change({error:this.formError||error})
             return error;
         },
         // Only show error after a field is touched.
         verCodeError() {
             const { getFieldError,isFieldTouched } = this.form;
             const error =  isFieldTouched('verCode') && getFieldError('verCode');
-            this.change({error});
+            this.change({error:this.formError||error})
             return error;
         },
         change(e){
