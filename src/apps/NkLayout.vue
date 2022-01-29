@@ -517,7 +517,9 @@ export default {
         position: fixed;
         bottom: 0;
         left: 0;
-        color: #404040;
+        color: #2a2a2a;
+        user-select: none;
+        transform: scale(0.8, 0.8);
     }
 }
 @media screen and ( max-width: 1366px ){
