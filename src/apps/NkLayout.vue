@@ -18,7 +18,7 @@
                 <component :is="logo"></component>
                 <nk-nav :active-page="activePage" :collapsed="collapsed"></nk-nav>
                 <div class="copyright" style="width: 256px;" v-if="!collapsed">
-                    elcube&trade; ver. {{version.version}}/{{(env&&env[1])||'0.0.0'}}
+                    elcube&trade; ver. {{version.version}} / {{(env&&env[1])||'0.0.0'}}
                 </div>
             </a-layout-sider>
             <a-layout class="nk-layout-right">
