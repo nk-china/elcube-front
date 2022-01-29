@@ -88,28 +88,22 @@
                  title="安全验证"
                  okText="确定"
                  :cancelText="logoutText"
-                 width="400px"
+                 width="350px"
                  :maskClosable="false"
                  :maskStyle="maskStyle"
+                 :destroyOnClose="true"
                  @cancel="cancel()"
-                 :okButtonProps="{props: {disabled:!password}}"
-                 @ok="login({key:'Enter'})"
-                 :confirm-loading="logging"
+                 :okButtonProps="{props: {disabled:!!loginInfo.error}}"
+                 @ok="login"
+                 :confirm-loading="loginInfo.logging"
         >
-            <a-alert :message="reLoginMessage||'由于长时间未操作，需要您重新验证身份'" banner />
-            <a-alert v-if="error" type="error" :message="error.data" banner />
-            <a-form style="margin-top: 20px;">
-                <a-form-item>
-                    <a-input :placeholder="user.username" disabled :defaultValue="user.username">
-                        <a-icon slot="prefix" type="user" style="color:rgba(0,0,0,.25)" />
-                    </a-input>
-                </a-form-item>
-                <a-form-item>
-                    <a-input type="password" placeholder="Password" v-model="password" v-myfocus @keydown="login">
-                        <a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.25)" />
-                    </a-input>
-                </a-form-item>
-            </a-form>
+            <a-alert :message="reLoginMessage" banner />
+            <nk-login-form ref="login"
+                           :username="user.username"
+                           :username-readonly="true"
+                           @change="loginFormChanged"
+                           @success="loginFormSuccess"
+            ></nk-login-form>
         </a-modal>
         <nk-error-modal />
     </a-spin>
@@ -150,13 +144,12 @@ export default {
             env: undefined,
 
             logging:false,
-            password:undefined,
-            error:undefined,
+            loginInfo: {},
 
             maskStyle:{
                 'background-color':'rgb(51, 51, 51,0.45)',
                 'backdrop-filter':'blur(3px)'
-            }
+            },
         };
     },
     computed:{
@@ -387,6 +380,7 @@ export default {
         dragstart(){
         },
         cancel(){
+            this.$refs.login.clear();
             if(AuthUtils.state().authed){
                 this.clearReLogin();
             }else{
@@ -398,20 +392,30 @@ export default {
                 this.$router.push("/");
             });
         },
-        login(e){
-            if(e.key==='Enter' && this.password){
-                this.logging = true;
-                this.$http.login(this.user.username,this.password)
-                    .then(()=>{
-                        this.error = undefined;
-                        this.submitLogin();
-                    }).catch((error)=>{
-                        this.error = error;
-                    }).finally(()=>{
-                        this.logging = false;
-                        this.password = undefined;
-                    });
-            }
+        // login(e){
+        //     if(e.key==='Enter' && this.password){
+        //         this.logging = true;
+        //         this.$http.login(this.user.username,this.password)
+        //             .then(()=>{
+        //                 this.error = undefined;
+        //                 this.submitLogin();
+        //             }).catch((error)=>{
+        //                 this.error = error;
+        //             }).finally(()=>{
+        //                 this.logging = false;
+        //                 this.password = undefined;
+        //             });
+        //     }
+        // },
+        login(){
+            this.$refs.login.login();
+        },
+        loginFormSuccess(){
+            console.log('1232')
+            this.submitLogin();
+        },
+        loginFormChanged(e){
+            this.loginInfo = e;
         }
     }
 }

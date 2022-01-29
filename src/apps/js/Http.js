@@ -222,6 +222,7 @@ export default (Vue) => {
         }else{
           // 否则弹出重新登陆对话框
           User.state.reLogin=true;
+          User.state.reLoginMessage = '由于长时间未操作，需要您重新验证身份';
           // 缓存用户调用的方法
           User.state.reLoginSuccess.push(resolve);
 

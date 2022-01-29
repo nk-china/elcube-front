@@ -16,6 +16,7 @@
  */
 
 import NkLogo from "./NkLogo";
+import NkLoginForm from "./NkLoginForm";
 import NkEditSlot from "./NkEditSlot";
 import NkForm from "./NkForm";
 import NkPageLayout from "./layout/NkPageLayout";
@@ -43,6 +44,7 @@ import 'highlight.js/styles/github.css';
 
 function install(Vue){
   Vue.component("nk-logo", NkLogo);
+  Vue.component("NkLoginForm", NkLoginForm);
   Vue.component("nk-required-mark", NkRequiredMark);
   Vue.component("nk-empty", NkEmpty);
 
