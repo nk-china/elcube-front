@@ -2,6 +2,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const fs = require('fs');
 
+const packageInfo = require("./package.json");
+const version = packageInfo.version;
+fs.writeFileSync(__dirname + '/src/apps/version.json',JSON.stringify({version}));
+
 module.exports = {
   "pages": {
     "index": {
