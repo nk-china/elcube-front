@@ -19,9 +19,9 @@
             <a-button ref="submit" type="primary" :disabled="!!loginInfo.error" @click="login">
                 {{$t('login')}}
             </a-button>
-            <a-button style="margin-left: 10px;" type="default" @click="defaultLogin">
-                Default User
-            </a-button>
+<!--            <a-button style="margin-left: 10px;" type="default" @click="defaultLogin">-->
+<!--                Default User-->
+<!--            </a-button>-->
         </a-card>
         <nk-error-modal />
     </div>
