@@ -17,6 +17,9 @@
             <a-layout-sider v-model="collapsed" :trigger="null" collapsible="collapsible" class="nk-layout-sider" width="256" :collapsed-width="60">
                 <component :is="logo"></component>
                 <nk-nav :active-page="activePage" :collapsed="collapsed"></nk-nav>
+                <div class="copyright" style="width: 256px;" v-if="!collapsed">
+                    elcube&trade; ver. {{version.version}} / {{(env&&env[1])||'0.0.0'}}
+                </div>
             </a-layout-sider>
             <a-layout class="nk-layout-right">
                 <a-layout-header class="nk-layout-header">
@@ -26,7 +29,7 @@
                             :type="collapsed ? 'menu-unfold' : 'menu-fold'"
                             @click="() => (collapsed = !collapsed)"
                         ></a-icon>
-                        <span v-if="env" class="env trigger nk-primary-color">{{env}}</span>
+                        <span v-if="env&&env[0]" class="env trigger nk-primary-color">{{env[0]}}</span>
                     </div>
                     <div>
                     </div>
@@ -117,6 +120,7 @@ import NkNav from "./NkNav";
 import NkDocCenter from "./NkDocCenter";
 import NkDebugPanel from "./NkDebugPanel";
 import AuthUtils from "./js/AuthUtils";
+import version from './version.json';
 
 export default {
     components:{
@@ -136,6 +140,7 @@ export default {
     },
     data() {
         return {
+            version,
             collapsed: false,
             activePage: '',
             pages: [],
@@ -508,10 +513,15 @@ export default {
 
     /* 页脚 */
     .copyright{
-        text-align: center;color:#999;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        color: #2a2a2a;
+        user-select: none;
+        transform: scale(0.8, 0.8);
     }
 }
-
 @media screen and ( max-width: 1366px ){
     .nk-debug-panel{
         position: absolute;
