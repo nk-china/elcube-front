@@ -147,6 +147,7 @@ export default (Vue) => {
              error.response.status <   600) { return onSystemError(error);
     }else if(error.response.status === 701) { return onDebugContextNotFound(error);
     }else if(error.response.status === 401) { return onUnauthorizedError(error);
+    }else if(error.response.status === 901) { return onUnauthorizedError(error);
     }else if(error.response.status === 403) { return onForbiddenError(error);
     }else if(error.response.status === 400) { return onCaution(error);
     }else{                                    return Promise.reject(error); // 其他未知的错误
