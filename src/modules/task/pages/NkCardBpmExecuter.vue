@@ -20,7 +20,8 @@
                       style="margin-bottom: 10px;" />
 
         <a-timeline>
-            <span slot="pending" style="padding-left: 20px;">{{task.name}} 流转中...</span>
+            <span slot="pendingDot"><a-icon type="clock-circle-o" style="font-size: 12px;" /></span>
+            <span slot="pending" style="padding-left: 16px;">{{task.name}} 流转中...</span>
             <a-timeline-item v-for="t in task.historicalTasks" :key="t.id">
                 <p style="margin: 5px 0 20px;padding: 2px 0 0 15px;">
                     {{t.name}}
