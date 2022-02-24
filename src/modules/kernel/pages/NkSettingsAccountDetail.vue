@@ -83,6 +83,30 @@
                 </vxe-table-column>
             </vxe-table>
         </nk-card>
+        <nk-card title="Secrets">
+            <vxe-table
+                auto-resize
+                size="mini"
+                border=inner
+                resizable
+                highlight-hover-row
+                class="me-perms-table"
+                header-cell-class-name="headerCellClassName"
+                :row-class-name="rowClassName"
+                :data="user.secrets">
+                <vxe-table-column   title="类型"    field="type" width="10%"/>
+                <vxe-table-column   title="Code"   field="code" width="30%" />
+                <vxe-table-column   title="Secret" field="secret" width="10%" >
+                    <template>
+                        ********
+                    </template>
+                </vxe-table-column>
+                <vxe-table-column   title="Name"    field="name" width="15%" />
+                <vxe-table-column   title="创建时间" field="createdTime" width="13%" formatter="nkDatetimeFriendly" />
+                <vxe-table-column   title="更新时间" field="updatedTime" width="13%" formatter="nkDatetimeFriendly" />
+                <vxe-table-column   />
+            </vxe-table>
+        </nk-card>
     </nk-page-layout>
 </template>
 
