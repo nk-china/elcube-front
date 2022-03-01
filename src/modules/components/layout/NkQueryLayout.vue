@@ -72,6 +72,9 @@
                         </a-select>
                     </nk-search-item>
                     <nk-search-item :min="10">
+                        <label class="nk-button" v-if="routeQuery&&routeQuery.length">
+                            隐藏条件[{{ routeQuery.length }}]
+                        </label>
                         <a-button-group class="nk-button">
                             <a-button type="primary" html-type="submit" style="width: 46px;">
                                 <a-icon type="search" />
@@ -184,6 +187,9 @@ export default {
     data(){
         return {
             loading: true,
+
+            routeQuery:[],
+
             page: {},
             availableSearchItemsMoreDef:[],
             searchItemsMoreSelected:[],
@@ -234,6 +240,7 @@ export default {
             }
         },
         init(){
+
             this.page.rows = this.initRows;
             this.params.rows = this.initRows;
 
@@ -367,6 +374,24 @@ export default {
          */
         emitChange(){
             this.loading = true;
+
+            // begin 处理查询字符串参数
+            try{
+                let q = this.$route.query.q && JSON.parse(this.$route.query.q);
+                if(q){
+                    q = q instanceof Array ? q : [q];
+                    const queryCond = {};
+                    q.forEach(value=>{
+                        queryCond['__NKQP__'+q.indexOf(value)]=value;
+                    })
+                    this.routeQuery = q;
+                    this.params.conditions = Object.assign(queryCond,this.params.conditions);
+                    this.$emit('setTab',{subName: this.$route.query.n || `Filter:${q.length}` });
+                }
+            }catch (e){
+                //
+            }
+            // end 处理查询字符串参数
 
             let aggs = [];
             this.searchItemsDefault.filter(i=>i.agg).forEach(i=>aggs.push(i.field))

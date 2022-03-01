@@ -356,6 +356,9 @@ export default {
                     if(options.confirm){
                         item.confirm = options.confirm;
                     }
+                    if(options.subName){
+                        this.$set(item,'subName',options.subName);
+                    }
                 }
             }
         },

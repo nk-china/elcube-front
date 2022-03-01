@@ -25,7 +25,10 @@
             <a-tooltip v-if="tab.name.length>=10" :title="tab.name">
                 <span @click="click">{{tab.name}}</span>
             </a-tooltip>
-            <span v-else @click="click" style="margin: 0 -16px;padding: 0 16px;">{{tab.name}}</span>
+            <span v-else @click="click" style="margin: 0 -16px;padding: 0 16px;">
+                {{tab.name}}
+                <template v-if="tab.subName">[{{tab.subName}}]</template>
+            </span>
             <a-popconfirm
                 v-if="tab.confirm && closeable"
                 placement="top"

@@ -24,6 +24,7 @@
         @change="search"
         @suggest="suggest"
         @click="selected"
+        @setTab="$emit('setTab',$event)"
     >
         <a-button-group slot="action">
         </a-button-group>
