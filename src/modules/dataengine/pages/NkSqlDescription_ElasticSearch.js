@@ -387,7 +387,7 @@ const numberFilter = {
 }
 
 export default {
-    formatName(index){
+    formatFrom(index){
         return `"${index}"`;
     },
     fields:{

@@ -387,12 +387,12 @@ export default {
             return this.modalEditDefine && !!this.modalEditDefine.find(item=>{
                 if(item.required===undefined||item.required){
                     const value = this.editItem[item.key];
-                    if(!value){
+                    if(value===undefined){
                         return true;
                     }else if(value instanceof Array){
                         return !(value.length&&!value.filter(e=>!e).length);
                     }else{
-                        return !value;
+                        return !value&&0!==value;
                     }
                 }
             });

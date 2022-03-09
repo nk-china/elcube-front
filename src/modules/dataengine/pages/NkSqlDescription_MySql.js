@@ -78,6 +78,22 @@ const keyword = {
     }
 }
 
+
+const text = {
+    alias:{
+        label: '别名',
+        type: 'a-input',
+        required: false,
+        class:{width:'220px'}
+    },
+    $format(e){
+        e.$format = {
+            alias : e.alias || e.name,
+            select:`${e.name} AS "${e.alias || e.name}"`
+        };
+    }
+}
+
 const date = {
     alias:{
         label: '别名',
@@ -128,14 +144,14 @@ const date = {
             e.aggregation ? (e.aggregation+'('+e.name+')') : e.name
         );
         const quote = e.aggregation!=='COUNT'?'\'':'';
-        const alias = e.alias || (e.name + (e.group ? '_HISTOGRAM' : '') +( e.aggregation ? ('_'+e.aggregation):'') );
+        const alias = e.alias || (e.name + (e.group ? '_GROUP' : '') +( e.aggregation ? ('_'+e.aggregation):'') );
         const value = quote + ((e.having === "BETWEEN" && e.havingValue) ? e.havingValue.join(quote+' AND '+quote) : e.havingValue) + quote;
 
         e.$format = {
             alias,
             select:`${select} AS "${alias}"`,
             group: e.group  && `"${alias}"`,
-            having:e.having && `"${alias}" ${e.having} ${value}`
+            having:e.having && `${(e.aggregation+'('+e.name+')')} ${e.having} ${value}`
         };
     }
 };
@@ -148,25 +164,25 @@ const datetime = {
         required: false,
         class:{width:'220px'}
     },
-    group:{
-        required:false,
-        label: '分组',
-        type: 'a-select',
-        options:[{label:'不分组',value:undefined},{label:'时间线',value:"toStartOfInterval"}],
-        class:{width:'160px'}
-    },
-    interval:{
-        label: '周期',
-        type: 'a-input-number',
-        visible(e){return e.group === 'toStartOfInterval';}
-    },
-    intervalType:{
-        label: '类型',
-        type: 'a-select',
-        visible(e){return e.group === 'toStartOfInterval';},
-        options:[{label:'年',value:'YEAR'}, {label:'月',value:'MONTH'}, {label:'日',value:'DAY'}],
-        class:{width:'140px'}
-    },
+    // group:{
+    //     required:false,
+    //     label: '分组',
+    //     type: 'a-select',
+    //     options:[{label:'不分组',value:undefined},{label:'时间线',value:"toStartOfInterval"}],
+    //     class:{width:'160px'}
+    // },
+    // interval:{
+    //     label: '周期',
+    //     type: 'a-input-number',
+    //     visible(e){return e.group === 'toStartOfInterval';}
+    // },
+    // intervalType:{
+    //     label: '类型',
+    //     type: 'a-select',
+    //     visible(e){return e.group === 'toStartOfInterval';},
+    //     options:[{label:'年',value:'YEAR'}, {label:'月',value:'MONTH'}, {label:'日',value:'DAY'}],
+    //     class:{width:'140px'}
+    // },
     aggregation:{
         required:false,
         label: '聚合',
@@ -205,19 +221,19 @@ const datetime = {
     },
     $format(e){
         const select = e.group ? (
-            `toStartOfInterval(${e.name}, INTERVAL ${e.interval} ${e.intervalType}, 'Asia/Shanghai')`
+            e.name
         ):(
             e.aggregation ? (e.aggregation+'('+e.name+')') : e.name
         );
         const quote = e.aggregation!=='COUNT'?'\'':'';
-        const alias = e.alias || (e.name + (e.group ? '_HISTOGRAM' : '') +( e.aggregation ? ('_'+e.aggregation):'') );
+        const alias = e.alias || (e.name + (e.group ? '_GROUP' : '') +( e.aggregation ? ('_'+e.aggregation):'') );
         const value = quote + ((e.having === "BETWEEN" && e.havingValue) ? e.havingValue.join(quote+' AND '+quote) : e.havingValue) + quote;
 
         e.$format = {
             alias,
             select:`${select} AS "${alias}"`,
             group: e.group  && `"${alias}"`,
-            having:e.having && `"${alias}" ${e.having} ${value}`
+            having:e.having && `${(e.aggregation+'('+e.name+')')} ${e.having} ${value}`
         };
     }
 };
@@ -230,16 +246,16 @@ const number = {
         class:{width:'220px'}
     },
     group:{
-        visible: false,
+        visible: true,
         required: false,
         label: '分组',
         type: 'a-switch',
     },
-    interval:{
-        label: '间隔',
-        type: 'a-input-number',
-        visible(e){return e.group;}
-    },
+    // interval:{
+    //     label: '间隔',
+    //     type: 'a-input-number',
+    //     visible(e){return e.group;}
+    // },
     aggregation:{
         required:false,
         label: '聚合',
@@ -282,18 +298,18 @@ const number = {
     $format(e){
 
         const select = e.group ? (
-            `HISTOGRAM(${e.name}, INTERVAL ${e.interval})`
+            e.name
         ):(
             e.aggregation ? (e.aggregation+'('+e.name+')') : e.name
         );
-        const alias = e.alias || (e.name + (e.group ? '_HISTOGRAM' : '') +( e.aggregation ? ('_'+e.aggregation):'') );
+        const alias = e.alias || (e.name + (e.group ? '_GROUP' : '') +( e.aggregation ? ('_'+e.aggregation):'') );
         const value = (e.having === "BETWEEN" && e.havingValue) ? e.havingValue.join(' AND ') : e.havingValue;
 
         e.$format = {
             alias,
             select:`${select} AS "${alias}"`,
-            group: e.group  && `"${alias}"`,
-            having:e.having && `"${alias}" ${e.having} ${value}`
+            group: e.group  && e.name,
+            having:e.having && `${(e.aggregation+'('+e.name+')')} ${e.having} ${value}`
         };
     }
 }
@@ -440,7 +456,9 @@ export default {
         bigint:number,
         varchar:keyword,
         date:date,
-        datetime:datetime
+        datetime:datetime,
+        text:text,
+        longtext:text
 
     },
     filters:{
