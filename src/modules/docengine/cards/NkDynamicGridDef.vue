@@ -175,7 +175,7 @@ export default {
                 inputType: this.inputTypeDefs[0].value,
                 calcTrigger:'',
                 calcOrder:1,
-                required:true,
+                required:false,
                 control:1,
                 spELContent:'',
                 spELTriggers:[],
