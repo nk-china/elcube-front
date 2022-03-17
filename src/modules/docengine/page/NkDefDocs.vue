@@ -31,7 +31,7 @@
 import NkUtil from "@/utils/NkUtil";
 
 const formatVersion = ({cellValue})=>{
-    return cellValue.split('-')[0];
+  return cellValue.substring(cellValue.length-9,cellValue.length);
 }
 const classifies = [
     {label: "伙伴",value:"PARTNER"},

@@ -218,7 +218,7 @@ export default {
     },
     filters:{
         formatVersion : (v)=>{
-            return v.split('-')[0];
+          return v.substring(v.length-9,v.length);
         }
     },
     data(){
