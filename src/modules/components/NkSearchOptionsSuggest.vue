@@ -33,6 +33,11 @@ export default {
             value: undefined
         }
     },
+    created() {
+        if(this.config.defaultValue){
+            this.value = this.config.defaultValue.multi_match.query
+        }
+    },
     computed:{
         suggestList(){
             const field = (this.config.field[0]||this.config.field).split('.');

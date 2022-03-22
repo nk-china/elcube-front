@@ -261,7 +261,8 @@ export default {
             this.searchItemsDefault
                 .forEach(item=>{
                     if(item.defaultValue){
-                        this.params[item.field]=item.defaultValue;
+                        this.params.conditions = this.params.conditions||{};
+                        this.params.conditions[item.field]=item.defaultValue;
                     }
                 });
             this.formSubmit();

@@ -29,6 +29,11 @@ export default {
             value: []
         }
     },
+    created() {
+        if(this.config.defaultValue){
+            this.value = this.config.defaultValue.range[this.config.field]
+        }
+    },
     methods:{
         setValue(values){
             const range = values&&values[this.config.field]&&values[this.config.field].range[this.config.field]

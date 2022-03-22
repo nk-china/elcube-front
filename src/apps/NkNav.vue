@@ -49,6 +49,13 @@
                 <a-menu-item v-else :key="menu.url">
                     <a-icon :type="menu.icon"/>
                     <span>{{menu.title}}</span>
+                    <a-badge :count="menu.total"
+                             :offset="[5,0]"
+                             :number-style="{
+                                border: 'none',
+                                boxShadow: 'none',
+                                backgroundColor: '#fa541c'
+                             }"/>
                 </a-menu-item>
             </template>
         </a-menu>
@@ -71,6 +78,21 @@ export default {
     created() {
         this.$http.get('/api/webapp/menus').then(res=>{
             this.menus = res.data;
+            this.menus
+                .filter(m=>m.subTitle)
+                .forEach(m=>{
+                    try{
+                        const options = JSON.parse(m.badgeOption);
+                        this.$http.postJSON(options.url,options.body).then(res=>{
+                            this.$set(m,'total',res.data.total)
+                            console.log(m)
+                        });
+                    }catch (e){
+                        console.error(e);
+                    }
+                });
+
+
             const l = document.getElementById("startup-loading");if(l)l.remove();
         });
     },

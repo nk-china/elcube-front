@@ -18,7 +18,6 @@
             v-model="value"
             :dropdownMatchSelectWidth="false"
             :default-open="config.defaulltOpen && !config.doNotOpen"
-            :default-value="config.defaultValue"
             :dropdownMenuStyle="{
                     'font-size':'12px'
                 }"
@@ -49,7 +48,11 @@ export default {
             value: undefined
         }
     },
-    watch:{},
+    created() {
+        if(this.config.defaultValue){
+            this.value = this.config.defaultValue.term[this.config.field]
+        }
+    },
     methods:{
         setValue(values){
             this.value = values&&values[this.config.field]&&values[this.config.field].term[this.config.field];

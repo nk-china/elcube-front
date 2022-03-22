@@ -86,6 +86,7 @@ export default {
                     component:'nk-search-options-single',
                     min:220,
                     agg:true,
+                    defaultValue:{term: { taskState:'create'}},
                     formatter:formatterTaskState,
                 },
                 {
