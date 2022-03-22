@@ -22,6 +22,12 @@ import NkDefDmnDesigner from "@/modules/task/pages/NkDefDmnDesigner";
 import NkPageProcessInstances from "@/modules/task/pages/NkPageProcessInstances";
 import NkPageProcessDetail from "@/modules/task/pages/NkPageProcessDetail";
 
+import NkBpmTimeline from "@/modules/task/components/NkBpmTimeline";
+
+const install = function (Vue) {
+
+    Vue.component("nk-bpm-timeline",                NkBpmTimeline);
+};
 
 const routes = [
     {
@@ -92,5 +98,6 @@ const routes = [
 ]
 
 export default {
+    install,
     routes
 }
