@@ -122,6 +122,7 @@ export default {
             this.width = this.width + 'px'
             this.isSticky = true
             this.height = '50px';
+            this.$emit('changed',true);
         },
         handleReset() {
             if (!this.active) {
@@ -135,6 +136,7 @@ export default {
             this.active = false
             this.isSticky = false
             this.height = '0';
+            this.$emit('changed',false);
         },
         handleScroll() {
             const width = this.$el.getBoundingClientRect().width

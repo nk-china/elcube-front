@@ -275,11 +275,13 @@ import NkDateRange from "./NkDateRange";
 import NkInputRange from "./NkInputRange";
 import ElasticSearch from "./NkSqlDescription_ElasticSearch";
 import ClickHouse from "./NkSqlDescription_ClickHouse";
+import MySql from "./NkSqlDescription_MySql";
 
 import IconElasticSearch from "./IconElasticSearch";
 import IconClickHouse from "./IconClickHouse";
+import IconMySql from "./IconMySql";
 
-const dataSourceDialects = {ElasticSearch,ClickHouse};
+const dataSourceDialects = {ElasticSearch,ClickHouse,MySql};
 
 export default {
     components:{
@@ -301,6 +303,7 @@ export default {
             icon:{
                 IconElasticSearch,
                 IconClickHouse,
+                IconMySql,
             },
 
             modalEdit:{
@@ -384,12 +387,12 @@ export default {
             return this.modalEditDefine && !!this.modalEditDefine.find(item=>{
                 if(item.required===undefined||item.required){
                     const value = this.editItem[item.key];
-                    if(!value){
+                    if(value===undefined){
                         return true;
                     }else if(value instanceof Array){
                         return !(value.length&&!value.filter(e=>!e).length);
                     }else{
-                        return !value;
+                        return !value&&0!==value;
                     }
                 }
             });
@@ -500,15 +503,20 @@ export default {
         },
         sql(){
 
+
             let fields = this.queryBuilder.fields.map(item=>item.$format.select).join(',\n       ');
             let filter = this.queryBuilder.filter.map(item=>item.$format.where).join(' AND ');
             let groups = this.groupFields.map(item=>item.$format.group).join(', ');
             let having = this.havingFields.map(item=>item.$format.having).join(' AND ');
             let sorted = this.queryBuilder.sorted.map(item=>item.$format).join(', ');
 
+            let fromName = this.dialect.formatFrom ?
+                this.dialect.formatFrom(this.queryBuilder.index||'<document>')
+                : (this.queryBuilder.index||'<document>');
+
             let sql = [
                 `SELECT ${fields||'*'}`,
-                `  FROM "${this.queryBuilder.index||'<document>'}"`
+                `  FROM ${fromName}`
             ];
 
             if(filter.length){
