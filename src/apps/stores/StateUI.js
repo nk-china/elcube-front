@@ -19,6 +19,7 @@ export default {
         loading:false,
         errors:[],
         errorVisible:false,
+        fixedMenu:false,
     },
     mutations: {
         doLoading(state,flag){
