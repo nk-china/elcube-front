@@ -37,6 +37,7 @@ export default {
     padding: 16px;
     text-align: center;
     height: 80px;
+    background-color: #001529;
 
     a{
         display: flex;
