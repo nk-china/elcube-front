@@ -78,20 +78,13 @@ export default {
     created() {
         this.$http.get('/api/webapp/menus').then(res=>{
             this.menus = res.data;
-            this.menus
-                .filter(m=>m.subTitle)
-                .forEach(m=>{
-                    try{
-                        const options = JSON.parse(m.badgeOption);
-                        this.$http.postJSON(options.url,options.body).then(res=>{
-                            this.$set(m,'total',res.data.total)
-                            console.log(m)
-                        });
-                    }catch (e){
-                        console.error(e);
-                    }
-                });
-
+            const badges = this.menus.filter(m=>m.badgeOption);
+            if(badges.length){
+                this.refresh(badges);
+                setInterval(()=>{
+                    this.refresh(badges);
+                },1000 * 5 * 60);
+            }
 
             const l = document.getElementById("startup-loading");if(l)l.remove();
         });
@@ -124,6 +117,19 @@ export default {
                 }
             }
         },
+        refresh(badges){
+            badges.forEach(m=>{
+                try{
+                    const options = JSON.parse(m.badgeOption);
+                    this.$http.postJSON(options.url,options.body).then(res=>{
+                        this.$set(m,'total',res.data.total)
+                        console.log(m)
+                    });
+                }catch (e){
+                    console.error(e);
+                }
+            });
+        }
     }
 }
 </script>
