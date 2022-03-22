@@ -26,7 +26,7 @@
 
                 <a-sub-menu v-if="menu.children" :key="menu.url">
                     <span slot="title">
-                        <a-icon :type="menu.icon"/>
+                        <nk-nav-icon :type="menu.icon"/>
                         <span>{{menu.title}}</span>
                     </span>
                     <template v-for="(sub) in menu.children">
@@ -47,7 +47,7 @@
                 </a-sub-menu>
                 <a-divider v-else-if="menu.url==='-'" class="divider" :key="menu.menuId"></a-divider>
                 <a-menu-item v-else :key="menu.url">
-                    <a-icon :type="menu.icon"/>
+                    <nk-nav-icon :type="menu.icon"/>
                     <span>{{menu.title}}</span>
                     <a-badge :count="menu.total"
                              :offset="[5,0]"
@@ -56,6 +56,7 @@
                                 boxShadow: 'none',
                                 backgroundColor: '#fa541c'
                              }"/>
+                    <a-tag v-if="menu.tag" color="#fa541c">{{menu.tag}}</a-tag>
                 </a-menu-item>
             </template>
         </a-menu>
@@ -64,8 +65,13 @@
 </template>
 
 <script>
+
+import NkNavIcon from "@/apps/NkNavIcon";
 export default {
     name: "NkNav",
+    components:{
+        NkNavIcon
+    },
     props:{
         activePage: String,
         collapsed: Boolean,
@@ -126,7 +132,7 @@ export default {
                         console.log(m)
                     });
                 }catch (e){
-                    console.error(e);
+                    this.$set(m,'tag',m.badgeOption)
                 }
             });
         }
@@ -158,5 +164,12 @@ export default {
     height: 15px;
     line-height: 14px;
     padding: 0 2px;
+}
+::v-deep .ant-tag{
+    line-height: 14px;
+    padding: 0 2px;
+    margin-left: 4px;
+    font-size: 10px;
+    transform: scale(0.8);
 }
 </style>

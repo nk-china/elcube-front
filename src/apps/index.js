@@ -163,6 +163,17 @@ const run = (options)=>{
     const i18n = new VueI18n({
         locale: 'zh_CN', // 设置语言环境
     });
+
+    if(globalOptions.iconFont){
+        Object.keys(globalOptions.iconFont)
+            .forEach(key=>{
+                const IconFont = Antd.Icon.createFromIconfontCN({
+                    scriptUrl: globalOptions.iconFont[key],
+                });
+                Vue.component(key,IconFont);
+            })
+    }
+
     const sfcLoader = new SfcLoader(Vue, {
         'vue'             : Vue,
         'ant-design-vue'  : Antd,
