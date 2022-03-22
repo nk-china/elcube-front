@@ -446,16 +446,24 @@ export default {
             display: none; /* Chrome Safari */
         }
     }
+
+    .logo{
+        position: relative;
+        box-shadow: -5px 1px 5px #001529;
+        min-height: 80px;
+        width:256px;
+        transition: width 0.2s;
+        -moz-transition: width 0.2s;
+        -webkit-transition: width 0.2s;
+        -o-transition: width 0.2s;
+    }
 }
 
 .collapsed.fixed{
-    width:auto;
-}
-
-.logo{
-    position: relative;
-    z-index: 1;
-    box-shadow: -5px 1px 5px #001529;
+    width:60px;
+    .logo{
+        width:60px;
+    }
 }
 
 ::v-deep.layout-spinning{

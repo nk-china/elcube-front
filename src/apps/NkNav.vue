@@ -28,12 +28,20 @@
                     <span slot="title">
                         <nk-nav-icon :type="menu.icon"/>
                         <span>{{menu.title}}</span>
+                        <a-badge :count="menu.total"
+                                 :offset="[5,0]"
+                                 :number-style="{
+                                    border: 'none',
+                                    boxShadow: 'none',
+                                    backgroundColor: '#fa541c'
+                                 }"/>
+                        <a-tag v-if="!collapsed && menu.tag" color="#fa541c">{{menu.tag}}</a-tag>
                     </span>
                     <template v-for="(sub) in menu.children">
                         <a-sub-menu v-if="sub.sub" :key="sub.url">
-                        <span slot="title">
-                            {{sub.title}}
-                        </span>
+                            <span slot="title">
+                                {{sub.title}}
+                            </span>
                             <template v-for="(s) in sub.sub">
                                 <a-menu-item :key="s.url">
                                     {{s.title}}
@@ -42,6 +50,7 @@
                         </a-sub-menu>
                         <a-menu-item v-else :key="sub.url">
                             {{sub.title}}
+                            <a-tag v-if="!collapsed && sub.badgeOption" color="#fa541c">{{sub.badgeOption}}</a-tag>
                         </a-menu-item>
                     </template>
                 </a-sub-menu>
@@ -49,14 +58,16 @@
                 <a-menu-item v-else :key="menu.url">
                     <nk-nav-icon :type="menu.icon"/>
                     <span>{{menu.title}}</span>
-                    <a-badge :count="menu.total"
+                    <a-badge v-if='menu.total'
+                             :count="menu.total"
                              :offset="[5,0]"
+                             :dot="collapsed"
                              :number-style="{
                                 border: 'none',
                                 boxShadow: 'none',
                                 backgroundColor: '#fa541c'
                              }"/>
-                    <a-tag v-if="menu.tag" color="#fa541c">{{menu.tag}}</a-tag>
+                    <a-tag v-if="!collapsed && menu.tag" color="#fa541c">{{menu.tag}}</a-tag>
                 </a-menu-item>
             </template>
         </a-menu>
