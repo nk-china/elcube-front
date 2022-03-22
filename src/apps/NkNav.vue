@@ -150,7 +150,7 @@ export default {
 ::v-deep .ant-badge-count{
     min-width: 15px;
     height: 15px;
-    line-height: 15px;
+    line-height: 14px;
     padding: 0 2px;
 }
 </style>
