@@ -82,7 +82,6 @@
 
 <script>
 
-import CanvasUtil from "@/utils/CanvasUtil";
 import NkDataV from "./NkDataV";
 import DomUtils from "@/utils/DomUtils";
 
@@ -300,20 +299,6 @@ export default {
 
                 this.containerDragBox = undefined;
             }
-        },
-        doHtml2canvas(){
-            let self = this;
-
-            CanvasUtil.html2canvas(this.$refs.container).then(function(canvas) {
-                self.dataVList.push({
-                    thumbnail:canvas.toDataURL("image/png"),
-                    selected:false,
-                });
-                self.dataVList.push({
-                    thumbnail:CanvasUtil.scale(canvas,400,300).toDataURL("image/png"),
-                    selected:false,
-                });
-            });
         }
     }
 }

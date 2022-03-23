@@ -13,12 +13,13 @@
 -->
 <template>
     <nk-page-layout class="mini"
-                    :title="doc.docName||'未命名单据'"
+                    :title="'单据详情'"
                     ref="nav"
-                    sub-title="单据详情"
+                    :sub-title="doc.docName||'未命名单据'"
                     :spinning="loading"
                     :right-bar="rightBar"
                     :header-indent="headerIndent"
+                    :show-sticky-title="showStickyTitle"
     >
 
         <div v-if="doc.historyVersion" slot="top" class="alert">
@@ -174,8 +175,7 @@
 
             <!-- 源码修改 -->
             <a-tooltip v-if="!doc.newCreate && hasAuthority(['DEVOPS:*','DEVOPS:DOC'])" title="编辑源数据">
-                <a-button
-                          @click="sourceVisible = true">
+                <a-button @click="sourceVisible = true">
                     <a-icon type="code" />
                 </a-button>
             </a-tooltip>
@@ -189,6 +189,20 @@
 
         </a-button-group>
 
+        <nk-sticky slot="default-top" v-if="groups && groups.length" :stickyTop="0" :z-index="12" @changed="showStickyTitle=!$event">
+            <span class="card-groups">
+                <a-button-group v-if="groups && groups.length">
+                    <a-button value="large"
+                              :type="selectedGroup===index?'primary':'dashed'"
+                              v-for="(item,index) in groups"
+                              :key="index"
+                              @click="selectedGroup = index"
+                    >
+                        {{ item.name }}
+                    </a-button>
+                </a-button-group>
+            </span>
+        </nk-sticky>
         <a-button-group v-if="groups && groups.length" style="margin-bottom: 24px;">
             <a-button value="large"
                       :type="selectedGroup===index?'primary':'dashed'"
@@ -281,11 +295,13 @@ import {mapGetters, mapMutations, mapState} from 'vuex';
 import NkCardBpmExecuter from "../../task/pages/NkCardBpmExecuter";
 import docMarkdown from "../components/docMarkdown";
 import NkDocSourceEditor from "../components/NkDocSourceEditor";
+import NkSticky from "../../components/NkSticky";
 
 export default {
     components:{
         NkCardBpmExecuter,
-        NkDocSourceEditor
+        NkDocSourceEditor,
+        NkSticky
     },
     props:{
         params: Object,
@@ -311,7 +327,8 @@ export default {
 
             selectedGroup: 0,
 
-            sourceVisible: false
+            sourceVisible: false,
+            showStickyTitle:true,
         }
     },
 
@@ -781,5 +798,22 @@ export default {
 }
 .alert{
     //padding: 10px 22px 0;
+}
+
+.card-groups{
+  background-color: #fff;
+  padding: 12px 0 12px 24px;
+  display: inline-block;
+  //min-width: 50%;
+  animation: card-groups-enter 0.5s;
+}
+
+@keyframes card-groups-enter{
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
 }
 </style>

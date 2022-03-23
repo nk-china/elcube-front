@@ -107,7 +107,7 @@ export default {
             columns:[
                 { title: 'KEY',  field: 'menuId',            width:"15%", editRender:{name:'$input'},visible:false},
                 { title: '菜单',  field: 'title',             width:"15%", editRender:{name:'$input'},treeNode: true },
-                { title: '子标题', field: 'subTitle',         width:"15%", editRender:{name:'$input'} },
+                { title: '徽标',  field: 'badgeOption',       width:"15%", editRender:{name:'$input'} },
                 { title: '图标',  field: 'icon',              width:"20%", editRender:{name:'$input'} },
                 { title: '路径',  field: 'url',               width:"25%", editRender:{name:'$input'} },
                 { title: '权限',  field: 'authorityOptions',  width:"20%", editRender:{name:'$input'} },

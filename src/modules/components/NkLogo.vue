@@ -34,9 +34,10 @@ export default {
 <style lang="less" scoped>
 .nk-application-logo {
     user-select: none;
-    margin: 16px;
+    padding: 16px;
     text-align: center;
-    height: 48px;
+    height: 80px;
+    background-color: #001529;
 
     a{
         display: flex;

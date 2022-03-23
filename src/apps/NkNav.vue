@@ -26,14 +26,22 @@
 
                 <a-sub-menu v-if="menu.children" :key="menu.url">
                     <span slot="title">
-                        <a-icon :type="menu.icon"/>
+                        <nk-nav-icon :type="menu.icon"/>
                         <span>{{menu.title}}</span>
+                        <a-badge :count="menu.total"
+                                 :offset="[5,0]"
+                                 :number-style="{
+                                    border: 'none',
+                                    boxShadow: 'none',
+                                    backgroundColor: '#fa541c'
+                                 }"/>
+                        <a-tag v-if="!collapsed && menu.tag" color="#fa541c">{{menu.tag}}</a-tag>
                     </span>
                     <template v-for="(sub) in menu.children">
                         <a-sub-menu v-if="sub.sub" :key="sub.url">
-                        <span slot="title">
-                            {{sub.title}}
-                        </span>
+                            <span slot="title">
+                                {{sub.title}}
+                            </span>
                             <template v-for="(s) in sub.sub">
                                 <a-menu-item :key="s.url">
                                     {{s.title}}
@@ -42,13 +50,24 @@
                         </a-sub-menu>
                         <a-menu-item v-else :key="sub.url">
                             {{sub.title}}
+                            <a-tag v-if="!collapsed && sub.badgeOption" color="#fa541c">{{sub.badgeOption}}</a-tag>
                         </a-menu-item>
                     </template>
                 </a-sub-menu>
                 <a-divider v-else-if="menu.url==='-'" class="divider" :key="menu.menuId"></a-divider>
                 <a-menu-item v-else :key="menu.url">
-                    <a-icon :type="menu.icon"/>
+                    <nk-nav-icon :type="menu.icon"/>
                     <span>{{menu.title}}</span>
+                    <a-badge v-if='menu.total'
+                             :count="menu.total"
+                             :offset="[5,0]"
+                             :dot="collapsed"
+                             :number-style="{
+                                border: 'none',
+                                boxShadow: 'none',
+                                backgroundColor: '#fa541c'
+                             }"/>
+                    <a-tag v-if="!collapsed && menu.tag" color="#fa541c">{{menu.tag}}</a-tag>
                 </a-menu-item>
             </template>
         </a-menu>
@@ -57,8 +76,13 @@
 </template>
 
 <script>
+
+import NkNavIcon from "@/apps/NkNavIcon";
 export default {
     name: "NkNav",
+    components:{
+        NkNavIcon
+    },
     props:{
         activePage: String,
         collapsed: Boolean,
@@ -71,6 +95,14 @@ export default {
     created() {
         this.$http.get('/api/webapp/menus').then(res=>{
             this.menus = res.data;
+            const badges = this.menus.filter(m=>m.badgeOption);
+            if(badges.length){
+                this.refresh(badges);
+                setInterval(()=>{
+                    this.refresh(badges);
+                },1000 * 5 * 60);
+            }
+
             const l = document.getElementById("startup-loading");if(l)l.remove();
         });
     },
@@ -102,6 +134,19 @@ export default {
                 }
             }
         },
+        refresh(badges){
+            badges.forEach(m=>{
+                try{
+                    const options = JSON.parse(m.badgeOption);
+                    this.$http.postJSON(options.url,options.body).then(res=>{
+                        this.$set(m,'total',res.data.total)
+                        console.log(m)
+                    });
+                }catch (e){
+                    this.$set(m,'tag',m.badgeOption)
+                }
+            });
+        }
     }
 }
 </script>
@@ -124,5 +169,18 @@ export default {
             font-size: 13px;
         }
     }
+}
+::v-deep .ant-badge-count{
+    min-width: 15px;
+    height: 15px;
+    line-height: 14px;
+    padding: 0 2px;
+}
+::v-deep .ant-tag{
+    line-height: 14px;
+    padding: 0 2px;
+    margin-left: 4px;
+    font-size: 10px;
+    transform: scale(0.8);
 }
 </style>

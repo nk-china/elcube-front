@@ -36,7 +36,7 @@
     "core-js": "^3.4.4",
     "crypto": "^1.0.1",
     "dmn-js": "^11.0.2",
-    "dmn-js-properties-panel": "^0.6.2",
+    "dmn-js-properties-panel": "^0.7.0",
     "echarts": "^4.9.0",
     "echarts-stat": "^1.1.1",
     "eval5": "^1.4.6",

@@ -154,14 +154,26 @@ const run = (options)=>{
 
     globalOptions = Object.assign(globalOptions,options);
 
-    Stores.UI.state.logo = globalOptions.logo || 'nk-logo';
-    Stores.UI.state.appName = globalOptions.appName;
+    Stores.UI.state.logo        = globalOptions.logo || 'nk-logo';
+    Stores.UI.state.appName     = globalOptions.appName;
+    Stores.UI.state.fixedMenu   = globalOptions.fixedMenu === undefined || globalOptions.fixedMenu;
 
     const router = new Router(VueRouter,routes,globalOptions.loginPage,globalOptions.defaultPage);
     const store = new Vuex.Store({ modules:stores });
     const i18n = new VueI18n({
         locale: 'zh_CN', // 设置语言环境
     });
+
+    if(globalOptions.iconFont){
+        Object.keys(globalOptions.iconFont)
+            .forEach(key=>{
+                const IconFont = Antd.Icon.createFromIconfontCN({
+                    scriptUrl: globalOptions.iconFont[key],
+                });
+                Vue.component(key,IconFont);
+            })
+    }
+
     const sfcLoader = new SfcLoader(Vue, {
         'vue'             : Vue,
         'ant-design-vue'  : Antd,

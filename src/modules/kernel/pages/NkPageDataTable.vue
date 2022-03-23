@@ -28,6 +28,7 @@
         @change="search"
         @suggest="suggest"
         @click="selected"
+        @setTab="$emit('setTab',$event)"
     >
         <a-button  slot="action"
                    type="primary"
@@ -109,12 +110,7 @@ export default {
                         this.$refs.layout.init();
                     })
 
-                    const queryLength = Object.keys(this.$route.query).length;
-                    if(queryLength){
-                        this.$emit("setTab",this.custom.title+"[Filter:"+queryLength+"]");
-                    }else{
-                        this.$emit("setTab",this.custom.title);
-                    }
+                    this.$emit("setTab",this.custom.title);
 
                 }).catch((e)=>{
                     console.error(e);
@@ -138,20 +134,6 @@ export default {
             }
         },
         search(params){
-
-            // for(const key in this.$route.query){
-            //     if(this.$route.query.hasOwnProperty(key)){
-            //         let value = this.$route.query[key];
-            //         if(value.startsWith('[')||value.startsWith('{')){
-            //             try{
-            //                 value = JSON.parse(value)
-            //             }catch (e) {
-            //                 console.log(e);
-            //             }
-            //         }
-            //         params[key]=value;
-            //     }
-            // }
 
             this.params = params;
 

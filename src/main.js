@@ -22,7 +22,8 @@ import Task from './modules/task'
 import Data from './modules/dataengine'
 
 
-ELCube.use(Doc)
+ELCube
+    .use(Doc)
     .use(Task)
     .use(Data,{
         themes:[{
@@ -37,6 +38,9 @@ ELCube.use(Doc)
         loginPage:  undefined,
         defaultPage:undefined,
         enableSfc:  true,
+        iconFont:{
+            "icon-font" : '//at.alicdn.com/t/font_3269017_5nvy3d0b5a8.js'
+        }
     })
     .then(({Vue,options})=>{
         new Vue(options).$mount('#app');

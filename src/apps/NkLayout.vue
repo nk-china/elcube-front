@@ -15,10 +15,12 @@
     <a-spin :spinning="loading" wrapperClassName="layout-spinning">
         <a-layout class="nk-layout-full">
             <a-layout-sider v-model="collapsed" :trigger="null" collapsible="collapsible" class="nk-layout-sider" width="256" :collapsed-width="60">
-                <component :is="logo"></component>
-                <nk-nav :active-page="activePage" :collapsed="collapsed"></nk-nav>
-                <div class="copyright" style="width: 256px;" v-if="!collapsed">
-                    elcube&trade; ver. {{version.version}} / {{(env&&env[1])||'0.0.0'}}
+                <div :class="{fixed:fixedMenu,collapsed}">
+                    <component :is="logo" class="logo"></component>
+                    <nk-nav :active-page="activePage" :collapsed="collapsed"></nk-nav>
+                    <div class="copyright" style="width: 256px;" v-if="!collapsed">
+                        elcube&trade; ver. {{version.version}} / {{(env&&env[1])||'0.0.0'}}
+                    </div>
                 </div>
             </a-layout-sider>
             <a-layout class="nk-layout-right">
@@ -159,7 +161,7 @@ export default {
     },
     computed:{
         ...mapState('UI',[
-            'loading','logo','errors',
+            'loading','logo','errors','fixedMenu'
         ]),
         ...mapState('Debug',[
             'debugId'
@@ -356,6 +358,9 @@ export default {
                     if(options.confirm){
                         item.confirm = options.confirm;
                     }
+                    if(options.subName){
+                        this.$set(item,'subName',options.subName);
+                    }
                 }
             }
         },
@@ -428,6 +433,39 @@ export default {
 
 <style scoped lang="less">
 
+.fixed,.collapsed{
+    position: fixed;
+    height: 100%;
+    width: 256px;
+
+    ::v-deep .nk-menu{
+        overflow-y: auto;
+        height: calc(100vh - 80px);
+
+        &::-webkit-scrollbar {
+            display: none; /* Chrome Safari */
+        }
+    }
+
+    .logo{
+        position: relative;
+        box-shadow: -5px 1px 5px #001529;
+        min-height: 80px;
+        width:256px;
+        transition: width 0.2s;
+        -moz-transition: width 0.2s;
+        -webkit-transition: width 0.2s;
+        -o-transition: width 0.2s;
+    }
+}
+
+.collapsed.fixed{
+    width:60px;
+    .logo{
+        width:60px;
+    }
+}
+
 ::v-deep.layout-spinning{
     & > div > .ant-spin{
         bottom: 0;
@@ -490,6 +528,8 @@ export default {
         box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
         display: flex;
         justify-content: space-between;
+        //width: calc(100% - 256px);
+        //z-index: 1;
 
         .nk-user{
             display: flex;

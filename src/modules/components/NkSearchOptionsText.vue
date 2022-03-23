@@ -28,6 +28,11 @@ export default {
             value: undefined
         }
     },
+    created() {
+        if(this.config.defaultValue){
+            this.value = this.config.defaultValue.multi_match.query
+        }
+    },
     methods:{
         setValue(values){
             this.value = values&&values[this.config.field]&&values[this.config.field].multi_match.query;

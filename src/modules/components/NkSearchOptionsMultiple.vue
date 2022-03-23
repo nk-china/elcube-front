@@ -54,6 +54,11 @@ export default {
             isFocus:false,
         }
     },
+    created() {
+        if(this.config.defaultValue){
+            this.value = this.config.defaultValue.terms[this.config.field]
+        }
+    },
     methods:{
         setValue(values){
             this.value = values&&values[this.config.field]&&values[this.config.field].terms[this.config.field]
